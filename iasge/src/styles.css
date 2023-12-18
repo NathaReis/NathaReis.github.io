@@ -7,7 +7,7 @@
 
 :root 
 {
-    --primaryColor: #003c5a;
+    --primaryColor: rgb(0, 60, 90);
     --secondColor: #eee;
     --warnColor: #e35e6b;
     --neutroColor: #afff79;
