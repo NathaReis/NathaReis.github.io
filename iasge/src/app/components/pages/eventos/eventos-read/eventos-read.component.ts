@@ -3,6 +3,8 @@ import {MatCalendarCellClassFunction, MatDatepickerModule} from '@angular/materi
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatNativeDateModule} from '@angular/material/core';
+import { AuthService } from 'src/app/components/services/auth.service';
+import { HeaderService } from 'src/app/components/services/header.service';
 
 @Component({
   selector: 'app-eventos-read',
@@ -16,11 +18,23 @@ export class EventosReadComponent implements OnInit {
 
   maxDate: Date = new Date;
   selected: any;
+
+  constructor(
+    private auth : AuthService,
+    private headerService: HeaderService) {
+      headerService.headerData = {
+        title: 'Eventos',
+        icon: 'event',
+        routerLink: 'eventos'
+      }
+    }
   
   ngOnInit(): void {
-      const date = new Date();
-      const year = date.getFullYear();
-      this.maxDate = new Date(year, 11, 31)
+    const date = new Date();
+    const year = date.getFullYear();
+    this.maxDate = new Date(year, 11, 31)
+    
+    this.auth.auth_guard();
   }
   
   dateClass: MatCalendarCellClassFunction<Date> = (cellDate, view) => {

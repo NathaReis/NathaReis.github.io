@@ -1,1 +1,58 @@
-<p>eventos-create works!</p>
+<div class="card shadow">
+    <div class="card-body">
+        <form>
+            <div class="mb-3">
+                <h4 class="text-dark text-muted">Criar evento</h4>
+            </div>
+
+            <mat-form-field>
+                <mat-label>Nome do evento</mat-label>
+                <input matInput #input name="event_name" [(ngModel)]="event_name">
+            </mat-form-field> 
+
+            <mat-form-field>
+                <mat-label>Breve descrição</mat-label>
+                <textarea matInput name="event_desc" [(ngModel)]="event_desc"></textarea>
+            </mat-form-field> 
+
+            <mat-form-field>
+                <mat-label>Apenas um dia?</mat-label>
+                <mat-select  name="isOneDay" [(ngModel)]="isOneDay">
+                  <mat-option value="true">Sim</mat-option>
+                  <mat-option value="">Não</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field *ngIf="isOneDay">
+                <mat-label>Data do evento</mat-label>
+                <input matInput [matDatepicker]="picker" name="start_date" [(ngModel)]="start_date">
+                <mat-hint>DD/MM/YYYY</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker touchUi #picker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field *ngIf="!isOneDay">
+                <mat-label>Data do evento</mat-label>
+                <mat-date-range-input [rangePicker]="picker">
+                    <input matStartDate placeholder="Start date" name="start_date" [(ngModel)]="start_date">
+                    <input matEndDate placeholder="End date" name="end_date" [(ngModel)]="end_date">
+                </mat-date-range-input>
+                <mat-hint>DD/MM/YYYY – DD/MM/YYYY</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker touchUi #picker></mat-date-range-picker>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Horário inicial</mat-label>
+                <input matInput #input placeholder="HH:MM" name="start_time" [(ngModel)]="start_time" (input)="maskTime()" maxlength="5">
+            </mat-form-field> 
+
+            <mat-form-field>
+                <mat-label>Horário final</mat-label>
+                <input matInput #input placeholder="HH:MM" name="end_time" [(ngModel)]="end_time" (input)="maskTime()" maxlength="5">
+            </mat-form-field> 
+
+            <button type="button" class="btn" (click)="criar()">Criar</button>
+        </form>
+    </div>
+</div>

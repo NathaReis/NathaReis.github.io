@@ -68,6 +68,17 @@ button.view
 {
     background-color: var(--grayColor);
 }
+button.btn
+{
+    color: var(--secondColor);
+    background-color: var(--primaryColor);
+}
+button.btn:hover
+{
+    opacity: .8;
+    color: var(--secondColor);
+    background-color: var(--primaryColor);
+}
 
 /*ICONS*/
 mat-icon.delete
