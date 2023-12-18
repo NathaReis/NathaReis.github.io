@@ -13,7 +13,7 @@ export class EventosCreateComponent implements OnInit{
   event_desc: string = '';
   isOneDay: string = 'true';
   start_date: Date = new Date('02/03/2002');//MM/DD/YYY
-  end_date: string = '';
+  end_date: Date = new Date();
   start_time: string = '';
   end_time: string = '';
 
@@ -95,15 +95,65 @@ export class EventosCreateComponent implements OnInit{
     }
   }
 
+  formatDate(data: Date)
+  {
+    let date = String(data);
+    const year = date.slice(11,16);
+    const day = date.slice(8,10);
+    let month = date.slice(4,7)
+    switch(month)
+    {
+      case 'Jan':
+        month = '01'
+        break
+      case 'Feb':
+        month = '02'
+        break
+      case 'Mar':
+        month = '03'
+        break
+      case 'Apr':
+        month = '04'
+        break
+      case 'May':
+        month = '05'
+        break
+      case 'Jun':
+        month = '06'
+        break
+      case 'Jul':
+        month = '07'
+        break
+      case 'Aug':
+        month = '08'
+        break
+      case 'Sep':
+        month = '09'
+        break
+      case 'Oct':
+        month = '10'
+        break
+      case 'Nov':
+        month = '11'
+        break
+      case 'Dec':
+        month = '12'
+        break
+    }
+
+    date = `${day}/${month}/${year}`
+    return date;
+  }
+
   criar()
   {
     const eventoObj = {
       name: this.event_name,
       desc: this.event_desc,
       isOneDay: this.isOneDay ? 'true' : 'false',
-      start_date: this.start_date,
-      end_date: this.isOneDay ? 'null' : this.end_date,
-      start_time: this.start_time,
+      start_date: this.formatDate(this.start_date),
+      end_date: this.isOneDay ? 'null' : this.formatDate(this.end_date),
+      start_time: this.formatDate(this.start_date),
       end_time: this.end_time,
     }
 
