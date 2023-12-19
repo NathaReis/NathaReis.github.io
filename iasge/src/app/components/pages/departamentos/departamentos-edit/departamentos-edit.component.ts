@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { User } from 'src/app/components/models/user';
 import { DataService } from 'src/app/components/services/data.service';
 import { HeaderService } from 'src/app/components/services/header.service';
+import { SnackbarService } from 'src/app/components/services/snackbar.service';
 
 @Component({
   selector: 'app-departamentos-edit',
@@ -16,6 +17,7 @@ export class DepartamentosEditComponent implements OnInit{
   constructor( 
     private data: DataService,
     private route: ActivatedRoute,
+    private snack: SnackbarService,
     private router: Router,
     private headerService: HeaderService) {
     headerService.headerData = {
@@ -71,7 +73,7 @@ export class DepartamentosEditComponent implements OnInit{
   {
     if(this.first_name == '' || this.last_name == '' || this.password == '' || this.perfil == '')
     {
-      alert('Preencha todos os campos');
+      this.snack.openSnackBar('Preencha todos os campos', 2000);
     }
     else 
     {
@@ -82,8 +84,8 @@ export class DepartamentosEditComponent implements OnInit{
       this.userObj.perfil = this.perfil;
       this.userObj.user_name = `${this.first_name.toLowerCase()}.${this.last_name.toLowerCase()}`;
       this.data.updateUser(this.userObj, this.id)
+      this.snack.openSnackBar('Atualizado com sucesso!')
       this.router.navigate(['/departamentos'])
-      this.resetForm()
     }
   }
 }

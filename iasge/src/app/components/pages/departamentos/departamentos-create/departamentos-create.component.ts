@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { DataService } from 'src/app/components/services/data.service';
 import { HeaderService } from 'src/app/components/services/header.service';
+import { SnackbarService } from 'src/app/components/services/snackbar.service';
 
 @Component({
   selector: 'app-departamentos-create',
@@ -13,6 +14,7 @@ export class DepartamentosCreateComponent {
 
   constructor( 
     private data : DataService,
+    private snack: SnackbarService,
     private headerService: HeaderService) {
     headerService.headerData = {
       title: 'Departamentos',
@@ -49,7 +51,7 @@ export class DepartamentosCreateComponent {
   {
     if(this.first_name == '' || this.last_name == '' || this.password == '' || this.perfil == '')
     {
-      alert('Preencha todos os campos');
+      this.snack.openSnackBar('Preencha todos os campos', 2000);
     }
     else 
     {
@@ -61,6 +63,7 @@ export class DepartamentosCreateComponent {
       this.userObj.user_name = `${this.first_name.toLowerCase()}.${this.last_name.toLowerCase()}`;
       this.data.addUser(this.userObj)
       this.resetForm()
+      this.snack.openSnackBar('Criado com sucesso!')
     }
   }
 

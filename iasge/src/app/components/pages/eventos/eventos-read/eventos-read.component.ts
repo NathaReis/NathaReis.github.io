@@ -5,6 +5,9 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatNativeDateModule} from '@angular/material/core';
 import { AuthService } from 'src/app/components/services/auth.service';
 import { HeaderService } from 'src/app/components/services/header.service';
+import { DataService } from 'src/app/components/services/data.service';
+import { Event } from 'src/app/components/models/event';
+import { SnackbarService } from 'src/app/components/services/snackbar.service';
 
 @Component({
   selector: 'app-eventos-read',
@@ -15,12 +18,15 @@ import { HeaderService } from 'src/app/components/services/header.service';
   imports: [MatFormFieldModule, MatInputModule, MatNativeDateModule, MatDatepickerModule],
 })
 export class EventosReadComponent implements OnInit {
-
-  maxDate: Date = new Date;
+  
   selected: any;
+  eventList: Event[] = [];
+  dates: Array<number> = [];
 
   constructor(
     private auth : AuthService,
+    private data: DataService,
+    private snack: SnackbarService,
     private headerService: HeaderService) {
       headerService.headerData = {
         title: 'Eventos',
@@ -30,28 +36,41 @@ export class EventosReadComponent implements OnInit {
     }
   
   ngOnInit(): void {
-    const date = new Date();
-    const year = date.getFullYear();
-    this.maxDate = new Date(year, 11, 31)
-    
     this.auth.auth_guard();
+    this.getAllEvents();
+  }
+
+  getAllEvents()
+  {
+    //Consulta o serviço correspondente
+    this.data.getAllEvents().subscribe(res =>
+      {
+        //Mapeia o resultado
+        this.eventList = res.map((e: any) =>
+          {
+            const data = e.payload.doc.data();
+            data.id = e.payload.doc.id;
+            return data;
+          })
+        this.dates = this.eventList.map(ev => +ev.start_date.replace(/\D/g, ""));
+        console.log(this.dates)
+      }, err => 
+      {
+        //Mensagem de erro
+        this.snack.openSnackBar(`Erro de busca: ${err}`)
+      })
   }
   
   dateClass: MatCalendarCellClassFunction<Date> = (cellDate, view) => {
       if (view === 'month') {
-      const year = cellDate.getFullYear();
-      const month = cellDate.getUTCMonth();
-      const day = cellDate.getDate();
-  
-        if(year === 2023)
+        const year = cellDate.getFullYear();
+        const month = cellDate.getUTCMonth();
+        const day = cellDate.getDate();
+        const date = `${day}/${month}/${year}`;
+        console.log(date + ' ' + this.dates)
+        if(this.dates.indexOf(23122023) != -1)
         {
-          if(month === 11)
-          {
-            if(day === 3)
-            {
-              return 'evento-day';
-            }
-          }
+          return 'event-day';
         }
         return '';
       }

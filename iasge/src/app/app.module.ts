@@ -15,6 +15,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 //Components
 import { AppRoutingModule } from './app-routing.module';
@@ -107,6 +108,7 @@ import { AssociadosMyreadComponent } from './components/pages/associados/associa
     MatFormFieldModule,
     MatDialogModule,
     MatButtonModule,
+    MatSnackBarModule,
     MatCheckboxModule,
     provideFirebaseApp(() => initializeApp({"projectId":"iasgestao","appId":"1:634292682476:web:38ff865f29151abb53efc9","storageBucket":"iasgestao.appspot.com","apiKey":"AIzaSyDM_8ffyG8YjOvCh2mtu9bO8iYYMBqIpk0","authDomain":"iasgestao.firebaseapp.com","messagingSenderId":"634292682476"})),
     provideAuth(() => getAuth()),

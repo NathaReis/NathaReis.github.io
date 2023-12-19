@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { DataService } from 'src/app/components/services/data.service';
 import { HeaderService } from 'src/app/components/services/header.service';
+import { SnackbarService } from 'src/app/components/services/snackbar.service';
 
 @Component({
   selector: 'app-associados-create',
@@ -13,6 +14,7 @@ export class AssociadosCreateComponent {
   
   constructor( 
     private data : DataService,
+    private snack: SnackbarService,
     private headerService: HeaderService) {
     headerService.headerData = {
       title: 'Associados',
@@ -48,8 +50,7 @@ export class AssociadosCreateComponent {
   {
     if(this.first_name == '' || this.last_name == '' || this.password == '')
     {
-      alert('Preencha todos os campos');
-      console.log(localStorage.getItem('user'))
+      this.snack.openSnackBar('Preencha todos os campos', 2000);
     }
     else 
     {
@@ -61,6 +62,7 @@ export class AssociadosCreateComponent {
       this.userObj.departamentos = `${localStorage.getItem('user_id')},${localStorage.getItem('user_name')},false`,
       this.data.addUser(this.userObj)
       this.resetForm()
+      this.snack.openSnackBar('Criado com sucesso!')
     }
   }
 }

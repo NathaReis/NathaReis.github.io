@@ -1,5 +1,6 @@
-button.evento-day
+button.event-day
 {
-    background: green;
+    background: var(--neutroColor);
+    color: var(--secondColor);
     border-radius: 100%;
 }

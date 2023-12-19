@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { DataService } from 'src/app/components/services/data.service';
 import { HeaderService } from 'src/app/components/services/header.service';
 import { DialogConfirmationComponent } from 'src/app/components/template/dialog-confirmation/dialog-confirmation.component';
+import { SnackbarService } from 'src/app/components/services/snackbar.service';
 
 @Component({
   selector: 'app-departamentos-read',
@@ -16,6 +17,7 @@ export class DepartamentosReadComponent implements AfterViewInit, OnInit{
 
   constructor(
     private data: DataService,
+    private snack: SnackbarService,
     private dialog: MatDialog,
     private headerService: HeaderService) {
     headerService.headerData = {
@@ -60,7 +62,7 @@ export class DepartamentosReadComponent implements AfterViewInit, OnInit{
       }, err => 
       {
         //Mensagem de erro
-        alert(`Erro de busca: ${err}`)
+        this.snack.openSnackBar(`Erro de busca: ${err}`)
       })
   }
 

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from 'src/app/components/services/data.service';
 import { HeaderService } from 'src/app/components/services/header.service';
+import { SnackbarService } from 'src/app/components/services/snackbar.service';
 
 @Component({
   selector: 'app-associados-edit',
@@ -15,6 +16,7 @@ export class AssociadosEditComponent implements OnInit{
   constructor( 
     private data: DataService,
     private route: ActivatedRoute,
+    private snack: SnackbarService,
     private router: Router,
     private headerService: HeaderService) {
     headerService.headerData = {
@@ -122,7 +124,7 @@ export class AssociadosEditComponent implements OnInit{
     }
     if(this.first_name == '' || this.last_name == '')
     {
-      alert('Preencha todos os campos');
+      this.snack.openSnackBar('Preencha todos os campos', 2000);
     }
     else 
     {
@@ -133,8 +135,8 @@ export class AssociadosEditComponent implements OnInit{
       this.userObj.departamentos = this.departamentos;
       this.userObj.perfil = this.perfil;
       this.userObj.password = this.password;
-      console.log(this.userObj)
       this.data.updateUser(this.userObj, this.id)
+      this.snack.openSnackBar('Atualizado com sucesso!')
       this.router.navigate(['/associados'])
     }
   }

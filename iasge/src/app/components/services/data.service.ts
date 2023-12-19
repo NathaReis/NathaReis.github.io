@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { User } from '../models/user';
+import { Event } from '../models/event';
 
 @Injectable({
   providedIn: 'root'
@@ -44,4 +45,35 @@ export class DataService {
   {
     return this.afs.collection('/perfis').snapshotChanges();
   }
+
+  //EVENT
+  
+  // add user
+  addEvent(event: Event)
+  {
+    event.id = this.afs.createId();
+    return this.afs.collection('/events').add(event);
+  }
+  // get all events
+  getAllEvents()
+  {
+    return this.afs.collection('/events').snapshotChanges();
+  }
+  /*
+  // get one users
+  getUser(id: string)
+  {
+    return this.afs.doc(`/users/${id}`).get();
+  }
+  // delete user
+  deleteUser(id: string)
+  {
+    return this.afs.doc(`/users/${id}`).delete();
+  }
+  // update user
+  updateUser(user: User, id: string)
+  {
+    this.afs.doc(`users/${id}`).update(user);
+  }
+  */
 }

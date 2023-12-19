@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { HeaderService } from '../../services/header.service';
+import { SnackbarService } from '../../services/snackbar.service';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,8 @@ export class LoginComponent implements OnInit {
   hide = true;
 
   constructor(
-    private auth : AuthService, 
+    private auth: AuthService, 
+    private snack: SnackbarService,
     private router : Router,
     private headerService: HeaderService) {
     headerService.headerData = {
@@ -34,13 +36,13 @@ export class LoginComponent implements OnInit {
   {
     if(this.user_name == '')
     {
-      alert('Por favor, digite o usuário');
+      this.snack.openSnackBar('Por favor, digite o usuário');
       return '';
     }
 
     if(this.password == '')
     {
-      alert('Por favor digite a senha');
+      this.snack.openSnackBar('Por favor digite a senha');
       return '';
     }
 

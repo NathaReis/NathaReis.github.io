@@ -7,6 +7,7 @@ import { count } from 'firebase/firestore';
 import { User } from 'src/app/components/models/user';
 import { DataService } from 'src/app/components/services/data.service';
 import { HeaderService } from 'src/app/components/services/header.service';
+import { SnackbarService } from 'src/app/components/services/snackbar.service';
 import { DialogConfirmationComponent } from 'src/app/components/template/dialog-confirmation/dialog-confirmation.component';
 
 @Component({
@@ -18,6 +19,7 @@ export class AssociadosMyreadComponent implements AfterViewInit, OnInit{
 
   constructor(
     private data: DataService,
+    private snack: SnackbarService,
     private dialog: MatDialog,
     private headerService: HeaderService) {
     headerService.headerData = {
@@ -61,7 +63,7 @@ export class AssociadosMyreadComponent implements AfterViewInit, OnInit{
       }, err => 
       {
         //Mensagem de erro
-        alert(`Erro de busca: ${err}`)
+        this.snack.openSnackBar(`Erro de busca: ${err}`)
       })
   }
 

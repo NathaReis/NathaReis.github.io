@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/components/services/auth.service';
+import { DataService } from 'src/app/components/services/data.service';
 import { HeaderService } from 'src/app/components/services/header.service';
+import { SnackbarService } from 'src/app/components/services/snackbar.service';
 
 @Component({
   selector: 'app-eventos-create',
@@ -12,13 +14,17 @@ export class EventosCreateComponent implements OnInit{
   event_name: string = '';
   event_desc: string = '';
   isOneDay: string = 'true';
-  start_date: Date = new Date('02/03/2002');//MM/DD/YYY
+  start_date: Date = new Date();//'MM/DD/YYY'
   end_date: Date = new Date();
   start_time: string = '';
   end_time: string = '';
+  maxDate: Date = new Date();
+  minDate: Date = new Date();
 
   constructor(
-    private auth : AuthService,
+    private auth: AuthService,
+    private data: DataService,
+    private snack: SnackbarService,
     private headerService: HeaderService) {
       headerService.headerData = {
         title: 'Eventos',
@@ -28,6 +34,13 @@ export class EventosCreateComponent implements OnInit{
     }
 
   ngOnInit(): void {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const day = +date.getDate() + 1;
+    this.maxDate = new Date(year, 11, 31)
+    this.minDate = new Date(year, month, day)
+
     this.auth.auth_guard();
   }
 
@@ -145,19 +158,46 @@ export class EventosCreateComponent implements OnInit{
     return date;
   }
 
-  criar()
+  criarObj()
   {
-    const eventoObj = {
-      name: this.event_name,
-      desc: this.event_desc,
-      isOneDay: this.isOneDay ? 'true' : 'false',
-      start_date: this.formatDate(this.start_date),
-      end_date: this.isOneDay ? 'null' : this.formatDate(this.end_date),
-      start_time: this.formatDate(this.start_date),
-      end_time: this.end_time,
+    if(this.event_name == '' || this.event_desc == '' || String(this.start_date) == '' || String(this.end_date) == '' || this.start_time == '' || this.end_time == '')
+    {
+      this.snack.openSnackBar('Preencha todos os dados!', 2000)
+      return null
     }
-
-    console.log(eventoObj)
+    else 
+    {
+      return {
+        event_name: this.event_name,
+        event_desc: this.event_desc,
+        isOneDay: this.isOneDay ? 'true' : 'false',
+        start_date: this.formatDate(this.start_date),
+        end_date: this.isOneDay ? 'null' : this.formatDate(this.end_date),
+        start_time: this.start_time,
+        end_time: this.end_time,
+      }        
+    }
   }
 
+  reset()
+  {
+    this.event_desc = '';
+    this.event_name = '';
+    this.isOneDay = 'true';
+    this.start_date = new Date();//'MM/DD/YYY'
+    this.end_date = new Date();
+    this.start_time = '';
+    this.end_time = '';
+  }
+
+  criar()
+  {
+    const event = this.criarObj();
+    if(event)
+    {
+      this.data.addEvent(event);
+      this.snack.openSnackBar('Criado com sucesso!');
+      this.reset();
+    }
+  }
 }
