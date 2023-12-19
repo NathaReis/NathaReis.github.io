@@ -21,7 +21,7 @@ export class EventosReadComponent implements OnInit {
   
   selected: any;
   eventList: Event[] = [];
-  dates: Array<number> = [];
+  dates: Array<string> = [];
 
   constructor(
     private auth : AuthService,
@@ -40,7 +40,7 @@ export class EventosReadComponent implements OnInit {
     this.getAllEvents();
   }
 
-  getAllEvents()
+  getAllEvents(): string[]
   {
     //Consulta o serviço correspondente
     this.data.getAllEvents().subscribe(res =>
@@ -52,25 +52,48 @@ export class EventosReadComponent implements OnInit {
             data.id = e.payload.doc.id;
             return data;
           })
-        this.dates = this.eventList.map(ev => +ev.start_date.replace(/\D/g, ""));
-        console.log(this.dates)
+          console.log(this.eventList);
+        this.dates = this.eventList.map(ev => ev.start_date);
+        this.isDateinList();
       }, err => 
       {
         //Mensagem de erro
         this.snack.openSnackBar(`Erro de busca: ${err}`)
       })
+    return this.dates;
+  }
+
+  isDateinList()
+  {
+    setTimeout(() =>
+    {
+      const datesBtn = document.querySelectorAll(".mat-calendar-body-cell");
+      datesBtn.forEach(btn =>
+        {
+          let pos = +btn.classList.length - 1
+          let date = String(btn.classList[pos])
+          if(this.dates.includes(date))
+          {
+            btn.classList.add('event-day');
+          }
+          else 
+          {
+            btn.classList.remove('event-day');
+          }
+        })
+    },100)
   }
   
   dateClass: MatCalendarCellClassFunction<Date> = (cellDate, view) => {
       if (view === 'month') {
         const year = cellDate.getFullYear();
-        const month = cellDate.getUTCMonth();
+        const month = +cellDate.getUTCMonth() + 1;
         const day = cellDate.getDate();
         const date = `${day}/${month}/${year}`;
-        console.log(date + ' ' + this.dates)
-        if(this.dates.indexOf(23122023) != -1)
+        
+        if(true)
         {
-          return 'event-day';
+          return `${date}`;
         }
         return '';
       }

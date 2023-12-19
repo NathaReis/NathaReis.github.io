@@ -111,7 +111,7 @@ export class EventosCreateComponent implements OnInit{
   formatDate(data: Date)
   {
     let date = String(data);
-    const year = date.slice(11,16);
+    const year = date.slice(11,15);
     const day = date.slice(8,10);
     let month = date.slice(4,7)
     switch(month)

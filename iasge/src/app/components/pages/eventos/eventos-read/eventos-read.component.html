@@ -3,4 +3,5 @@
         [dateClass]="dateClass"
         [(selected)]="selected"
     ></mat-calendar> 
+    <p *ngFor="let item of eventList">{{ item.id }}</p>
 </div>
