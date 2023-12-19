@@ -22,7 +22,7 @@ export class EventosReadComponent implements OnInit {
   selected: any;
   eventList: Event[] = [];
   dates: Array<string> = [];
-
+  
   constructor(
     private auth : AuthService,
     private data: DataService,
@@ -40,6 +40,7 @@ export class EventosReadComponent implements OnInit {
     this.getAllEvents();
   }
 
+  //Busca todos os eventos e chama a função que valida as datas
   getAllEvents(): string[]
   {
     //Consulta o serviço correspondente
@@ -52,7 +53,6 @@ export class EventosReadComponent implements OnInit {
             data.id = e.payload.doc.id;
             return data;
           })
-          console.log(this.eventList);
         this.dates = this.eventList.map(ev => ev.start_date);
         this.isDateinList();
       }, err => 
@@ -63,6 +63,7 @@ export class EventosReadComponent implements OnInit {
     return this.dates;
   }
 
+  //Class especial para datas incluidas na array
   isDateinList()
   {
     setTimeout(() =>
@@ -84,6 +85,7 @@ export class EventosReadComponent implements OnInit {
     },100)
   }
   
+  //Dá uma identificação para cada data, referente a ela mesma
   dateClass: MatCalendarCellClassFunction<Date> = (cellDate, view) => {
       if (view === 'month') {
         const year = cellDate.getFullYear();
