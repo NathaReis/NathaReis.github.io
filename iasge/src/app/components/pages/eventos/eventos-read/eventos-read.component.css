@@ -1,6 +1,12 @@
 button.event-day
 {
-    background: var(--neutroColor);
+    background: #afff79;
+    color: var(--secondColor);
+    border-radius: 100%;
+}
+button.events-day
+{
+    background: #e35e6b;
     color: var(--secondColor);
     border-radius: 100%;
 }

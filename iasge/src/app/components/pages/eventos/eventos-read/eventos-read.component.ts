@@ -21,7 +21,8 @@ export class EventosReadComponent implements OnInit {
   
   selected: any;
   eventList: Event[] = [];
-  dates: Array<string> = [];
+  datesOneDay: Array<string> = [];
+  datesMoreDay: Array<{start: number, end: number}> = [];
   
   constructor(
     private auth : AuthService,
@@ -40,6 +41,19 @@ export class EventosReadComponent implements OnInit {
     this.getAllEvents();
   }
 
+  dateForNumber(date: string)
+  {
+    const res = Number(date.split('/')[2]+date.split('/')[1]+date.split('/')[0]);
+    if(typeof res == 'number')
+    {
+      return res; 
+    }
+    else 
+    {
+      return -1;
+    }
+  }
+
   //Busca todos os eventos e chama a função que valida as datas
   getAllEvents(): string[]
   {
@@ -53,14 +67,29 @@ export class EventosReadComponent implements OnInit {
             data.id = e.payload.doc.id;
             return data;
           })
-        this.dates = this.eventList.map(ev => ev.start_date);
+
+        this.datesOneDay = 
+          this.eventList
+          .filter(ev => ev.isOneDay == 'true')
+          .map(ev => ev.start_date);
+        this.datesMoreDay = 
+          this.eventList
+          .filter(ev => ev.isOneDay == 'false')
+          .map(ev => {
+
+            let start = this.dateForNumber(ev.start_date);
+            let end = this.dateForNumber(ev.end_date);
+            return {start: start, end: end}
+          });
+
         this.isDateinList();
+        this.isDatesinList();
       }, err => 
       {
         //Mensagem de erro
         this.snack.openSnackBar(`Erro de busca: ${err}`)
       })
-    return this.dates;
+    return this.datesOneDay;
   }
 
   //Class especial para datas incluidas na array
@@ -73,7 +102,7 @@ export class EventosReadComponent implements OnInit {
         {
           let pos = +btn.classList.length - 1
           let date = String(btn.classList[pos])
-          if(this.dates.includes(date))
+          if(this.datesOneDay.includes(date))
           {
             btn.classList.add('event-day');
           }
@@ -81,6 +110,46 @@ export class EventosReadComponent implements OnInit {
           {
             btn.classList.remove('event-day');
           }
+        })
+    },100)
+  }
+
+  isDatesinList()
+  {
+    setTimeout(() =>
+    {
+      const datesBtn = document.querySelectorAll(".mat-calendar-body-cell");
+      datesBtn.forEach(btn =>
+        {
+          let pos = +btn.classList.length - 1;
+          let date = String(btn.classList[pos]);
+          let dta = this.dateForNumber(date);
+
+          if(dta == -1)
+          {
+            pos -= 1;
+            date = String(btn.classList[pos]);
+            dta = this.dateForNumber(date);
+
+            if(dta == -1)
+            {
+              pos -= 1;
+              date = String(btn.classList[pos]);
+              dta = this.dateForNumber(date);
+            }
+          }
+
+          this.datesMoreDay.forEach(dtm =>
+            {
+              if(dtm.start <= dta && dtm.end >= dta)
+              {
+                btn.classList.add('events-day');
+              }
+              else 
+              {
+                btn.classList.remove('events-day');
+              }
+            })
         })
     },100)
   }
