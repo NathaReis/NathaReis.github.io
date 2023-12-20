@@ -165,6 +165,11 @@ export class EventosCreateComponent implements OnInit{
       this.snack.openSnackBar('Preencha todos os dados!', 2000)
       return null
     }
+    else if(this.start_time.length < 5 || this.end_time.length < 5)
+    {
+      this.snack.openSnackBar('Preencha o horário completo', 2000)
+      return null
+    }
     else 
     {
       return {
