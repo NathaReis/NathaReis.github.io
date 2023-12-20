@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { AfterContentInit, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { AuthService } from 'src/app/components/services/auth.service';
 import { HeaderService } from 'src/app/components/services/header.service';
 import { DataService } from 'src/app/components/services/data.service';
@@ -25,7 +25,7 @@ export class EventosReadComponent implements OnInit {
         routerLink: 'eventos'
       }
     }
-
+    
     
   ngOnInit(): void {
     this.auth.auth_guard();
@@ -58,8 +58,7 @@ export class EventosReadComponent implements OnInit {
     let res = `${date.split('/')[2]}-${date.split('/')[1]}-${date.split('/')[0]}`;
     return res;
   }
-  events: any = []
-
+  
   popularEvents(events: Event[])
   {
     events.forEach(event =>
@@ -73,19 +72,24 @@ export class EventosReadComponent implements OnInit {
           })
         }
       })
-  }
-  
-  title: string = '';
-  calendarOptions: CalendarOptions = {
+      console.log(this.events);
+    }
+    
+  events: any = []
+  options = {
     initialView: 'dayGridMonth',
     plugins: [dayGridPlugin],
     events: this.events,
     eventClick: this.handleDateClick.bind(this),
-  };
-
+  };  
+  title: string = '';
+    
   handleDateClick(arg: any) {
     alert('date click! ' + arg.event._def.title);
     this.title = arg.event._def.title; 
   }
+
+  
+  calendarOptions: CalendarOptions = this.options;
 
 }
