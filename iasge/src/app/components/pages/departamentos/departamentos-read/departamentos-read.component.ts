@@ -59,6 +59,7 @@ export class DepartamentosReadComponent implements AfterViewInit, OnInit{
         this.usersList = noass.concat(ass);//Ordernar a lista de Diretor e admin emcima para associados
         //Passa a lista para o data usado na table
         this.dataSource = new MatTableDataSource<User>(this.usersList);
+        setTimeout(() => {this.validarView();}, 10)
       }, err => 
       {
         //Mensagem de erro
@@ -78,5 +79,31 @@ export class DepartamentosReadComponent implements AfterViewInit, OnInit{
         this.data.deleteUser(id);
       }
     });
+  }
+
+  view(id: string)
+  {
+    //Tira os selecionados style
+    document.querySelectorAll(".view").forEach(view =>
+      {
+        view.classList.remove("selected");
+      })
+    //Muda o id de pesquisa
+    localStorage.setItem('usermask_id', id);
+    //Adiciona o style
+    document.querySelector(`#${id}`)?.classList.add("selected");
+  }
+
+  validarView()
+  {
+    //Tira os selecionados style
+    document.querySelectorAll(".view").forEach(view =>
+      {
+        console.log(view);
+        if(String(view.id) == String(localStorage.getItem("usermask_id")))
+        {
+          view.classList.add("selected");
+        }
+      })
   }
 }

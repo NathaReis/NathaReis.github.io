@@ -38,8 +38,9 @@ export class EventosCreateComponent implements OnInit{
     const year = date.getFullYear();
     const month = date.getMonth();
     const day = +date.getDate() + 1;
-    this.maxDate = new Date(year, 11, 31)
-    this.minDate = new Date(year, month, day)
+    this.maxDate = new Date(year, 11, 31);
+    this.minDate = new Date(year, month, day);
+    this.start_date = new Date(year, month, day);
 
     this.auth.auth_guard();
   }
@@ -194,6 +195,7 @@ export class EventosCreateComponent implements OnInit{
         end_date: this.isOneDay ? 'null' : this.formatDate(this.end_date),
         start_time: this.start_time,
         end_time: this.end_time,
+        user: String(localStorage.getItem("user_id"))
       }        
     }
     else 

@@ -172,6 +172,7 @@ export class DialogConfirmationComponent implements OnInit{
         end_date: this.isOneDay ? 'null' : this.formatDate(this.end_date),
         start_time: this.start_time,
         end_time: this.end_time,
+        user: String(localStorage.getItem("user_id"))
       }        
     }
     else 

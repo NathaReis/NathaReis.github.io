@@ -8,4 +8,5 @@ export interface Event
     end_date: string,
     start_time: string,
     end_time: string,
+    user: string,
 }

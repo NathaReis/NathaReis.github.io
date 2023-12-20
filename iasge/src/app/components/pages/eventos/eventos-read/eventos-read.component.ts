@@ -59,6 +59,7 @@ export class EventosReadComponent implements OnInit {
             data.id = e.payload.doc.id;
             return data;
           })
+        this.eventsList = this.eventsList.filter(ev => ev.user == String(localStorage.getItem('usermask_id')));
         this.popularEvents(this.eventsList); //Atualiza a lista
         this.updateCalendarOptions(); //Atualiza o calendário
       }, err => 
