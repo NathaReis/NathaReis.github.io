@@ -16,6 +16,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { FullCalendarModule } from '@fullcalendar/angular';
 
 //Components
 import { AppRoutingModule } from './app-routing.module';
@@ -87,11 +88,11 @@ import { AssociadosMyreadComponent } from './components/pages/associados/associa
     AssociadosEditComponent,
     AssociadosCreateComponent,
     AssociadosMyreadComponent,
+    EventosReadComponent,
   ],
   imports: [
     AngularFireModule.initializeApp(ambiente.firebaseConfig),
     BrowserModule,
-    EventosReadComponent,
     EscalasReadComponent,
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -109,6 +110,7 @@ import { AssociadosMyreadComponent } from './components/pages/associados/associa
     MatDialogModule,
     MatButtonModule,
     MatSnackBarModule,
+    FullCalendarModule,
     MatCheckboxModule,
     provideFirebaseApp(() => initializeApp({"projectId":"iasgestao","appId":"1:634292682476:web:38ff865f29151abb53efc9","storageBucket":"iasgestao.appspot.com","apiKey":"AIzaSyDM_8ffyG8YjOvCh2mtu9bO8iYYMBqIpk0","authDomain":"iasgestao.firebaseapp.com","messagingSenderId":"634292682476"})),
     provideAuth(() => getAuth()),
