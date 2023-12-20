@@ -92,7 +92,7 @@ export class AssociadosMyreadComponent implements AfterViewInit, OnInit{
   deleteUser(id: string, name: string = '')
   {
     const dialogRef = this.dialog.open(DialogConfirmationComponent, {
-      data: `Deseja excluir ${name}?`,
+      data: {title: `Deseja excluir ${name}?`, confirm: true},
     });
 
     dialogRef.afterClosed().subscribe((result: boolean) => {
@@ -106,7 +106,7 @@ export class AssociadosMyreadComponent implements AfterViewInit, OnInit{
   removerAssociadoEquipe(user: User)
   {
     const dialogRef = this.dialog.open(DialogConfirmationComponent, {
-      data: `Deseja remover ${user.user_name} da equipe?`,
+      data: {title: `Deseja remover ${user.user_name} da equipe?`, confirm: true},
     });
 
     dialogRef.afterClosed().subscribe((result: boolean) => {

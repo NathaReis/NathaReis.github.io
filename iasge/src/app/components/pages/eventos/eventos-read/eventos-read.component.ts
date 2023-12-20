@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/components/services/auth.service';
 import { HeaderService } from 'src/app/components/services/header.service';
 import { DataService } from 'src/app/components/services/data.service';
@@ -6,6 +6,8 @@ import { SnackbarService } from 'src/app/components/services/snackbar.service';
 import { CalendarOptions } from '@fullcalendar/core'; // useful for typechecking
 import dayGridPlugin from '@fullcalendar/daygrid';
 import { Event } from 'src/app/components/models/event';
+import { DialogConfirmationComponent } from 'src/app/components/template/dialog-confirmation/dialog-confirmation.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-eventos-read',
@@ -17,6 +19,7 @@ export class EventosReadComponent implements OnInit {
     private auth : AuthService,
     private data: DataService,
     private snack: SnackbarService,
+    private dialog: MatDialog,
     private headerService: HeaderService) {
       headerService.headerData = {
         title: 'Eventos',
@@ -36,9 +39,6 @@ export class EventosReadComponent implements OnInit {
   };  
   //Init calendar 
   calendarOptions: CalendarOptions = this.options;
-  //Itens of event
-  title: string = '';
-  color: string = '';
   
   //Init page
   ngOnInit(): void {
@@ -95,7 +95,6 @@ export class EventosReadComponent implements OnInit {
         }
       }
     })
-    console.log(this.events)
   }
 
   //Atualuzar o calendário
@@ -127,7 +126,23 @@ export class EventosReadComponent implements OnInit {
   }
   
   handleDateClick(arg: any) {
-    alert('date click! ' + arg.event._def.title);
-    this.title = arg.event._def.title; 
+    let id = arg.event._def.publicId; 
+    const dialogRef = this.dialog.open(DialogConfirmationComponent, {
+      data: 
+      {
+        id: id,
+        eventEdit: true,
+        edit: true,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+      if(result)
+      {
+        setTimeout(() => {
+          location.reload();
+        }, 1000)
+      }
+    });
   }
 }

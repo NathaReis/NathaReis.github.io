@@ -11,7 +11,6 @@ export class DataService {
   constructor(private afs : AngularFirestore) { }
 
   //USER
-  
   // add user
   addUser(user: User)
   {
@@ -47,7 +46,6 @@ export class DataService {
   }
 
   //EVENT
-  
   // add user
   addEvent(event: Event)
   {
@@ -59,21 +57,19 @@ export class DataService {
   {
     return this.afs.collection('/events').snapshotChanges();
   }
-  /*
   // get one users
-  getUser(id: string)
+  getEvent(id: string)
   {
-    return this.afs.doc(`/users/${id}`).get();
+    return this.afs.doc(`/events/${id}`).get();
   }
   // delete user
-  deleteUser(id: string)
+  deleteEvent(id: string)
   {
-    return this.afs.doc(`/users/${id}`).delete();
+    return this.afs.doc(`/events/${id}`).delete();
   }
   // update user
-  updateUser(user: User, id: string)
+  updateEvent(event: Event, id: string)
   {
-    this.afs.doc(`users/${id}`).update(user);
+    this.afs.doc(`events/${id}`).update(event);
   }
-  */
 }

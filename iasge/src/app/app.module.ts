@@ -33,10 +33,8 @@ import { EscalasDeleteComponent } from './components/pages/escalas/escalas-delet
 import { EscalasEditComponent } from './components/pages/escalas/escalas-edit/escalas-edit.component';
 
 import { EventosComponent } from './views/eventos/eventos.component';
-import { EventosEditComponent } from './components/pages/eventos/eventos-edit/eventos-edit.component';
 import { EventosCreateComponent } from './components/pages/eventos/eventos-create/eventos-create.component';
 import { EventosReadComponent } from './components/pages/eventos/eventos-read/eventos-read.component';
-import { EventosDeleteComponent } from './components/pages/eventos/eventos-delete/eventos-delete.component';
 
 import { DepartamentosComponent } from './views/departamentos/departamentos.component';
 import { DepartamentosCreateComponent } from './components/pages/departamentos/departamentos-create/departamentos-create.component';
@@ -68,9 +66,7 @@ import { AssociadosMyreadComponent } from './components/pages/associados/associa
     HomeComponent,
     EventosComponent,
     EscalasComponent,
-    EventosEditComponent,
     EventosCreateComponent,
-    EventosDeleteComponent,
     EscalasEditComponent,
     EscalasCreateComponent,
     EscalasDeleteComponent,

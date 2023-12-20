@@ -158,19 +158,33 @@ export class EventosCreateComponent implements OnInit{
     return date;
   }
 
-  criarObj()
+  validarObj(): boolean
   {
     if(this.event_name == '' || this.event_desc == '' || String(this.start_date) == '' || String(this.end_date) == '' || this.start_time == '' || this.end_time == '')
     {
       this.snack.openSnackBar('Preencha todos os dados!', 2000)
-      return null
+      return false
     }
     else if(this.start_time.length < 5 || this.end_time.length < 5)
     {
-      this.snack.openSnackBar('Preencha o horário completo', 2000)
-      return null
+      this.snack.openSnackBar('Preencha o horário completo!', 2000)
+      return false
+    }
+    else if(+(this.start_time.replace(/\D/g, "")) > +(this.end_time.replace(/\D/g, "")) && this.isOneDay)
+    {
+      this.snack.openSnackBar('Horário de início maior que o de fim!', 2000)
+      return false
     }
     else 
+    {
+      return true;
+    }
+  }
+
+  criarObj()
+  {
+
+    if(this.validarObj()) 
     {
       return {
         event_name: this.event_name,
@@ -181,6 +195,10 @@ export class EventosCreateComponent implements OnInit{
         start_time: this.start_time,
         end_time: this.end_time,
       }        
+    }
+    else 
+    {
+      return false;
     }
   }
 

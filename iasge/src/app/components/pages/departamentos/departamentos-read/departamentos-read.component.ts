@@ -69,7 +69,7 @@ export class DepartamentosReadComponent implements AfterViewInit, OnInit{
   deleteUser(id: string, name: string = '')
   {
     const dialogRef = this.dialog.open(DialogConfirmationComponent, {
-      data: `Deseja excluir ${name}?`,
+      data: {title: `Deseja excluir ${name}?`, confirm: true},
     });
 
     dialogRef.afterClosed().subscribe((result: boolean) => {
