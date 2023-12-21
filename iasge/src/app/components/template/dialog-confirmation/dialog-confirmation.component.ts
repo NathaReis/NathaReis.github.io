@@ -11,7 +11,35 @@ import { SnackbarService } from '../../services/snackbar.service';
 })
 export class DialogConfirmationComponent implements OnInit{
 
-  //Calendar edit
+  constructor(
+    public dialogRef: MatDialogRef<DialogConfirmationComponent>,
+    private dataS: DataService,
+    private snack: SnackbarService,
+    private dialog: MatDialog,
+    @Inject(MAT_DIALOG_DATA) public data: Dialog,
+  ) {}
+
+  ngOnInit(): void {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const day = +date.getDate() + 1;
+    this.maxDate = new Date(year, 11, 31)
+    this.minDate = new Date(year, month, day)
+
+    //Para preencher os eventos
+    this.dataS.getEvent(String(this.data.id)).subscribe(event =>
+      {
+        this.preencherEvento(event.data())
+      })
+  }
+
+  //Resultado dos confirms
+  onConfirm(result: boolean): void {
+    this.dialogRef.close(result);
+  }
+
+  //Evento
   event_name: string = '';
   event_desc: string = '';
   isOneDay: string = 'true';
@@ -78,15 +106,18 @@ export class DialogConfirmationComponent implements OnInit{
       //If maior que sete
       if(numsArray.length > 4)
       {
-        console.log(numsArray.slice(0,4).join(""))
         numFormatado += `${numsArray.slice(0,4).join("")}`;
       }
       //Enviar para o campo o num formatado
       this.end_time = numFormatado;
     }
   }
-
-  formatDate(data: Date)
+  dateBrForEUA(date: string)
+  {
+    let res = `${date.split('/')[1]}/${date.split('/')[0]}/${date.split('/')[2]}`;
+    return res;
+  }
+  dateForString(data: Date)
   {
     let date = String(data);
     const year = date.slice(11,15);
@@ -136,7 +167,7 @@ export class DialogConfirmationComponent implements OnInit{
     return date;
   }
 
-  validarObj(): boolean
+  validarEvento(): boolean
   {
     if(this.event_name == '' || this.event_desc == '' || String(this.start_date) == '' || String(this.end_date) == '' || this.start_time == '' || this.end_time == '')
     {
@@ -158,21 +189,19 @@ export class DialogConfirmationComponent implements OnInit{
       return true;
     }
   }
-
   criarEvento()
   {
-
-    if(this.validarObj()) 
+    if(this.validarEvento()) 
     {
       return {
         event_name: this.event_name,
         event_desc: this.event_desc,
         isOneDay: this.isOneDay ? 'true' : 'false',
-        start_date: this.formatDate(this.start_date),
-        end_date: this.isOneDay ? 'null' : this.formatDate(this.end_date),
+        start_date: this.dateForString(this.start_date),
+        end_date: this.isOneDay ? 'null' : this.dateForString(this.end_date),
         start_time: this.start_time,
         end_time: this.end_time,
-        user: String(localStorage.getItem("user_id"))
+        user: String(localStorage.getItem("usermask_id"))
       }        
     }
     else 
@@ -180,16 +209,8 @@ export class DialogConfirmationComponent implements OnInit{
       return false;
     }
   }
-
-  dateBrForEUA(date: string)
-  {
-    let res = `${date.split('/')[1]}/${date.split('/')[0]}/${date.split('/')[2]}`;
-    return res;
-  }
-
   preencherEvento(event: any)
   {
-    console.log(event)
     this.event_desc = event.event_desc;
     this.event_name = event.event_name;
     this.isOneDay = eval(event.isOneDay) ? 'true' : '';
@@ -197,10 +218,8 @@ export class DialogConfirmationComponent implements OnInit{
     this.end_date = new Date(this.dateBrForEUA(event.end_date));
     this.start_time = event.start_time;
     this.end_time = event.end_time;
-    console.log(this.start_date)
   }
-
-  reset()
+  resetEvento()
   {
     this.event_desc = '';
     this.event_name = '';
@@ -210,20 +229,18 @@ export class DialogConfirmationComponent implements OnInit{
     this.start_time = '';
     this.end_time = '';
   }
-
-  update()
+  updateEvento()
   {
     const event = this.criarEvento();
     if(event)
     {
       this.dataS.updateEvent(event, String(this.data.id));
       this.snack.openSnackBar('Atualizado com sucesso!');
-      this.reset();
+      this.resetEvento();
       this.onConfirm(true);
     }
   }
-
-  delete()
+  deleteEvento()
   {
     const dialogRef = this.dialog.open(DialogConfirmationComponent, {
       data: 
@@ -238,36 +255,10 @@ export class DialogConfirmationComponent implements OnInit{
       {
         this.dataS.deleteEvent(String(this.data.id));
         this.snack.openSnackBar('Deletado com sucesso!');
-        this.reset();
+        this.resetEvento();
         this.onConfirm(true);        
       }
     });
 
-  }
-
-  constructor(
-    public dialogRef: MatDialogRef<DialogConfirmationComponent>,
-    private dataS: DataService,
-    private snack: SnackbarService,
-    private dialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA) public data: Dialog,
-  ) {}
-
-  ngOnInit(): void {
-    const date = new Date();
-    const year = date.getFullYear();
-    const month = date.getMonth();
-    const day = +date.getDate() + 1;
-    this.maxDate = new Date(year, 11, 31)
-    this.minDate = new Date(year, month, day)
-
-    this.dataS.getEvent(String(this.data.id)).subscribe(event =>
-      {
-        this.preencherEvento(event.data())
-      })
-  }
-
-  onConfirm(result: boolean): void {
-    this.dialogRef.close(result);
   }
 }

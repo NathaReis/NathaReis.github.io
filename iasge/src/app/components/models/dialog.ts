@@ -1,8 +1,10 @@
 export interface Dialog 
 {
     title?: string,
+    message?: string,
     confirm?: boolean,
-    eventEdit?: boolean,
-    edit?: boolean,
+    alert?: boolean,
+    eventBox?: boolean,
+    eventEdit: boolean,
     id?: string,
 }

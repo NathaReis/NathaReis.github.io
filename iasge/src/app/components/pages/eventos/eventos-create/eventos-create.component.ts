@@ -20,6 +20,7 @@ export class EventosCreateComponent implements OnInit{
   end_time: string = '';
   maxDate: Date = new Date();
   minDate: Date = new Date();
+  agora: Date = new Date();
 
   constructor(
     private auth: AuthService,
@@ -38,9 +39,10 @@ export class EventosCreateComponent implements OnInit{
     const year = date.getFullYear();
     const month = date.getMonth();
     const day = +date.getDate() + 1;
+    this.agora = new Date(year, month, day);
     this.maxDate = new Date(year, 11, 31);
-    this.minDate = new Date(year, month, day);
-    this.start_date = new Date(year, month, day);
+    this.minDate = this.agora;
+    this.start_date = this.agora;
 
     this.auth.auth_guard();
   }
@@ -195,7 +197,7 @@ export class EventosCreateComponent implements OnInit{
         end_date: this.isOneDay ? 'null' : this.formatDate(this.end_date),
         start_time: this.start_time,
         end_time: this.end_time,
-        user: String(localStorage.getItem("user_id"))
+        user: String(localStorage.getItem("usermask_id"))
       }        
     }
     else 
@@ -209,7 +211,7 @@ export class EventosCreateComponent implements OnInit{
     this.event_desc = '';
     this.event_name = '';
     this.isOneDay = 'true';
-    this.start_date = new Date();//'MM/DD/YYY'
+    this.start_date = this.agora;//'MM/DD/YYY'
     this.end_date = new Date();
     this.start_time = '';
     this.end_time = '';

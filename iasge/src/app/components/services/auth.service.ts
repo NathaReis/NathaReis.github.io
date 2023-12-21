@@ -42,7 +42,8 @@ export class AuthService {
   // Logout
   logout() 
   {
-    localStorage.removeItem('usermask_id')
+    localStorage.removeItem("all_view");
+    localStorage.removeItem('usermask_id');
     localStorage.removeItem('user_name');
     localStorage.removeItem('user_id');
     localStorage.removeItem('logado');

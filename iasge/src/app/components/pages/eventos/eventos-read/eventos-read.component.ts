@@ -59,13 +59,16 @@ export class EventosReadComponent implements OnInit {
             data.id = e.payload.doc.id;
             return data;
           })
-        this.eventsList = this.eventsList.filter(ev => ev.user == String(localStorage.getItem('usermask_id')));
+        if(!eval(String(localStorage.getItem("all_view"))))
+        {
+          this.eventsList = this.eventsList.filter(ev => ev.user == String(localStorage.getItem('usermask_id')));
+        }
         this.popularEvents(this.eventsList); //Atualiza a lista
         this.updateCalendarOptions(); //Atualiza o calendário
       }, err => 
       {
         //Mensagem de erro
-        this.snack.openSnackBar(`Erro de busca: ${err}`)
+        this.snack.openSnackBar(`Erro de busca: ${err}`);
       })
   }
   
@@ -80,7 +83,9 @@ export class EventosReadComponent implements OnInit {
           id: event.id,
           title: event.event_name,
           date: this.formatDate(event.start_date),
-          color: '#333'
+          color: '#333',
+          user: event.user,
+          dia: this.dateForNumber(event.start_date),
         })
       }
       else 
@@ -91,7 +96,9 @@ export class EventosReadComponent implements OnInit {
             id: event.id,
             title: event.event_name,
             date: this.formatDate(this.numberForDate(init)),
-            color: '#003c5a'
+            color: '#003c5a',
+            user: event.user,
+            dia: init,
           })
         }
       }
@@ -128,14 +135,58 @@ export class EventosReadComponent implements OnInit {
   
   handleDateClick(arg: any) {
     let id = arg.event._def.publicId; 
-    const dialogRef = this.dialog.open(DialogConfirmationComponent, {
-      data: 
+    let user = arg.event._def.extendedProps.user; 
+    let dia = arg.event._def.extendedProps.dia; 
+    let dialogRef;
+
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = +date.getDate();
+    const agora = +`${year}${month}${day}`;
+
+    if(user == String(localStorage.getItem("usermask_id")))
+    {
+      if(dia > agora)
       {
-        id: id,
-        eventEdit: true,
-        edit: true,
-      },
-    });
+        dialogRef = this.dialog.open(DialogConfirmationComponent, {
+          data: 
+          {
+            id: id,
+            eventBox: true,
+            eventEdit: true,
+          },
+        });
+      }
+      else 
+      {
+        dialogRef = this.dialog.open(DialogConfirmationComponent, {
+          data:
+          {
+            id: id,
+            eventBox: true,
+          }
+        });
+        dialogRef = this.dialog.open(DialogConfirmationComponent, {
+          data:
+          {
+            title: 'Edição',
+            message: 'Edite com um dia de antecedência',
+            alert: true,
+          }
+        });
+      }
+    }
+    else 
+    {
+      dialogRef = this.dialog.open(DialogConfirmationComponent, {
+        data: 
+        {
+          id: id,
+          eventBox: true,
+        },
+      });
+    }
 
     dialogRef.afterClosed().subscribe((result: boolean) => {
       if(result)

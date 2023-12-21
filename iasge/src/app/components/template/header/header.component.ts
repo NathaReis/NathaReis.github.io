@@ -52,6 +52,8 @@ export class HeaderComponent implements OnInit{
 
   pages_perfil(perfil: any)
   {
+    let all_view = perfil.all_view ? 'true' : 'false';
+    localStorage.setItem("all_view", all_view);
     this.eventos = perfil.eventos;
     this.associados = perfil.associados;
     this.departamentos = perfil.departamentos
