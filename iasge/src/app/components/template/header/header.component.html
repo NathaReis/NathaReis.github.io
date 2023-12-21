@@ -10,15 +10,19 @@
     </span>
     <span>
         <mat-menu #menu="matMenu">
-            <button mat-menu-item routerLink="config">
+            <button mat-menu-item>
+                <mat-icon color="primary">account_circle</mat-icon>
+                <span>IASGE</span>
+            </button>
+            <button *ngIf="config" mat-menu-item routerLink="config">
                 <mat-icon>settings</mat-icon>
                 <span>Config</span>
             </button>
-            <button mat-menu-item routerLink="home">
+            <button *ngIf="home" mat-menu-item routerLink="home">
                 <mat-icon>home</mat-icon>
                 <span>Home</span>
             </button>
-            <button mat-menu-item routerLink="escalas">
+            <button *ngIf="escalas" mat-menu-item routerLink="escalas">
                 <mat-icon>dashboard</mat-icon>
                 <span>Escalas</span>
             </button>

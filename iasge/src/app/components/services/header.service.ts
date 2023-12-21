@@ -1,4 +1,4 @@
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { HeaderTitleData } from './../models/header-title';
 import { Injectable } from '@angular/core';
 
@@ -17,7 +17,8 @@ export class HeaderService {
 
   // métodos
 
-  get headerData(): HeaderTitleData {
+  get headerData(): HeaderTitleData 
+  {
     return this._headerData.value;
   }//Busca
 

@@ -7,7 +7,7 @@
     <p>{{ data.message }}</p>
   </div>
   
-  <div *ngIf="data.eventBox" class="card shadow">
+  <div *ngIf="data.eventBox" class="card">
     <div class="card-body">
         <form>
             <mat-form-field>
@@ -56,6 +56,11 @@
                 <mat-label>Horário final</mat-label>
                 <input [disabled]="!data.eventEdit" matInput #input placeholder="HH:MM" name="end_time" [(ngModel)]="end_time" (input)="maskTime()" maxlength="5">
             </mat-form-field> 
+
+            <mat-radio-group aria-label="O evento será" name="event_type" [(ngModel)]="event_type">
+              <mat-radio-button color="primary" value="public">Público</mat-radio-button>
+              <mat-radio-button color="primary" value="private">Privado</mat-radio-button>
+            </mat-radio-group>
 
             <div *ngIf="data.eventEdit" mat-dialog-actions>
               <button mat-fab (click)="updateEvento()" class="save" style="color: var(--secondColor);">

@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
 import { Dialog } from '../../models/dialog';
 import { DataService } from '../../services/data.service';
 import { SnackbarService } from '../../services/snackbar.service';
+import { Event } from '../../models/event';
 
 @Component({
   selector: 'app-dialog-confirmation',
@@ -26,6 +27,10 @@ export class DialogConfirmationComponent implements OnInit{
     const day = +date.getDate() + 1;
     this.maxDate = new Date(year, 11, 31)
     this.minDate = new Date(year, month, day)
+    this.agora = new Date(year, month, day);
+
+    //Busca eventos para validação de datas
+    this.getAllEvents();
 
     //Para preencher os eventos
     this.dataS.getEvent(String(this.data.id)).subscribe(event =>
@@ -49,6 +54,61 @@ export class DialogConfirmationComponent implements OnInit{
   end_time: string = '';
   maxDate: Date = new Date();
   minDate: Date = new Date();
+  event_type: string = 'public';
+  agora: Date = new Date();
+  dataAntesdeEditar: number = 0;
+
+  eventsList: Event[] = [];
+  listDatas: Array<number> = [];
+  listEventsName: Array<string> = [];
+  listDatasInicio: Array<number> = [];
+  listDatasFim: Array<number> = [];
+  getAllEvents()
+  {
+    //Consulta o serviço Events
+    this.dataS.getAllEvents().subscribe(res =>
+      {
+        //Mapeia o resultado
+        this.eventsList = res.map((e: any) =>
+          {
+            const data = e.payload.doc.data();
+            data.id = e.payload.doc.id;
+            return data;
+          })
+        this.eventsList = this.eventsList
+        .filter(ev => ev.event_type == 'public' && ev.id != this.data.id);
+        this.listDatasInicio = this.eventsList
+        .map(ev => {
+          const data = ev.start_date;
+          const res = +`${data.split("/")[2]}${data.split("/")[1]}${data.split("/")[0]}${ev.start_time.replace(/\D/g, "")}`;
+          return res;
+        })
+        this.listDatasFim = this.eventsList
+        .map(ev => {
+          const data = eval(ev.isOneDay) ? ev.start_date : ev.end_date;
+          const res = +`${data.split("/")[2]}${data.split("/")[1]}${data.split("/")[0]}${ev.end_time.replace(/\D/g, "")}`;
+          return res;
+        })
+        
+        //Unindo os períodos em uma única array
+        for(let i = 0; i < this.listDatasInicio.length; i++)
+        {
+          let dataInicio = this.listDatasInicio[i];
+          let dataFim = this.listDatasFim[i];
+          let name = this.eventsList[i].event_name;
+
+          for(let i = dataInicio; i <= dataFim; i++)
+          {
+            this.listDatas.push(i);
+            this.listEventsName.push(name);
+          }
+        }
+      }, err => 
+      {
+        //Mensagem de erro
+        this.snack.openSnackBar(`Erro de busca: ${err}`);
+      })
+  }
 
   maskTime()
   {
@@ -173,19 +233,60 @@ export class DialogConfirmationComponent implements OnInit{
     {
       this.snack.openSnackBar('Preencha todos os dados!', 2000)
       return false
-    }
+    }//Se preenchidos
     else if(this.start_time.length < 5 || this.end_time.length < 5)
     {
       this.snack.openSnackBar('Preencha o horário completo!', 2000)
       return false
-    }
+    }// Se horário preenchido
     else if(+(this.start_time.replace(/\D/g, "")) > +(this.end_time.replace(/\D/g, "")) && this.isOneDay)
     {
       this.snack.openSnackBar('Horário de início maior que o de fim!', 2000)
       return false
+    }//Se isOneDay e hor final maior que hor inicial
+    else if(+this.start_time.split(':')[0] > 23 || +this.start_time.split(':')[1] > 59 || +this.start_time.split(':')[0] < 0 || +this.start_time.split(':')[1] < 0 || +this.end_time.split(':')[0] > 23 || +this.end_time.split(':')[1] > 59 || +this.end_time.split(':')[0] < 0 || +this.end_time.split(':')[1] < 0)
+    {
+      this.snack.openSnackBar('Horário incorreto!', 2000)
+      return false
     }
     else 
     {
+      //Se já exites um evento iniciado no mesmo intervalo entre o início e o fim do evento atual
+      let dataInicio: number | string = this.dateForString(this.start_date);
+      dataInicio = +`${dataInicio.split("/")[2]}${dataInicio.split("/")[1]}${dataInicio.split("/")[0]}${this.start_time.replace(/\D/g, "")}`;
+  
+      let dataFim: number | string = this.agora != this.end_date ? this.dateForString(this.end_date) : this.dateForString(this.start_date);
+      dataFim = +`${dataFim.split("/")[2]}${dataFim.split("/")[1]}${dataFim.split("/")[0]}${this.end_time.replace(/\D/g, "")}`;
+
+      const somaDatas = dataInicio + dataFim;
+
+      console.log(somaDatas)
+      console.log(this.dataAntesdeEditar)
+
+      //Se a data for alterada, validar se a nova está em uso
+      if(this.dataAntesdeEditar != somaDatas)
+      {
+        console.log('Data editada')
+        for(let i = dataInicio; i <= dataFim; i++)
+        {
+          if(this.listDatas.includes(i))
+          {
+            const pos = this.listDatas.indexOf(i);
+            const event = this.listEventsName[pos];
+            this.dialog.open(DialogConfirmationComponent, {
+              data: 
+              {
+                title: 'ERRO',
+                message: `A data já está sendo usada no evento ${event}!`,
+                alert: true
+              },
+            });
+            return false
+          }
+        }
+      }
+      console.log('Data não editada')
+      //Se tudo estiver ok
       return true;
     }
   }
@@ -201,6 +302,7 @@ export class DialogConfirmationComponent implements OnInit{
         end_date: this.isOneDay ? 'null' : this.dateForString(this.end_date),
         start_time: this.start_time,
         end_time: this.end_time,
+        event_type: this.event_type,
         user: String(localStorage.getItem("usermask_id"))
       }        
     }
@@ -211,6 +313,14 @@ export class DialogConfirmationComponent implements OnInit{
   }
   preencherEvento(event: any)
   {
+    let dataInicio: number | string = this.dateForString(new Date(this.dateBrForEUA(String(event.start_date))));
+    dataInicio = +`${dataInicio.split("/")[2]}${dataInicio.split("/")[1]}${dataInicio.split("/")[0]}${event.start_time.replace(/\D/g, "")}`;
+
+    let dataFim: number | string = this.agora != this.end_date ? this.dateForString(new Date(this.dateBrForEUA(String(event.end_date)))) : this.dateForString(new Date(this.dateBrForEUA(String(event.start_date))));
+    dataFim = +`${dataFim.split("/")[2]}${dataFim.split("/")[1]}${dataFim.split("/")[0]}${event.end_time.replace(/\D/g, "")}`;
+
+    const somaDatas = dataInicio + dataFim;
+    
     this.event_desc = event.event_desc;
     this.event_name = event.event_name;
     this.isOneDay = eval(event.isOneDay) ? 'true' : '';
@@ -218,6 +328,9 @@ export class DialogConfirmationComponent implements OnInit{
     this.end_date = new Date(this.dateBrForEUA(event.end_date));
     this.start_time = event.start_time;
     this.end_time = event.end_time;
+    this.event_type = event.event_type;
+    this.dataAntesdeEditar = somaDatas;
+
   }
   resetEvento()
   {
@@ -228,6 +341,7 @@ export class DialogConfirmationComponent implements OnInit{
     this.end_date = new Date();
     this.start_time = '';
     this.end_time = '';
+    this.event_type = 'public';
   }
   updateEvento()
   {

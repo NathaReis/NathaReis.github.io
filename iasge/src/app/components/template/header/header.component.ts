@@ -1,17 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { HeaderService } from '../../services/header.service';
-import { DataService } from '../../services/data.service';
+import { PerfilService } from '../../services/perfil.service';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent implements OnInit{
+export class HeaderComponent {
 
   constructor(
     private headerService: HeaderService,
-    private data: DataService) {}
+    private perfilService: PerfilService) {}
 
   get title(): string
   {
@@ -26,36 +26,29 @@ export class HeaderComponent implements OnInit{
     return this.headerService.headerData.routerLink;
   }
 
-  //Perfis
-  eventos = false;
-  associados = false;
-  departamentos = false;
-
-  ngOnInit(): void {
-    this.data.getAllPerfis().subscribe(res =>
-      {
-        //Mapeia o resultado
-        const perfis = res.map((e: any) =>
-          {
-            const data = e.payload.doc.data();
-            data.id = e.payload.doc.id;
-            return data;
-          })
-        const perfil = perfis.filter(perfil => localStorage.getItem('logado') == perfil.type)
-        this.pages_perfil(perfil[0])
-      }, err => 
-      {
-        //Mensagem de erro
-        alert(`Erro de busca: ${err}`)
-      })
-  }
-
-  pages_perfil(perfil: any)
+  //Perfil
+  get eventos(): boolean
   {
-    let all_view = perfil.all_view ? 'true' : 'false';
-    localStorage.setItem("all_view", all_view);
-    this.eventos = perfil.eventos;
-    this.associados = perfil.associados;
-    this.departamentos = perfil.departamentos
+    return this.perfilService.perfilData.eventos;
+  }
+  get associados(): boolean
+  {
+    return this.perfilService.perfilData.associados;
+  }
+  get departamentos(): boolean
+  {
+    return this.perfilService.perfilData.departamentos;
+  }
+  get config(): boolean
+  {
+    return this.perfilService.perfilData.config;
+  }
+  get escalas(): boolean
+  {
+    return this.perfilService.perfilData.escalas;
+  }
+  get home(): boolean
+  {
+    return this.perfilService.perfilData.home;
   }
 }

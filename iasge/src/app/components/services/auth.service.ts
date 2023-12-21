@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
 import { DataService } from './data.service';
+import { SnackbarService } from './snackbar.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +9,8 @@ import { DataService } from './data.service';
 export class AuthService {
 
   constructor(
-    private fireauth : AngularFireAuth, 
     private router : Router,
+    private snack: SnackbarService,
     private data : DataService
     ) { }
   
@@ -31,11 +31,11 @@ export class AuthService {
         const user = users.filter(user => user.user_name == user_name && user.password == password)
         user.length > 0 
         ? this.logar(user[0])
-        : this.logout()
+        : this.snack.openSnackBar('Usuário incorreto!');
       }, err => 
       {
         //Mensagem de erro
-        alert(`Erro de login: ${err}`)
+        this.snack.openSnackBar(`Erro de login: ${err}`)
       })
   }
 

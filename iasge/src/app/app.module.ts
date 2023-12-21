@@ -17,6 +17,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { FullCalendarModule } from '@fullcalendar/angular';
+import { MatRadioModule } from '@angular/material/radio';
 
 //Components
 import { AppRoutingModule } from './app-routing.module';
@@ -41,6 +42,12 @@ import { DepartamentosCreateComponent } from './components/pages/departamentos/d
 import { DepartamentosReadComponent } from './components/pages/departamentos/departamentos-read/departamentos-read.component';
 import { DepartamentosEditComponent } from './components/pages/departamentos/departamentos-edit/departamentos-edit.component';
 
+import { AssociadosComponent } from './views/associados/associados.component';
+import { AssociadosReadComponent } from './components/pages/associados/associados-read/associados-read.component';
+import { AssociadosEditComponent } from './components/pages/associados/associados-edit/associados-edit.component';
+import { AssociadosCreateComponent } from './components/pages/associados/associados-create/associados-create.component';
+import { AssociadosMyreadComponent } from './components/pages/associados/associados-myread/associados-myread.component';
+
 import { LoginComponent } from './components/pages/login/login.component';
 import { FormsModule } from '@angular/forms';
 import { ConfigComponent } from './views/config/config.component';
@@ -54,11 +61,6 @@ import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { getStorage, provideStorage } from '@angular/fire/storage';
 import { ambiente } from 'src/ambiente/ambiente';
-import { AssociadosComponent } from './views/associados/associados.component';
-import { AssociadosReadComponent } from './components/pages/associados/associados-read/associados-read.component';
-import { AssociadosEditComponent } from './components/pages/associados/associados-edit/associados-edit.component';
-import { AssociadosCreateComponent } from './components/pages/associados/associados-create/associados-create.component';
-import { AssociadosMyreadComponent } from './components/pages/associados/associados-myread/associados-myread.component';
 
 @NgModule({
   declarations: [
@@ -107,6 +109,7 @@ import { AssociadosMyreadComponent } from './components/pages/associados/associa
     MatButtonModule,
     MatSnackBarModule,
     FullCalendarModule,
+    MatRadioModule,
     MatCheckboxModule,
     provideFirebaseApp(() => initializeApp({"projectId":"iasgestao","appId":"1:634292682476:web:38ff865f29151abb53efc9","storageBucket":"iasgestao.appspot.com","apiKey":"AIzaSyDM_8ffyG8YjOvCh2mtu9bO8iYYMBqIpk0","authDomain":"iasgestao.firebaseapp.com","messagingSenderId":"634292682476"})),
     provideAuth(() => getAuth()),

@@ -10,6 +10,7 @@ import esLocale from '@fullcalendar/core/locales/pt-br';
 import { Event } from 'src/app/components/models/event';
 import { DialogConfirmationComponent } from 'src/app/components/template/dialog-confirmation/dialog-confirmation.component';
 import { MatDialog } from '@angular/material/dialog';
+import { PerfilService } from 'src/app/components/services/perfil.service';
 
 @Component({
   selector: 'app-eventos-read',
@@ -22,6 +23,7 @@ export class EventosReadComponent implements OnInit {
     private data: DataService,
     private snack: SnackbarService,
     private dialog: MatDialog,
+    private perfilService: PerfilService,
     private headerService: HeaderService) {
       headerService.headerData = {
         title: 'Eventos',
@@ -45,23 +47,6 @@ export class EventosReadComponent implements OnInit {
       right: 'next',
     },
   };  
-  /*
-  options = {
-    plugins: [dayGridPlugin, interactionPlugin],
-    initialView: 'dayGridMonth',
-    headerToolbar: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
-    },
-    locale: esLocale,
-    weekends: true,
-    editable: true,
-    selectable: true,
-    selectMirror: true,
-    dayMaxEvents: true,
-  }
-  */
   //Init calendar 
   calendarOptions: CalendarOptions = this.options;
   
@@ -84,7 +69,7 @@ export class EventosReadComponent implements OnInit {
             data.id = e.payload.doc.id;
             return data;
           })
-        if(!eval(String(localStorage.getItem("all_view"))))
+        if(!this.perfilService.perfilData.all_view)
         {
           this.eventsList = this.eventsList.filter(ev => ev.user == String(localStorage.getItem('usermask_id')));
         }

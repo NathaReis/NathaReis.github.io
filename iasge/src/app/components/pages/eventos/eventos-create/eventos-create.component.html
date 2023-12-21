@@ -52,6 +52,11 @@
                 <input matInput #input placeholder="HH:MM" name="end_time" [(ngModel)]="end_time" (input)="maskTime()" maxlength="5">
             </mat-form-field> 
 
+            <mat-radio-group aria-label="O evento será" name="event_type" [(ngModel)]="event_type">
+                <mat-radio-button color="primary" value="public">Público (Com a igreja)</mat-radio-button>
+                <mat-radio-button color="primary" value="private">Privado (Só para o departamento)</mat-radio-button>
+            </mat-radio-group>
+
             <button type="button" class="btn" (click)="criar()">Criar</button>
         </form>
     </div>

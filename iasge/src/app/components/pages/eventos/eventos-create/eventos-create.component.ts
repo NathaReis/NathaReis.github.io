@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { Event } from 'src/app/components/models/event';
 import { AuthService } from 'src/app/components/services/auth.service';
 import { DataService } from 'src/app/components/services/data.service';
 import { HeaderService } from 'src/app/components/services/header.service';
 import { SnackbarService } from 'src/app/components/services/snackbar.service';
+import { DialogConfirmationComponent } from 'src/app/components/template/dialog-confirmation/dialog-confirmation.component';
 
 @Component({
   selector: 'app-eventos-create',
@@ -18,6 +21,7 @@ export class EventosCreateComponent implements OnInit{
   end_date: Date = new Date();
   start_time: string = '';
   end_time: string = '';
+  event_type: string = 'public';
   maxDate: Date = new Date();
   minDate: Date = new Date();
   agora: Date = new Date();
@@ -26,6 +30,7 @@ export class EventosCreateComponent implements OnInit{
     private auth: AuthService,
     private data: DataService,
     private snack: SnackbarService,
+    private dialog: MatDialog,
     private headerService: HeaderService) {
       headerService.headerData = {
         title: 'Eventos',
@@ -43,8 +48,62 @@ export class EventosCreateComponent implements OnInit{
     this.maxDate = new Date(year, 11, 31);
     this.minDate = this.agora;
     this.start_date = this.agora;
+    this.end_date = this.agora;
 
     this.auth.auth_guard();
+    this.getAllEvents();
+  }
+
+  eventsList: Event[] = [];
+  listDatas: Array<number> = [];
+  listEventsName: Array<string> = [];
+  listDatasInicio: Array<number> = [];
+  listDatasFim: Array<number> = [];
+  getAllEvents()
+  {
+    //Consulta o serviço Events
+    this.data.getAllEvents().subscribe(res =>
+      {
+        //Mapeia o resultado
+        this.eventsList = res.map((e: any) =>
+          {
+            const data = e.payload.doc.data();
+            data.id = e.payload.doc.id;
+            return data;
+          })
+        this.eventsList = this.eventsList
+        .filter(ev => ev.event_type == 'public');
+        this.listDatasInicio = this.eventsList
+        .map(ev => {
+          const data = ev.start_date;
+          const res = +`${data.split("/")[2]}${data.split("/")[1]}${data.split("/")[0]}${ev.start_time.replace(/\D/g, "")}`;
+          return res;
+        })
+        this.listDatasFim = this.eventsList
+        .map(ev => {
+          const data = eval(ev.isOneDay) ? ev.start_date : ev.end_date;
+          const res = +`${data.split("/")[2]}${data.split("/")[1]}${data.split("/")[0]}${ev.end_time.replace(/\D/g, "")}`;
+          return res;
+        })
+        
+        //Unindo os períodos em uma única array
+        for(let i = 0; i < this.listDatasInicio.length; i++)
+        {
+          let dataInicio = this.listDatasInicio[i];
+          let dataFim = this.listDatasFim[i];
+          let name = this.eventsList[i].event_name;
+
+          for(let i = dataInicio; i <= dataFim; i++)
+          {
+            this.listDatas.push(i);
+            this.listEventsName.push(name);
+          }
+        }
+      }, err => 
+      {
+        //Mensagem de erro
+        this.snack.openSnackBar(`Erro de busca: ${err}`);
+      })
   }
 
   maskTime()
@@ -111,7 +170,7 @@ export class EventosCreateComponent implements OnInit{
     }
   }
 
-  formatDate(data: Date)
+  dateForString(data: Date)
   {
     let date = String(data);
     const year = date.slice(11,15);
@@ -167,19 +226,50 @@ export class EventosCreateComponent implements OnInit{
     {
       this.snack.openSnackBar('Preencha todos os dados!', 2000)
       return false
-    }
+    }//Se preenchidos
     else if(this.start_time.length < 5 || this.end_time.length < 5)
     {
       this.snack.openSnackBar('Preencha o horário completo!', 2000)
       return false
-    }
+    }// Se horário preenchido
     else if(+(this.start_time.replace(/\D/g, "")) > +(this.end_time.replace(/\D/g, "")) && this.isOneDay)
     {
       this.snack.openSnackBar('Horário de início maior que o de fim!', 2000)
       return false
+    }//Se isOneDay e hor final maior que hor inicial
+    else if(+this.start_time.split(':')[0] > 23 || +this.start_time.split(':')[1] > 59 || +this.start_time.split(':')[0] < 0 || +this.start_time.split(':')[1] < 0 || +this.end_time.split(':')[0] > 23 || +this.end_time.split(':')[1] > 59 || +this.end_time.split(':')[0] < 0 || +this.end_time.split(':')[1] < 0)
+    {
+      this.snack.openSnackBar('Horário incorreto!', 2000)
+      return false
     }
     else 
     {
+      //Se já exites um evento iniciado no mesmo intervalo entre o início e o fim do evento atual
+      let dataInicio: number | string = this.dateForString(this.start_date);
+      dataInicio = +`${dataInicio.split("/")[2]}${dataInicio.split("/")[1]}${dataInicio.split("/")[0]}${this.start_time.replace(/\D/g, "")}`;
+  
+      let dataFim: number | string = this.agora != this.end_date ? this.dateForString(this.end_date) : this.dateForString(this.start_date);
+      dataFim = +`${dataFim.split("/")[2]}${dataFim.split("/")[1]}${dataFim.split("/")[0]}${this.end_time.replace(/\D/g, "")}`;
+
+      for(let i = dataInicio; i <= dataFim; i++)
+      {
+        if(this.listDatas.includes(i))
+        {
+          const pos = this.listDatas.indexOf(i);
+          const event = this.listEventsName[pos];
+          this.dialog.open(DialogConfirmationComponent, {
+            data: 
+            {
+              title: 'ERRO',
+              message: `A data já está sendo usada no evento ${event}!`,
+              alert: true
+            },
+          });
+          return false
+        }
+      }
+
+      //Se tudo estiver ok
       return true;
     }
   }
@@ -193,10 +283,11 @@ export class EventosCreateComponent implements OnInit{
         event_name: this.event_name,
         event_desc: this.event_desc,
         isOneDay: this.isOneDay ? 'true' : 'false',
-        start_date: this.formatDate(this.start_date),
-        end_date: this.isOneDay ? 'null' : this.formatDate(this.end_date),
+        start_date: this.dateForString(this.start_date),
+        end_date: this.isOneDay ? 'null' : this.dateForString(this.end_date),
         start_time: this.start_time,
         end_time: this.end_time,
+        event_type: this.event_type,
         user: String(localStorage.getItem("usermask_id"))
       }        
     }
@@ -212,9 +303,10 @@ export class EventosCreateComponent implements OnInit{
     this.event_name = '';
     this.isOneDay = 'true';
     this.start_date = this.agora;//'MM/DD/YYY'
-    this.end_date = new Date();
+    this.end_date = this.agora;
     this.start_time = '';
     this.end_time = '';
+    this.event_type = 'public';
   }
 
   criar()
@@ -225,6 +317,7 @@ export class EventosCreateComponent implements OnInit{
       this.data.addEvent(event);
       this.snack.openSnackBar('Criado com sucesso!');
       this.reset();
+      this.getAllEvents();
     }
   }
 }
