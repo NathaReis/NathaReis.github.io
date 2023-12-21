@@ -55,10 +55,7 @@ export class EventosCreateComponent implements OnInit{
   }
 
   eventsList: Event[] = [];
-  listDatas: Array<number> = [];
-  listEventsName: Array<string> = [];
-  listDatasInicio: Array<number> = [];
-  listDatasFim: Array<number> = [];
+  listDatas: Array<{data: {start: number, end: number}, hora: {start: number, end: number}, name: string}> = [];
   getAllEvents()
   {
     //Consulta o serviço Events
@@ -73,32 +70,26 @@ export class EventosCreateComponent implements OnInit{
           })
         this.eventsList = this.eventsList
         .filter(ev => ev.event_type == 'public');
-        this.listDatasInicio = this.eventsList
-        .map(ev => {
-          const data = ev.start_date;
-          const res = +`${data.split("/")[2]}${data.split("/")[1]}${data.split("/")[0]}${ev.start_time.replace(/\D/g, "")}`;
-          return res;
-        })
-        this.listDatasFim = this.eventsList
-        .map(ev => {
-          const data = eval(ev.isOneDay) ? ev.start_date : ev.end_date;
-          const res = +`${data.split("/")[2]}${data.split("/")[1]}${data.split("/")[0]}${ev.end_time.replace(/\D/g, "")}`;
-          return res;
-        })
-        
-        //Unindo os períodos em uma única array
-        for(let i = 0; i < this.listDatasInicio.length; i++)
-        {
-          let dataInicio = this.listDatasInicio[i];
-          let dataFim = this.listDatasFim[i];
-          let name = this.eventsList[i].event_name;
-
-          for(let i = dataInicio; i <= dataFim; i++)
+        this.listDatas = this.eventsList
+        .map(ev =>
           {
-            this.listDatas.push(i);
-            this.listEventsName.push(name);
-          }
-        }
+            const datInt = +`${ev.start_date.split("/")[2]}${ev.start_date.split("/")[1]}${ev.start_date.split("/")[0]}`;
+            const horInt = +`${this.start_time.replace(/\D/g, "")}`;
+            const datFim = +`${ev.end_date.split("/")[2]}${ev.end_date.split("/")[1]}${ev.end_date.split("/")[0]}`;
+            const horFim = +`${this.end_time.replace(/\D/g, "")}`;
+            const name = ev.event_name;
+            return {
+              data: {
+                start: datInt, 
+                end: datFim
+              }, 
+              hora: {
+                start: horInt, 
+                end: horFim
+              }, 
+              name: name
+            }
+          })
       }, err => 
       {
         //Mensagem de erro
@@ -246,26 +237,45 @@ export class EventosCreateComponent implements OnInit{
     {
       //Se já exites um evento iniciado no mesmo intervalo entre o início e o fim do evento atual
       let dataInicio: number | string = this.dateForString(this.start_date);
-      dataInicio = +`${dataInicio.split("/")[2]}${dataInicio.split("/")[1]}${dataInicio.split("/")[0]}${this.start_time.replace(/\D/g, "")}`;
+      dataInicio = +`${dataInicio.split("/")[2]}${dataInicio.split("/")[1]}${dataInicio.split("/")[0]}`;
+      let horaInicio = +`${this.start_time.replace(/\D/g, "")}`;
   
       let dataFim: number | string = this.agora != this.end_date ? this.dateForString(this.end_date) : this.dateForString(this.start_date);
       dataFim = +`${dataFim.split("/")[2]}${dataFim.split("/")[1]}${dataFim.split("/")[0]}${this.end_time.replace(/\D/g, "")}`;
+      let horaFim = +`${this.end_time.replace(/\D/g, "")}`;
 
+      //Passa por todos os dias entre os dias atuais
       for(let i = dataInicio; i <= dataFim; i++)
       {
-        if(this.listDatas.includes(i))
+        console.log(i)
+        //Passa para todos os itens da lista
+        for(let item of this.listDatas)
         {
-          const pos = this.listDatas.indexOf(i);
-          const event = this.listEventsName[pos];
-          this.dialog.open(DialogConfirmationComponent, {
-            data: 
+          //Passa por todos os períodos de cada item da lista
+          for(let ii = item.data.start; ii <= item.data.end; ii++)
+          {
+            //Se o príodo Dia da lista for igual ao período Dia atual
+            if(ii == i)
             {
-              title: 'ERRO',
-              message: `A data já está sendo usada no evento ${event}!`,
-              alert: true
-            },
-          });
-          return false
+              console.log(i)
+              /*
+              //Passa por todas as horas entre o início e o fim atual
+              for(let h = horaInicio; h <= horaFim; h++)
+              {
+                //Passa por todas as horas do item da lista
+                for(let hh = item.hora.start; hh < item.hora.end; hh++)
+                {
+                  //Se a hora se encaixar
+                  if(hh == h)
+                  {
+                    console.log(item.name);
+                    return false;
+                  }
+                }
+              }
+              */
+            }
+          }
         }
       }
 
