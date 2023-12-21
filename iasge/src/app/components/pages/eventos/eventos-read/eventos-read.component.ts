@@ -5,6 +5,8 @@ import { DataService } from 'src/app/components/services/data.service';
 import { SnackbarService } from 'src/app/components/services/snackbar.service';
 import { CalendarOptions } from '@fullcalendar/core'; // useful for typechecking
 import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import esLocale from '@fullcalendar/core/locales/pt-br';
 import { Event } from 'src/app/components/models/event';
 import { DialogConfirmationComponent } from 'src/app/components/template/dialog-confirmation/dialog-confirmation.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -36,7 +38,30 @@ export class EventosReadComponent implements OnInit {
   options = {
     initialView: 'dayGridMonth',
     plugins: [dayGridPlugin],
+    locale: esLocale,
+    headerToolbar: {
+      left: 'prev',
+      center: 'title',
+      right: 'next',
+    },
   };  
+  /*
+  options = {
+    plugins: [dayGridPlugin, interactionPlugin],
+    initialView: 'dayGridMonth',
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
+    },
+    locale: esLocale,
+    weekends: true,
+    editable: true,
+    selectable: true,
+    selectMirror: true,
+    dayMaxEvents: true,
+  }
+  */
   //Init calendar 
   calendarOptions: CalendarOptions = this.options;
   
