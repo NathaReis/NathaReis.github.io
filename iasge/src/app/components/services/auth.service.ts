@@ -44,6 +44,7 @@ export class AuthService {
   {
     localStorage.removeItem("all_view");
     localStorage.removeItem('usermask_id');
+    localStorage.removeItem('usermask_name');
     localStorage.removeItem('user_name');
     localStorage.removeItem('user_id');
     localStorage.removeItem('logado');
@@ -53,6 +54,7 @@ export class AuthService {
   logar(user: any) 
   {
     localStorage.setItem('usermask_id', user.id)
+    localStorage.setItem('usermask_name', user.name);
     localStorage.setItem('user_name', user.user_name)
     localStorage.setItem('user_id', user.id)
     localStorage.setItem('logado', user.perfil);

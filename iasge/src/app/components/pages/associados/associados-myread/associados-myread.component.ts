@@ -79,7 +79,7 @@ export class AssociadosMyreadComponent implements AfterViewInit, OnInit{
       {
         if(user.departamentos)
         {
-          let notMyDepartamento = user.departamentos.replace(`${localStorage.getItem('user_id')}`,'');
+          let notMyDepartamento = user.departamentos.replace(`${localStorage.getItem('usermask_id')}`,'');
           if(user.departamentos != notMyDepartamento)
           {
             newList.push(user)
@@ -114,7 +114,7 @@ export class AssociadosMyreadComponent implements AfterViewInit, OnInit{
       {
         if(user.departamentos)
         {
-          let isUltimo = user.departamentos.replace(`${localStorage.getItem('user_id')},${localStorage.getItem('user_name')},`,'').length <= 5 ? true : false;
+          let isUltimo = user.departamentos.replace(`${localStorage.getItem('usermask_id')},${localStorage.getItem('usermask_name')},`,'').length <= 5 ? true : false;
           if(isUltimo)
           {
             this.data.deleteUser(String(user.id))//Deleta associado se ele n tiver departamento
@@ -126,7 +126,7 @@ export class AssociadosMyreadComponent implements AfterViewInit, OnInit{
             deps.forEach(dep =>
               {
                 let id = dep.split(',')[0];
-                if(id != localStorage.getItem('user_id'))
+                if(id != localStorage.getItem('usermask_id'))
                 {
                   newList.length <= 0 ? newList = `${dep}` : newList += `/${dep}`;
                 }

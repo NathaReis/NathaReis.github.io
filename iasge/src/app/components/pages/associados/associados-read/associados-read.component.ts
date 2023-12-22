@@ -78,7 +78,7 @@ export class AssociadosReadComponent implements AfterViewInit, OnInit{
       {
         if(user.departamentos)
         {
-          let notMyDepartamento = user.departamentos.replace(`${localStorage.getItem('user_id')}`,'');
+          let notMyDepartamento = user.departamentos.replace(`${localStorage.getItem('usermask_id')}`,'');
           if(user.departamentos == notMyDepartamento)
           {
             newList.push(user)
@@ -107,12 +107,12 @@ export class AssociadosReadComponent implements AfterViewInit, OnInit{
     if(user.departamentos)
     {
       user.departamentos += user.departamentos.length <= 0
-        ? `${localStorage.getItem('user_id')},${localStorage.getItem('user_name')},padrao`
-        : `/${localStorage.getItem('user_id')},${localStorage.getItem('user_name')},padrao`;
+        ? `${localStorage.getItem('usermask_id')},${localStorage.getItem('usermask_name')},padrao`
+        : `/${localStorage.getItem('usermask_id')},${localStorage.getItem('usermask_name')},padrao`;
     }
     else 
     {
-      user.departamentos = `${localStorage.getItem('user_id')},${localStorage.getItem('user_name')},padrao`;
+      user.departamentos = `${localStorage.getItem('usermask_id')},${localStorage.getItem('usermask_name')},padrao`;
     }
 
     const dialogRef = this.dialog.open(DialogConfirmationComponent, {

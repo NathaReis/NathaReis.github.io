@@ -59,7 +59,7 @@ export class AssociadosCreateComponent {
       this.userObj.last_name = this.last_name;
       this.userObj.password = this.password;
       this.userObj.user_name = `${this.first_name.toLowerCase()}.${this.last_name.toLowerCase()}`;
-      this.userObj.departamentos = `${localStorage.getItem('user_id')},${localStorage.getItem('user_name')},false`,
+      this.userObj.departamentos = `${localStorage.getItem('usermask_id')},${localStorage.getItem('usermask_name')},false`,
       this.data.addUser(this.userObj)
       this.resetForm()
       this.snack.openSnackBar('Criado com sucesso!')

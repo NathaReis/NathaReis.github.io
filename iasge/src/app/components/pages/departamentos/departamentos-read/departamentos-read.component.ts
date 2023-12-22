@@ -54,9 +54,12 @@ export class DepartamentosReadComponent implements AfterViewInit, OnInit{
             data.id = e.payload.doc.id;
             return data;
           })
-        const noass = this.usersList.filter(user => user.perfil != 'associado')
-        const ass = this.usersList.filter(user => user.perfil == 'associado')
-        this.usersList = noass.concat(ass);//Ordernar a lista de Diretor e admin emcima para associados
+        const noass = this.usersList.filter(user => user.perfil != 'associado');
+        const admins = noass.filter(user => user.perfil == 'admin');
+        const gerentes = noass.filter(user => user.perfil == 'gerente');
+        const diretores = noass.filter(user => user.perfil == 'diretor');
+        const ass = this.usersList.filter(user => user.perfil == 'associado');
+        this.usersList = admins.concat(gerentes.concat(diretores.concat(ass)));//Ordernar a lista em Admin/Gerente/Diretor/Associado cima para baixo
         //Passa a lista para o data usado na table
         this.dataSource = new MatTableDataSource<User>(this.usersList);
         setTimeout(() => {this.validarView();}, 10)
@@ -81,7 +84,7 @@ export class DepartamentosReadComponent implements AfterViewInit, OnInit{
     });
   }
 
-  view(id: string)
+  view(id: string, name_first: string, name_last: string)
   {
     //Tira os selecionados style
     document.querySelectorAll(".view").forEach(view =>
@@ -90,6 +93,7 @@ export class DepartamentosReadComponent implements AfterViewInit, OnInit{
       })
     //Muda o id de pesquisa
     localStorage.setItem('usermask_id', id);
+    localStorage.setItem('usermask_name', name_first.toLowerCase()+'.'+name_last.toLowerCase());
     //Adiciona o style
     document.querySelector(`#${id}`)?.classList.add("selected");
   }
