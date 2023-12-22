@@ -59,10 +59,7 @@ export class DialogConfirmationComponent implements OnInit{
   dataAntesdeEditar: number = 0;
 
   eventsList: Event[] = [];
-  listDatas: Array<number> = [];
-  listEventsName: Array<string> = [];
-  listDatasInicio: Array<number> = [];
-  listDatasFim: Array<number> = [];
+  listDatas: Array<{data: {start: number, end: number}, hora: {start: number, end: number}, name: string}> = [];
   getAllEvents()
   {
     //Consulta o serviço Events
@@ -77,32 +74,28 @@ export class DialogConfirmationComponent implements OnInit{
           })
         this.eventsList = this.eventsList
         .filter(ev => ev.event_type == 'public' && ev.id != this.data.id);
-        this.listDatasInicio = this.eventsList
-        .map(ev => {
-          const data = ev.start_date;
-          const res = +`${data.split("/")[2]}${data.split("/")[1]}${data.split("/")[0]}${ev.start_time.replace(/\D/g, "")}`;
-          return res;
-        })
-        this.listDatasFim = this.eventsList
-        .map(ev => {
-          const data = eval(ev.isOneDay) ? ev.start_date : ev.end_date;
-          const res = +`${data.split("/")[2]}${data.split("/")[1]}${data.split("/")[0]}${ev.end_time.replace(/\D/g, "")}`;
-          return res;
-        })
-        
-        //Unindo os períodos em uma única array
-        for(let i = 0; i < this.listDatasInicio.length; i++)
-        {
-          let dataInicio = this.listDatasInicio[i];
-          let dataFim = this.listDatasFim[i];
-          let name = this.eventsList[i].event_name;
-
-          for(let i = dataInicio; i <= dataFim; i++)
+        this.listDatas = this.eventsList
+        .map(ev =>
           {
-            this.listDatas.push(i);
-            this.listEventsName.push(name);
-          }
-        }
+            const datInt = +`${ev.start_date.split("/")[2]}${ev.start_date.split("/")[1]}${ev.start_date.split("/")[0]}`;
+            const horInt = +`${ev.start_time.replace(/\D/g, "")}`;
+            const datFim = !eval(ev.isOneDay) 
+              ? +`${ev.end_date.split("/")[2]}${ev.end_date.split("/")[1]}${ev.end_date.split("/")[0]}`
+              :  datInt;
+            const horFim = +`${ev.end_time.replace(/\D/g, "")}`;
+            const name = ev.event_name;
+            return {
+              data: {
+                start: datInt, 
+                end: datFim
+              }, 
+              hora: {
+                start: horInt, 
+                end: horFim
+              }, 
+              name: name
+            }
+          })
       }, err => 
       {
         //Mensagem de erro
@@ -136,7 +129,6 @@ export class DialogConfirmationComponent implements OnInit{
       //If maior que sete
       if(numsArray.length > 4)
       {
-        console.log(numsArray.slice(0,4).join(""))
         numFormatado += `${numsArray.slice(0,4).join("")}`;
       }
       //Enviar para o campo o num formatado
@@ -253,39 +245,51 @@ export class DialogConfirmationComponent implements OnInit{
     {
       //Se já exites um evento iniciado no mesmo intervalo entre o início e o fim do evento atual
       let dataInicio: number | string = this.dateForString(this.start_date);
-      dataInicio = +`${dataInicio.split("/")[2]}${dataInicio.split("/")[1]}${dataInicio.split("/")[0]}${this.start_time.replace(/\D/g, "")}`;
+      dataInicio = +`${dataInicio.split("/")[2]}${dataInicio.split("/")[1]}${dataInicio.split("/")[0]}`;
+      let horaInicio = +`${this.start_time.replace(/\D/g, "")}`;
   
       let dataFim: number | string = this.agora != this.end_date ? this.dateForString(this.end_date) : this.dateForString(this.start_date);
-      dataFim = +`${dataFim.split("/")[2]}${dataFim.split("/")[1]}${dataFim.split("/")[0]}${this.end_time.replace(/\D/g, "")}`;
+      dataFim = +`${dataFim.split("/")[2]}${dataFim.split("/")[1]}${dataFim.split("/")[0]}`;
+      let horaFim = +`${this.end_time.replace(/\D/g, "")}`;
 
-      const somaDatas = dataInicio + dataFim;
-
-      console.log(somaDatas)
-      console.log(this.dataAntesdeEditar)
-
-      //Se a data for alterada, validar se a nova está em uso
-      if(this.dataAntesdeEditar != somaDatas)
+      //Passa por todos os dias entre os dias atuais
+      for(let i = dataInicio; i <= dataFim; i++)
       {
-        console.log('Data editada')
-        for(let i = dataInicio; i <= dataFim; i++)
+        //Passa para todos os itens da lista
+        for(let item of this.listDatas)
         {
-          if(this.listDatas.includes(i))
+          //Passa por todos os períodos de cada item da lista
+          for(let ii = item.data.start; ii <= item.data.end; ii++)
           {
-            const pos = this.listDatas.indexOf(i);
-            const event = this.listEventsName[pos];
-            this.dialog.open(DialogConfirmationComponent, {
-              data: 
+            //Se o príodo Dia da lista for igual ao período Dia atual
+            if(ii == i)
+            {
+              //Passa por todas as horas entre o início e o fim atual
+              for(let h = horaInicio; h <= horaFim; h++)
               {
-                title: 'ERRO',
-                message: `A data já está sendo usada no evento ${event}!`,
-                alert: true
-              },
-            });
-            return false
+                //Passa por todas as horas do item da lista
+                for(let hh = item.hora.start; hh < item.hora.end; hh++)
+                {
+                  //Se a hora se encaixar
+                  if(hh == h)
+                  {
+                    this.dialog.open(DialogConfirmationComponent, {
+                      data: 
+                      {
+                        title: 'ERRO',
+                        message: `A data já está sendo usada no evento ${item.name}!`,
+                        alert: true
+                      },
+                    });
+                    return false;
+                  }
+                }
+              }
+            }
           }
         }
       }
-      console.log('Data não editada')
+
       //Se tudo estiver ok
       return true;
     }

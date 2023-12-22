@@ -99,7 +99,6 @@ export class DepartamentosReadComponent implements AfterViewInit, OnInit{
     //Tira os selecionados style
     document.querySelectorAll(".view").forEach(view =>
       {
-        console.log(view);
         if(String(view.id) == String(localStorage.getItem("usermask_id")))
         {
           view.classList.add("selected");

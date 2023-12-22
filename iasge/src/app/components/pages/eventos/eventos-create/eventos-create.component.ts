@@ -14,8 +14,8 @@ import { DialogConfirmationComponent } from 'src/app/components/template/dialog-
 })
 export class EventosCreateComponent implements OnInit{
 
-  event_name: string = '';
-  event_desc: string = '';
+  event_name: string = 'e';
+  event_desc: string = 'e';
   isOneDay: string = 'true';
   start_date: Date = new Date();//'MM/DD/YYY'
   end_date: Date = new Date();
@@ -74,9 +74,11 @@ export class EventosCreateComponent implements OnInit{
         .map(ev =>
           {
             const datInt = +`${ev.start_date.split("/")[2]}${ev.start_date.split("/")[1]}${ev.start_date.split("/")[0]}`;
-            const horInt = +`${this.start_time.replace(/\D/g, "")}`;
-            const datFim = +`${ev.end_date.split("/")[2]}${ev.end_date.split("/")[1]}${ev.end_date.split("/")[0]}`;
-            const horFim = +`${this.end_time.replace(/\D/g, "")}`;
+            const horInt = +`${ev.start_time.replace(/\D/g, "")}`;
+            const datFim = !eval(ev.isOneDay) 
+              ? +`${ev.end_date.split("/")[2]}${ev.end_date.split("/")[1]}${ev.end_date.split("/")[0]}`
+              :  datInt;
+            const horFim = +`${ev.end_time.replace(/\D/g, "")}`;
             const name = ev.event_name;
             return {
               data: {
@@ -123,7 +125,6 @@ export class EventosCreateComponent implements OnInit{
       //If maior que sete
       if(numsArray.length > 4)
       {
-        console.log(numsArray.slice(0,4).join(""))
         numFormatado += `${numsArray.slice(0,4).join("")}`;
       }
       //Enviar para o campo o num formatado
@@ -153,7 +154,6 @@ export class EventosCreateComponent implements OnInit{
       //If maior que sete
       if(numsArray.length > 4)
       {
-        console.log(numsArray.slice(0,4).join(""))
         numFormatado += `${numsArray.slice(0,4).join("")}`;
       }
       //Enviar para o campo o num formatado
@@ -241,13 +241,12 @@ export class EventosCreateComponent implements OnInit{
       let horaInicio = +`${this.start_time.replace(/\D/g, "")}`;
   
       let dataFim: number | string = this.agora != this.end_date ? this.dateForString(this.end_date) : this.dateForString(this.start_date);
-      dataFim = +`${dataFim.split("/")[2]}${dataFim.split("/")[1]}${dataFim.split("/")[0]}${this.end_time.replace(/\D/g, "")}`;
+      dataFim = +`${dataFim.split("/")[2]}${dataFim.split("/")[1]}${dataFim.split("/")[0]}`;
       let horaFim = +`${this.end_time.replace(/\D/g, "")}`;
 
       //Passa por todos os dias entre os dias atuais
       for(let i = dataInicio; i <= dataFim; i++)
       {
-        console.log(i)
         //Passa para todos os itens da lista
         for(let item of this.listDatas)
         {
@@ -257,8 +256,6 @@ export class EventosCreateComponent implements OnInit{
             //Se o príodo Dia da lista for igual ao período Dia atual
             if(ii == i)
             {
-              console.log(i)
-              /*
               //Passa por todas as horas entre o início e o fim atual
               for(let h = horaInicio; h <= horaFim; h++)
               {
@@ -268,12 +265,18 @@ export class EventosCreateComponent implements OnInit{
                   //Se a hora se encaixar
                   if(hh == h)
                   {
-                    console.log(item.name);
+                    this.dialog.open(DialogConfirmationComponent, {
+                      data: 
+                      {
+                        title: 'ERRO',
+                        message: `A data já está sendo usada no evento ${item.name}!`,
+                        alert: true
+                      },
+                    });
                     return false;
                   }
                 }
               }
-              */
             }
           }
         }
