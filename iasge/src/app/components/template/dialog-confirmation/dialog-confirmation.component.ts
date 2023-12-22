@@ -248,7 +248,7 @@ export class DialogConfirmationComponent implements OnInit{
       dataInicio = +`${dataInicio.split("/")[2]}${dataInicio.split("/")[1]}${dataInicio.split("/")[0]}`;
       let horaInicio = +`${this.start_time.replace(/\D/g, "")}`;
   
-      let dataFim: number | string = this.agora != this.end_date ? this.dateForString(this.end_date) : this.dateForString(this.start_date);
+      let dataFim: number | string = !eval(this.isOneDay) ? this.dateForString(this.end_date) : this.dateForString(this.start_date);
       dataFim = +`${dataFim.split("/")[2]}${dataFim.split("/")[1]}${dataFim.split("/")[0]}`;
       let horaFim = +`${this.end_time.replace(/\D/g, "")}`;
 
