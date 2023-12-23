@@ -44,6 +44,10 @@ export class DataService {
   {
     return this.afs.collection('/perfis').snapshotChanges();
   }
+  getPerfil(type: string)
+  {
+    return this.afs.collection('perfis', ref => ref.where('type', '==', type)).valueChanges();
+  }
 
   //EVENT
   // add user

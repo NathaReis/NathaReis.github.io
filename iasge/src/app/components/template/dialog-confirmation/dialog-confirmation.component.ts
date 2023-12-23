@@ -59,7 +59,7 @@ export class DialogConfirmationComponent implements OnInit{
   dataAntesdeEditar: number = 0;
 
   eventsList: Event[] = [];
-  listDatas: Array<{data: {start: number, end: number}, hora: {start: number, end: number}, name: string}> = [];
+  listDatas: Array<{data: {start: number, end: number}, hora: {start: number, end: number}, name: string, horario: string}> = [];
   getAllEvents()
   {
     //Consulta o serviço Events
@@ -84,6 +84,7 @@ export class DialogConfirmationComponent implements OnInit{
               :  datInt;
             const horFim = +`${ev.end_time.replace(/\D/g, "")}`;
             const name = ev.event_name;
+            const horario = `${ev.start_time}-${ev.end_time}`;
             return {
               data: {
                 start: datInt, 
@@ -93,7 +94,8 @@ export class DialogConfirmationComponent implements OnInit{
                 start: horInt, 
                 end: horFim
               }, 
-              name: name
+              name: name,
+              horario: horario,
             }
           })
       }, err => 
@@ -219,6 +221,13 @@ export class DialogConfirmationComponent implements OnInit{
     return date;
   }
 
+  horaNumberForHour(hora: number)
+  {
+    let str = String(hora);
+    let res = `${str.slice(0,1)}:${str.slice(2,3)}`;
+    return res;
+  }
+
   validarEvento(): boolean
   {
     if(this.event_name == '' || this.event_desc == '' || String(this.start_date) == '' || String(this.end_date) == '' || this.start_time == '' || this.end_time == '')
@@ -277,7 +286,7 @@ export class DialogConfirmationComponent implements OnInit{
                       data: 
                       {
                         title: 'ERRO',
-                        message: `A data já está sendo usada no evento ${item.name}!`,
+                        message: `A data já está sendo usada no evento ${item.name}!\nNo horário ${item.horario}`,
                         alert: true
                       },
                     });

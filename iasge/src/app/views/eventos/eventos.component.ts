@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Perfil } from 'src/app/components/models/perfil';
 import { AuthService } from 'src/app/components/services/auth.service';
 import { DataService } from 'src/app/components/services/data.service';
 import { HeaderService } from 'src/app/components/services/header.service';
@@ -14,7 +13,7 @@ export class EventosComponent implements OnInit{
 
   constructor(
     private auth : AuthService,
-    private perfilService: PerfilService,
+    private perfil: PerfilService,
     private data: DataService,
     private headerService: HeaderService) {
       headerService.headerData = {
@@ -26,17 +25,10 @@ export class EventosComponent implements OnInit{
 
   ngOnInit(): void {
     this.auth.auth_guard();
-    this.data.getAllPerfis().subscribe(res =>
+    this.data.getPerfil(String(localStorage.getItem('logado'))).subscribe(res =>
       {
-        //Mapeia o resultado
-        const perfis = res.map((e: any) =>
-          {
-            const data = e.payload.doc.data();
-            data.id = e.payload.doc.id;
-            return data;
-          })
-        const perfil = perfis.filter(perfil => localStorage.getItem('logado') == perfil.type)
-        this.perfilSave(perfil[0])
+        const perfil = res[0];
+        this.perfilSave(perfil)
       }, err => 
       {
         //Mensagem de erro
@@ -44,10 +36,10 @@ export class EventosComponent implements OnInit{
       })
   }
 
-  perfilSave(perfil: Perfil)
+  perfilSave(perfil: any)
   {
     let all_view = perfil.all_view ? true : false;
-    this.perfilService.perfilData = {
+    this.perfil.perfilData = {
       departamentos: perfil.departamentos,
       associados: perfil.associados,
       eventos: perfil.eventos,
@@ -58,5 +50,4 @@ export class EventosComponent implements OnInit{
       home: true
     }
   }
-
 }

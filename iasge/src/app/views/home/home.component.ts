@@ -1,4 +1,3 @@
-import { Perfil } from './../../components/models/perfil';
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/components/services/auth.service';
 import { DataService } from 'src/app/components/services/data.service';
@@ -26,17 +25,10 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.auth.auth_guard();
-    this.data.getAllPerfis().subscribe(res =>
+    this.data.getPerfil(String(localStorage.getItem('logado'))).subscribe(res =>
       {
-        //Mapeia o resultado
-        const perfis = res.map((e: any) =>
-          {
-            const data = e.payload.doc.data();
-            data.id = e.payload.doc.id;
-            return data;
-          })
-        const perfil = perfis.filter(perfil => localStorage.getItem('logado') == perfil.type)
-        this.perfilSave(perfil[0])
+        const perfil = res[0];
+        this.perfilSave(perfil)
       }, err => 
       {
         //Mensagem de erro
@@ -44,7 +36,7 @@ export class HomeComponent implements OnInit {
       })
   }
 
-  perfilSave(perfil: Perfil)
+  perfilSave(perfil: any)
   {
     let all_view = perfil.all_view ? true : false;
     this.perfil.perfilData = {
