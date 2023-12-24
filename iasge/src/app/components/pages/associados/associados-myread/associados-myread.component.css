@@ -7,4 +7,5 @@
 .title 
 {
     margin: 5px;
+    color: var(--textColor);
 }

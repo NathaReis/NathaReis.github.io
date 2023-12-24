@@ -1,7 +1,7 @@
 .card
 {
     font-family: 'Caveat', cursive;
-    background-color: #eee;
+    background-color: var(--background);
     box-shadow: 10px 10px 15px #0002;
     height: 50vh;
     padding: 10vh;
@@ -14,6 +14,7 @@
 {
     font-size: 2rem;
     text-shadow: 2px 2px 3px #0004;
+    color: var(--textColor);
     letter-spacing: 3px;
     font-weight: 500;
 }
@@ -38,6 +39,7 @@
     font-size: 1.9rem;
     text-align: center;
     margin-top: 20vh;
+    color: var(--textColor);
 }
 
 .card .slogan mat-icon 

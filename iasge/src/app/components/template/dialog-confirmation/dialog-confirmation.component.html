@@ -6,6 +6,42 @@
   <div *ngIf="data.message" mat-dialog-content>
     <p>{{ data.message }}</p>
   </div>
+
+  <div *ngIf="data.passwordBox" class="card shadow">
+    <div class="card-body">
+        <form>
+            <div class="mb-3">
+                <h4 class="text-dark text-muted">Login</h4>
+            </div>
+            <mat-form-field>
+                <mat-label>Usuário</mat-label>
+                <input readonly="true" matInput #input name="user_name" [(ngModel)]="user_name">
+            </mat-form-field>                        
+            <mat-form-field>
+                <mat-label>Senha atual</mat-label>
+                <input matInput [type]="hide ? 'password' : 'text'" name="password" [(ngModel)]="password">
+                <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                  <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Nova senha</mat-label>
+                <input matInput [type]="hide ? 'password' : 'text'" name="newPassword" [(ngModel)]="newPassword">
+                <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                  <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Confirme a senha</mat-label>
+                <input matInput [type]="hide ? 'password' : 'text'" name="confirmPassword" [(ngModel)]="confirmPassword">
+                <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                  <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+            </mat-form-field>
+            <button type="button" class="btn" (click)="salvePassword()">Salvar</button>
+        </form>
+    </div>
+  </div>
   
   <div *ngIf="data.eventBox" class="card">
     <div class="card-body">

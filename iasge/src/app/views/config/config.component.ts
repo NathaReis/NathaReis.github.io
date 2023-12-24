@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Perfil } from 'src/app/components/models/perfil';
 import { AuthService } from 'src/app/components/services/auth.service';
 import { DataService } from 'src/app/components/services/data.service';
 import { HeaderService } from 'src/app/components/services/header.service';
 import { PerfilService } from 'src/app/components/services/perfil.service';
+import { DialogConfirmationComponent } from 'src/app/components/template/dialog-confirmation/dialog-confirmation.component';
 
 @Component({
   selector: 'app-config',
@@ -12,10 +14,13 @@ import { PerfilService } from 'src/app/components/services/perfil.service';
 })
 export class ConfigComponent implements OnInit{
 
+  theme: string = 'Claro';
+
   constructor(
     private auth : AuthService,
     private data : DataService,
     private perfil : PerfilService,
+    private dialog: MatDialog,
     private headerService: HeaderService) {
       headerService.headerData = {
         title: 'Config',
@@ -62,6 +67,28 @@ export class ConfigComponent implements OnInit{
   logout()
   {
     this.auth.logout();
+  }
+
+  editPassword()
+  {
+    const dialogRef = this.dialog.open(DialogConfirmationComponent, {
+      data: 
+      {
+        passwordBox: true,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+      if(result)
+      {
+        this.auth.logout();
+      }
+    });
+  }
+
+  alterTheme()
+  {
+    this.theme = this.theme == 'Claro' ? 'Escuro' : 'Claro';
   }
 
 }

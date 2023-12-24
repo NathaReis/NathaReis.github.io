@@ -5,7 +5,6 @@ import { DataService } from 'src/app/components/services/data.service';
 import { SnackbarService } from 'src/app/components/services/snackbar.service';
 import { CalendarOptions } from '@fullcalendar/core'; // useful for typechecking
 import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin from '@fullcalendar/interaction';
 import esLocale from '@fullcalendar/core/locales/pt-br';
 import { Event } from 'src/app/components/models/event';
 import { DialogConfirmationComponent } from 'src/app/components/template/dialog-confirmation/dialog-confirmation.component';

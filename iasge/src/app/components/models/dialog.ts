@@ -7,4 +7,5 @@ export interface Dialog
     eventBox?: boolean,
     eventEdit: boolean,
     id?: string,
+    passwordBox?: boolean,
 }

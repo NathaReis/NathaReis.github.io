@@ -23,9 +23,17 @@ export class DataService {
     return this.afs.collection('/users').snapshotChanges();
   }
   // get one users
-  getUser(id: string)
+  getUser(id?: string)
   {
     return this.afs.doc(`/users/${id}`).get();
+  }
+  getUserOfNamePass(name: string, pass: string)
+  {
+    return this.afs.collection('users', ref => {
+      return ref
+      .where('user_name', '==', name)
+      .where('password', '==', pass)
+    }).valueChanges();
   }
   // delete user
   deleteUser(id: string)

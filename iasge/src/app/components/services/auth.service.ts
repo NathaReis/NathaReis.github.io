@@ -17,25 +17,16 @@ export class AuthService {
   // login metodo
   login(user_name : string, password: string)
   {
-    this.data.getAllUsers().subscribe(res =>
+    this.data.getUserOfNamePass(user_name,password).subscribe(res =>
       {
-        //Mapeia o resultado
-        const users = res.map((e: any) =>
-          {
-            const data = e.payload.doc.data();
-            data.id = e.payload.doc.id;
-            return data;
-          })
-        
-        //Se user exists or no
-        const user = users.filter(user => user.user_name == user_name && user.password == password)
-        user.length > 0 
-        ? this.logar(user[0])
-        : this.snack.openSnackBar('Usuário incorreto!');
-      }, err => 
-      {
-        //Mensagem de erro
-        this.snack.openSnackBar(`Erro de login: ${err}`)
+        if(res.length > 0)
+        {
+          this.logar(res[0]);
+        }
+        else 
+        {
+          this.snack.openSnackBar('Usuário não existe!', 2000);
+        }
       })
   }
 

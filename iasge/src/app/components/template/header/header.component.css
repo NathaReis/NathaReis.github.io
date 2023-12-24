@@ -10,7 +10,8 @@
 
 .header .logo
 {
-    background-color: var(--secondColor);
+    background-color: var(--background);
+    color: var(--textColor);
     height: 8vh;
     width: 8vh;
     display: grid;
@@ -37,4 +38,12 @@
 {
     padding-right: 20px;
     margin-right: 10px;
+}
+
+.theme
+{
+    position: absolute;
+    right: 10px;
+    color: var(--secondColor);
+    cursor: pointer;
 }

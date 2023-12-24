@@ -23,6 +23,14 @@
                             <mat-option value="true">Sim</mat-option>
                           </mat-select>
                         </mat-form-field>
+
+                        <mat-form-field>
+                          <mat-label>Senha</mat-label>
+                          <input matInput disabled="true" [type]="hide ? 'password' : 'text'" name="password" [(ngModel)]="password">
+                          <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                          </button>
+                        </mat-form-field> 
                         
                         <button type="button" class="btn" (click)="updateUser()">Atualizar</button>
                       </form>

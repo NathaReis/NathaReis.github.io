@@ -18,6 +18,9 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { MatRadioModule } from '@angular/material/radio';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {MatCardModule} from '@angular/material/card';
+import { MatTreeModule} from '@angular/material/tree';
 
 //Components
 import { AppRoutingModule } from './app-routing.module';
@@ -30,8 +33,6 @@ import { BodyComponent } from './components/template/body/body.component';
 import { EscalasComponent } from './views/escalas/escalas.component';
 import { EscalasReadComponent } from './components/pages/escalas/escalas-read/escalas-read.component';
 import { EscalasCreateComponent } from './components/pages/escalas/escalas-create/escalas-create.component';
-import { EscalasDeleteComponent } from './components/pages/escalas/escalas-delete/escalas-delete.component';
-import { EscalasEditComponent } from './components/pages/escalas/escalas-edit/escalas-edit.component';
 
 import { EventosComponent } from './views/eventos/eventos.component';
 import { EventosCreateComponent } from './components/pages/eventos/eventos-create/eventos-create.component';
@@ -69,9 +70,7 @@ import { ambiente } from 'src/ambiente/ambiente';
     EventosComponent,
     EscalasComponent,
     EventosCreateComponent,
-    EscalasEditComponent,
     EscalasCreateComponent,
-    EscalasDeleteComponent,
     LoginComponent,
     ConfigComponent,
     HeaderComponent,
@@ -87,11 +86,11 @@ import { ambiente } from 'src/ambiente/ambiente';
     AssociadosCreateComponent,
     AssociadosMyreadComponent,
     EventosReadComponent,
+    EscalasReadComponent,
   ],
   imports: [
     AngularFireModule.initializeApp(ambiente.firebaseConfig),
     BrowserModule,
-    EscalasReadComponent,
     AppRoutingModule,
     BrowserAnimationsModule,
     MatIconModule,
@@ -110,7 +109,10 @@ import { ambiente } from 'src/ambiente/ambiente';
     MatSnackBarModule,
     FullCalendarModule,
     MatRadioModule,
+    MatCardModule,
+    MatSlideToggleModule,
     MatCheckboxModule,
+    MatTreeModule,
     provideFirebaseApp(() => initializeApp({"projectId":"iasgestao","appId":"1:634292682476:web:38ff865f29151abb53efc9","storageBucket":"iasgestao.appspot.com","apiKey":"AIzaSyDM_8ffyG8YjOvCh2mtu9bO8iYYMBqIpk0","authDomain":"iasgestao.firebaseapp.com","messagingSenderId":"634292682476"})),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),

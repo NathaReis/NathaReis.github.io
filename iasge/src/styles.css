@@ -4,15 +4,28 @@
 /* font-family: 'Dhurjati', sans-serif; */
 @import url('https://fonts.googleapis.com/css2?family=Caveat&display=swap');
 /* font-family: 'Caveat', cursive; */
-
 :root 
 {
+    --background: #eee;
     --primaryColor: #003c5a;
     --secondColor: #eee;
+    --textColor: #1d1d1d;
     --warnColor: #e35e6b;
     --neutroColor: #afff79;
     --grayColor: #333;
     --selectedColor: #ffd139;
+}
+
+:root .dark-theme
+{
+    --background: #1d1d1d;
+    --primaryColor: #002d44;
+    --secondColor: #afafaf;
+    --textColor: #eee;
+    --warnColor: #c4414e;
+    --neutroColor: #8ddd57;
+    --grayColor: #333;
+    --selectedColor: #cca72d;
 }
 
 /*PAGES*/
@@ -31,6 +44,7 @@ body
 {
     width: 100vw;
     height: 90vh;
+    background-color: var(--background);
 }
 .center
 {
@@ -50,7 +64,6 @@ body
 {
     background-color: var(--secondColor);
 }
-
 
 /*BUTTONS*/
 button.add

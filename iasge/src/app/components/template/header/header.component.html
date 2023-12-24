@@ -8,33 +8,41 @@
         <mat-icon>{{ icon }}</mat-icon>
         {{ title }}
     </span>
+    <span class="theme">
+        <mat-icon *ngIf="!theme" (click)="isTheme('dark-theme')">
+            brightness_high
+        </mat-icon>
+        <mat-icon *ngIf="theme" (click)="isTheme('')">
+            brightness_3
+        </mat-icon>
+    </span>
     <span>
-        <mat-menu #menu="matMenu">
-            <button mat-menu-item>
+        <mat-menu #menu="matMenu" class="menu">
+            <button mat-menu-item class="item">
                 <mat-icon color="primary">account_circle</mat-icon>
                 <span>IASGE</span>
             </button>
-            <button *ngIf="config" mat-menu-item routerLink="config">
+            <button *ngIf="config" mat-menu-item class="item" routerLink="config">
                 <mat-icon>settings</mat-icon>
                 <span>Config</span>
             </button>
-            <button *ngIf="home" mat-menu-item routerLink="home">
+            <button *ngIf="home" mat-menu-item class="item" routerLink="home">
                 <mat-icon>home</mat-icon>
                 <span>Home</span>
             </button>
-            <button *ngIf="escalas" mat-menu-item routerLink="escalas">
+            <button *ngIf="escalas" mat-menu-item class="item" routerLink="escalas">
                 <mat-icon>dashboard</mat-icon>
                 <span>Escalas</span>
             </button>
-            <button *ngIf="eventos" mat-menu-item routerLink="eventos">
+            <button *ngIf="eventos" mat-menu-item class="item" routerLink="eventos">
                 <mat-icon>event</mat-icon>
                 <span>Eventos</span>
             </button>
-            <button *ngIf="associados" mat-menu-item routerLink="associados">
+            <button *ngIf="associados" mat-menu-item class="item" routerLink="associados">
                 <mat-icon>people</mat-icon>
                 <span>Associados</span>
             </button>
-            <button *ngIf="departamentos" mat-menu-item routerLink="departamentos">
+            <button *ngIf="departamentos" mat-menu-item class="item" routerLink="departamentos">
                 <mat-icon>house</mat-icon>
                 <span>Departamentos</span>
             </button>
