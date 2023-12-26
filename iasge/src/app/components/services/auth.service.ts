@@ -45,7 +45,7 @@ export class AuthService {
   logar(user: any) 
   {
     localStorage.setItem('usermask_id', user.id)
-    localStorage.setItem('usermask_name', user.name);
+    localStorage.setItem('usermask_name', user.user_name);
     localStorage.setItem('user_name', user.user_name)
     localStorage.setItem('user_id', user.id)
     localStorage.setItem('logado', user.perfil);
