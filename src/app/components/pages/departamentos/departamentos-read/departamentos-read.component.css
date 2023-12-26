@@ -1,0 +1,10 @@
+#id 
+{
+    max-width: 20px;
+    overflow: hidden;
+}
+
+.selected
+{
+    color: var(--selectedColor);
+}

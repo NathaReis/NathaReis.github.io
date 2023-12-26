@@ -1,0 +1,11 @@
+#id 
+{
+    max-width: 20px;
+    overflow: hidden;
+}
+
+.title 
+{
+    margin: 5px;
+    color: var(--textColor);
+}

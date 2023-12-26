@@ -1,0 +1,40 @@
+.btn
+{
+    border: none;
+    padding: 15px;
+    background-color: var(--grayColor);
+    color: var(--secondColor);
+    border-radius: 30px;
+    box-shadow: 5px 5px 10px #0003;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 10px;
+}
+
+a 
+{
+    text-decoration: none;
+    color: var(--secondColor);
+}
+
+.btns 
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px;
+}
+
+.password 
+{
+    text-decoration: none;
+    color: var(--warnColor);
+    margin-top: 40px;
+    cursor: pointer;
+}
+
+.card
+{
+    padding: 40px;
+}

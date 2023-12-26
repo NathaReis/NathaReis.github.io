@@ -1,0 +1,49 @@
+.header
+{
+    background-color: var(--primaryColor);
+    box-shadow: 3px 3px 5px #0004;
+    display: flex;
+    align-items: center;
+    height: 10vh;
+    cursor: default;
+}
+
+.header .logo
+{
+    background-color: var(--background);
+    color: var(--textColor);
+    height: 8vh;
+    width: 8vh;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin-top: 2vh;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.header .title-group
+{
+    width: 100px;
+    margin-left: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--secondColor);
+    cursor: pointer;
+}
+
+.title-group mat-icon 
+{
+    padding-right: 20px;
+    margin-right: 10px;
+}
+
+.theme
+{
+    position: absolute;
+    right: 10px;
+    color: var(--secondColor);
+    cursor: pointer;
+}

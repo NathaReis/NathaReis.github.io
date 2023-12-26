@@ -1,0 +1,18 @@
+.yes
+{
+    background: var(--neutroColor);
+}
+.no 
+{
+    color: var(--secondColor);
+    background: var(--warnColor);
+}
+.save
+{
+    color: var(--secondColor);
+    background: var(--primaryColor); 
+}
+.card
+{
+    height: 70vh;
+}
