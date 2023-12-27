@@ -16,7 +16,7 @@
                           <input matInput #input minlength="10" placeholder="Ex. nome.sobrenome" name="last_name" [(ngModel)]="last_name">
                         </mat-form-field>  
                         
-                        <mat-form-field *ngIf="isAssociado">
+                        <mat-form-field *ngIf="isEditor">
                           <mat-label>Editor</mat-label>
                           <mat-select  name="editor" [(ngModel)]="editor">
                             <mat-option value="false">Não</mat-option>
