@@ -10,6 +10,7 @@ import { Event } from 'src/app/components/models/event';
 import { DialogConfirmationComponent } from 'src/app/components/template/dialog-confirmation/dialog-confirmation.component';
 import { MatDialog } from '@angular/material/dialog';
 import { PerfilService } from 'src/app/components/services/perfil.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-eventos-read',
@@ -21,6 +22,7 @@ export class EventosReadComponent implements OnInit {
     private auth : AuthService,
     private data: DataService,
     private snack: SnackbarService,
+    private router: Router,
     private dialog: MatDialog,
     private perfilService: PerfilService,
     private headerService: HeaderService) {
@@ -158,24 +160,10 @@ export class EventosReadComponent implements OnInit {
     {
       if(dia > agora)
       {
-        dialogRef = this.dialog.open(DialogConfirmationComponent, {
-          data: 
-          {
-            id: id,
-            eventBox: true,
-            eventEdit: true,
-          },
-        });
+        this.router.navigate([`eventos/edit/${id}`]);
       }
       else 
       {
-        dialogRef = this.dialog.open(DialogConfirmationComponent, {
-          data:
-          {
-            id: id,
-            eventBox: true,
-          }
-        });
         dialogRef = this.dialog.open(DialogConfirmationComponent, {
           data:
           {
@@ -184,26 +172,24 @@ export class EventosReadComponent implements OnInit {
             alert: true,
           }
         });
+        dialogRef.afterClosed().subscribe((result: boolean) => {
+          this.router.navigate([`eventos/view/${id}`]);
+        });
       }
     }
     else 
     {
       dialogRef = this.dialog.open(DialogConfirmationComponent, {
-        data: 
+        data:
         {
-          id: id,
-          eventBox: true,
-        },
+          title: 'Edição',
+          message: 'Esse evento não é seu',
+          alert: true,
+        }
+      });
+      dialogRef.afterClosed().subscribe((result: boolean) => {
+        this.router.navigate([`eventos/view/${id}`]);
       });
     }
-
-    dialogRef.afterClosed().subscribe((result: boolean) => {
-      if(result)
-      {
-        setTimeout(() => {
-          location.reload();
-        }, 1000)
-      }
-    });
   }
 }

@@ -247,6 +247,7 @@ export class FormUserComponent implements OnInit{
       this.userObj.user_name = `${this.first_name.toLowerCase()}.${this.last_name.toLowerCase()}`;
       this.userObj.departamentos = `${localStorage.getItem('usermask_id')},${localStorage.getItem('usermask_name')},false`,
       this.userObj.editor = this.editor;
+      this.userObj.perfil = this.perfil;
       this.data.addUser(this.userObj)
       this.resetForm()
       this.snack.openSnackBar('Criado com sucesso!')

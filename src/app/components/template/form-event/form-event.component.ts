@@ -6,6 +6,7 @@ import { Event } from 'src/app/components/models/event';
 import { MatDialog } from '@angular/material/dialog';
 import { SnackbarService } from '../../services/snackbar.service';
 import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-form-event',
@@ -26,12 +27,14 @@ export class FormEventComponent implements OnInit{
   maxDate: Date = new Date();
   minDate: Date = new Date();
   agora: Date = new Date();
+  edit = true;
 
   constructor(
     private auth: AuthService,
     private data: DataService,
     private snack: SnackbarService,
     private dialog: MatDialog,
+    private router: Router,
     private headerService: HeaderService) {
       headerService.headerData = {
         title: 'Eventos',
@@ -54,11 +57,18 @@ export class FormEventComponent implements OnInit{
     this.auth.auth_guard();
     this.getAllEvents();
 
-    //Para preencher os eventos
-    this.data.getEvent(String(this.typeForm.id)).subscribe(event =>
-      {
-        this.preencherEvento(event.data())
-      })
+    if(this.typeForm.id.length > 0)
+    {
+      //Para preencher os eventos
+      this.data.getEvent(String(this.typeForm.id)).subscribe(event =>
+        {
+          this.preencherEvento(event.data())
+        })      
+    }
+    if(this.typeForm.type == 'Visualizar')
+    {
+      this.edit = false;
+    }
   }
 
   eventsList: Event[] = [];
@@ -355,6 +365,10 @@ export class FormEventComponent implements OnInit{
     if(this.typeForm.type == 'Criar')
     {
       this.criar();
+    }
+    else if(this.typeForm.type == 'Visualizar')
+    {
+      this.router.navigate(['/eventos'])
     }
     else 
     {

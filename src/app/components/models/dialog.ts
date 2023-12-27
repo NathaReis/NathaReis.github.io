@@ -4,8 +4,8 @@ export interface Dialog
     message?: string,
     confirm?: boolean,
     alert?: boolean,
-    eventBox?: boolean,
-    eventEdit: boolean,
     id?: string,
     passwordBox?: boolean,
+    escalaBox?: boolean,
+    escalaView: Array<{id: number, hour: string, categoria: string, pessoa: string}>,
 }

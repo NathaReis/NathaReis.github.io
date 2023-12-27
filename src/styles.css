@@ -73,6 +73,7 @@ button.add
 button.delete
 {
     background-color: var(--warnColor);
+    color: var(--secondColor);
 }
 button.edit
 {

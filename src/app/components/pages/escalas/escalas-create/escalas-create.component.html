@@ -7,7 +7,7 @@
 
             <mat-form-field>
                 <mat-label>Nome do evento</mat-label>
-                <input matInput #input name="event_name" [(ngModel)]="event_name">
+                <input matInput #input name="escala_name" [(ngModel)]="escala_name">
             </mat-form-field> 
 
             <mat-form-field>
@@ -19,11 +19,6 @@
             </mat-form-field>
             
             <mat-form-field>
-                <mat-label>ESCALA</mat-label>
-                <textarea matInput name="escala" [(ngModel)]="escala"></textarea>
-            </mat-form-field> 
-            
-            <mat-form-field>
                 <mat-label>Horário do campo</mat-label>
                 <input matInput type="time" name="hour" [(ngModel)]="hour">
             </mat-form-field> 
@@ -32,15 +27,15 @@
                 <mat-label>Categorias</mat-label>
                 <mat-select  name="categorias" [(ngModel)]="categorias">
                   <mat-option value="">Escolha uma</mat-option>
-                  <mat-option value="sermao">Sermão</mat-option>
-                  <mat-option value="louvor_especial">Louvor especial</mat-option>
-                  <mat-option value="louvor">Louvor</mat-option>
-                  <mat-option value="oracao">Oração</mat-option>
-                  <mat-option value="ofertorio">Ofertório</mat-option>
-                  <mat-option value="ado_infantil">Ado. Infantil</mat-option>
-                  <mat-option value="provai_vede">Provai e Vede</mat-option>
-                  <mat-option value="informativo">Informativo</mat-option>
-                  <mat-option value="outro">Outro</mat-option>
+                  <mat-option value="Sermão">Sermão</mat-option>
+                  <mat-option value="Louvor_especial">Louvor especial</mat-option>
+                  <mat-option value="Louvor">Louvor</mat-option>
+                  <mat-option value="Oração">Oração</mat-option>
+                  <mat-option value="Ofertório">Ofertório</mat-option>
+                  <mat-option value="Ado_infantil">Ado. Infantil</mat-option>
+                  <mat-option value="Provai_vede">Provai e Vede</mat-option>
+                  <mat-option value="Informativo">Informativo</mat-option>
+                  <mat-option value="Outro">Outro</mat-option>
                   <mat-option value="pausa">Pausa</mat-option>
                   <mat-option value="entrada">Entrada</mat-option>
                   <mat-option value="saida">Saída</mat-option>
@@ -52,7 +47,19 @@
                 <input matInput #input name="pessoa" [(ngModel)]="pessoa">
             </mat-form-field> 
 
-            <button type="button" class="btn" (click)="criar()">Add Campo</button>
+            <div class="btns">
+                <button type="button" mat-fab class="view" (click)="criarCampo()">
+                    <mat-icon>
+                        add
+                    </mat-icon>
+                </button>
+                <button type="button" mat-fab class="view" (click)="viewEscala()">
+                    <mat-icon>
+                        remove_red_eye
+                    </mat-icon>
+                </button>                
+            </div>
+
             <br>
             <button type="button" class="btn" (click)="criar()">Criar</button>
         </form>

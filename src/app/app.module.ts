@@ -64,6 +64,8 @@ import { getStorage, provideStorage } from '@angular/fire/storage';
 import { ambiente } from 'src/ambiente/ambiente';
 import { FormUserComponent } from './components/template/form-user/form-user.component';
 import { FormEventComponent } from './components/template/form-event/form-event.component';
+import { EventosEditComponent } from './components/pages/eventos/eventos-edit/eventos-edit.component';
+import { EventosViewComponent } from './components/pages/eventos/eventos-view/eventos-view.component';
 
 @NgModule({
   declarations: [
@@ -91,6 +93,8 @@ import { FormEventComponent } from './components/template/form-event/form-event.
     EscalasReadComponent,
     FormUserComponent,
     FormEventComponent,
+    EventosEditComponent,
+    EventosViewComponent,
   ],
   imports: [
     AngularFireModule.initializeApp(ambiente.firebaseConfig),

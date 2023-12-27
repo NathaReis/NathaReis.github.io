@@ -13,6 +13,8 @@ import { AssociadosCreateComponent } from './components/pages/associados/associa
 import { AssociadosEditComponent } from './components/pages/associados/associados-edit/associados-edit.component';
 import { EventosCreateComponent } from './components/pages/eventos/eventos-create/eventos-create.component';
 import { EscalasCreateComponent } from './components/pages/escalas/escalas-create/escalas-create.component';
+import { EventosEditComponent } from './components/pages/eventos/eventos-edit/eventos-edit.component';
+import { EventosViewComponent } from './components/pages/eventos/eventos-view/eventos-view.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -27,6 +29,8 @@ const routes: Routes = [
   {path: 'associados/edit/:id', component: AssociadosEditComponent},
   {path: 'eventos', component: EventosComponent},
   {path: 'eventos/create', component: EventosCreateComponent},
+  {path: 'eventos/edit/:id', component: EventosEditComponent},
+  {path: 'eventos/view/:id', component: EventosViewComponent},
   {path: 'escalas', component: EscalasComponent},
   {path: 'escalas/create', component: EscalasCreateComponent},
 ];

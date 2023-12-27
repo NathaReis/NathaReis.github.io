@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { User } from '../models/user';
 import { Event } from '../models/event';
+import { Escala } from '../models/escala';
 
 @Injectable({
   providedIn: 'root'
@@ -58,7 +59,7 @@ export class DataService {
   }
 
   //EVENT
-  // add user
+  // add event
   addEvent(event: Event)
   {
     event.id = this.afs.createId();
@@ -69,19 +70,49 @@ export class DataService {
   {
     return this.afs.collection('/events').snapshotChanges();
   }
-  // get one users
+  // get one events
   getEvent(id: string)
   {
     return this.afs.doc(`/events/${id}`).get();
   }
-  // delete user
+  // delete event
   deleteEvent(id: string)
   {
     return this.afs.doc(`/events/${id}`).delete();
   }
-  // update user
+  // update event
   updateEvent(event: Event, id: string)
   {
     this.afs.doc(`events/${id}`).update(event);
   }
+
+  //ESCALAS
+  // add escala
+  addEscala(escala: Escala)
+  {
+    escala.id = this.afs.createId();
+    return this.afs.collection('/escalas').add(escala);
+  }
+  /*
+  // get all events
+  getAllEvents()
+  {
+    return this.afs.collection('/events').snapshotChanges();
+  }
+  // get one events
+  getEvent(id: string)
+  {
+    return this.afs.doc(`/events/${id}`).get();
+  }
+  // delete event
+  deleteEvent(id: string)
+  {
+    return this.afs.doc(`/events/${id}`).delete();
+  }
+  // update event
+  updateEvent(event: Event, id: string)
+  {
+    this.afs.doc(`events/${id}`).update(event);
+  }
+  */
 }

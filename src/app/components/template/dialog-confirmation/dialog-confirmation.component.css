@@ -16,3 +16,51 @@
 {
     height: 70vh;
 }
+.escala 
+{
+    width: 280px;
+    height: 60vh;
+    max-height: 60vh;
+    max-width: 280px;
+    overflow: hidden auto;  
+    padding: 20px;
+}
+
+.escala-item
+{
+    display: flex;
+    align-items: center;
+    width: 220px;
+    margin-top: 5px;
+    border-radius: 20px;
+}
+
+.escala-item-data
+{
+    width: 200px;
+    display: grid;
+    align-items: center;
+    justify-content: left;
+}
+
+.escala-item h1
+{
+    margin-left: 20px;
+}
+
+.escala-item p 
+{
+    margin-left: 30px;
+}
+
+.escala-item-delete
+{
+    width: 20px;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+}
+.escala-item-delete mat-icon
+{
+    cursor: pointer;
+}

@@ -3,7 +3,6 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
 import { Dialog } from '../../models/dialog';
 import { DataService } from '../../services/data.service';
 import { SnackbarService } from '../../services/snackbar.service';
-import { Event } from '../../models/event';
 import { User } from '../../models/user';
 
 @Component({
@@ -28,6 +27,11 @@ export class DialogConfirmationComponent implements OnInit{
   //Resultado dos confirms
   onConfirm(result: boolean): void {
     this.dialogRef.close(result);
+  }
+
+  deleteCampo(campos: Array<{id: number, hour: string, categoria: string, pessoa: string}>, id: number) {
+    // Verificar se a posição fornecida é válida
+    this.dialogRef.close(campos.filter(campo => campo.id != id));
   }
 
   //Password

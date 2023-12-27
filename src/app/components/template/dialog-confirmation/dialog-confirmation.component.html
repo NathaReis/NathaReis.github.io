@@ -7,6 +7,21 @@
     <p>{{ data.message }}</p>
   </div>
 
+
+  <div class="escala card-body" *ngIf="data.escalaBox">
+    <div *ngFor="let escala of data.escalaView" class="escala-item">
+      <div class="escala-item-data">
+        <h1>{{escala.hour}}</h1>
+        <p>{{escala.categoria}} - {{escala.pessoa}}</p>
+      </div>
+      <div class="escala-item-delete">
+        <mat-icon class="delete" (click)="deleteCampo(data.escalaView, escala.id)">
+          delete
+        </mat-icon>
+      </div>
+    </div>      
+  </div>
+
   <div *ngIf="data.passwordBox" class="card shadow">
     <div class="card-body">
         <form>
@@ -41,10 +56,6 @@
             <button type="button" class="btn" (click)="salvePassword()">Salvar</button>
         </form>
     </div>
-  </div>
-  
-  <div *ngIf="data.eventBox" class="card">
-    <app-form-event [typeForm]="typeForm"></app-form-event>
   </div>
   
   <div *ngIf="data.confirm" mat-dialog-actions>
