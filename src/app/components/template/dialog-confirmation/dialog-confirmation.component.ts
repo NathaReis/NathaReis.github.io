@@ -22,6 +22,10 @@ export class DialogConfirmationComponent implements OnInit{
 
   typeForm = {type:'Atualizar', id: String(this.data.id)}
   ngOnInit(): void {
+    if(this.data.passwordBox)
+    {
+      this.getUser();
+    }
   }
 
   //Resultado dos confirms
@@ -57,8 +61,8 @@ export class DialogConfirmationComponent implements OnInit{
       {
         if(res)
         {
-          this.passwordAtual = res.data().password;
-          this.user = res.data();
+          this.passwordAtual = res[0].password;
+          this.user = res[0];
         }
         else 
         {
@@ -73,9 +77,16 @@ export class DialogConfirmationComponent implements OnInit{
     {
       if(this.newPassword == this.confirmPassword)
       {
-        this.user.password = this.newPassword;
-        this.dataS.updateUser(this.user, String(localStorage.getItem("user_id")))
-        this.onConfirm(true);
+        if(this.newPassword == '' || this.confirmPassword == '')
+        {
+          this.snack.openSnackBar('Senhas vazias')
+        }
+        else 
+        {
+          this.user.password = this.newPassword;
+          this.dataS.updateUser(this.user, String(this.user.id));
+          //this.onConfirm(true);          
+        }
       }
       else 
       {

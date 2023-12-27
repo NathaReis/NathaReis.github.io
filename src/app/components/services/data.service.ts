@@ -26,7 +26,10 @@ export class DataService {
   // get one users
   getUser(id?: string)
   {
-    return this.afs.doc(`/users/${id}`).get();
+    return this.afs.collection('users', ref => {
+      return ref
+      .where('id', '==', id)
+    }).valueChanges();  
   }
   getUserOfNamePass(name: string, pass: string)
   {
