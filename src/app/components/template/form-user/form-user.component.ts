@@ -35,7 +35,6 @@ export class FormUserComponent implements OnInit{
     {
       this.password = 'iasge';
       this.perfil = 'associado';
-      this.editor = 'false';
       this.isAssociado = true;
     }
     else if(this.typeForm == 'Atualizar associado')
@@ -58,7 +57,6 @@ export class FormUserComponent implements OnInit{
     perfil: '',
     user_name: '',
     departamentos: '',
-    editor: '',
   }
 
   id: string = '';
@@ -80,7 +78,6 @@ export class FormUserComponent implements OnInit{
       this.departamentos = user.departamentos;
       this.perfil = user.perfil;
       this.password = user.password;
-      this.editor = user.editor;
   
       if(user.departamentos)
       {
@@ -226,7 +223,6 @@ export class FormUserComponent implements OnInit{
       this.userObj.departamentos = this.departamentos;
       this.userObj.perfil = this.perfil;
       this.userObj.password = this.password;
-      this.userObj.editor = this.editor;
       this.data.updateUser(this.userObj, this.id)
       this.router.navigate(['/associados'])
       this.snack.openSnackBar('Atualizado com sucesso!')
@@ -246,7 +242,6 @@ export class FormUserComponent implements OnInit{
       this.userObj.password = this.password;
       this.userObj.user_name = `${this.first_name.toLowerCase()}.${this.last_name.toLowerCase()}`;
       this.userObj.departamentos = `${localStorage.getItem('usermask_id')},${localStorage.getItem('usermask_name')},false`,
-      this.userObj.editor = this.editor;
       this.userObj.perfil = this.perfil;
       this.data.addUser(this.userObj)
       this.resetForm()

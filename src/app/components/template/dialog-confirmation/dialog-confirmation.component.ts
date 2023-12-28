@@ -54,6 +54,8 @@ export class DialogConfirmationComponent implements OnInit{
   newPassword: string = '';
   confirmPassword: string = '';
   hide = true;
+  hide1 = true;
+  hide2 = true;
 
   getUser()
   {
@@ -84,8 +86,9 @@ export class DialogConfirmationComponent implements OnInit{
         else 
         {
           this.user.password = this.newPassword;
+          console.log(this.user)
           this.dataS.updateUser(this.user, String(this.user.id));
-          //this.onConfirm(true);          
+          this.onConfirm(true);          
         }
       }
       else 
