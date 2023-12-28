@@ -7,21 +7,6 @@
     <p>{{ data.message }}</p>
   </div>
 
-
-  <div class="escala card-body" *ngIf="data.escalaBox">
-    <div *ngFor="let escala of data.escalaView" class="escala-item">
-      <div class="escala-item-data">
-        <h1>{{escala.hour}}</h1>
-        <p>{{escala.categoria}} - {{escala.pessoa}}</p>
-      </div>
-      <div class="escala-item-delete">
-        <mat-icon class="delete" (click)="deleteCampo(data.escalaView, escala.id)">
-          delete
-        </mat-icon>
-      </div>
-    </div>      
-  </div>
-
   <div *ngIf="data.passwordBox" class="card shadow">
     <div class="card-body">
         <form>
@@ -41,14 +26,14 @@
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Nova senha</mat-label>
-                <input matInput [type]="hide ? 'password' : 'text'" name="newPassword" [(ngModel)]="newPassword">
+                <input matInput [type]="hide1 ? 'password' : 'text'" name="newPassword" [(ngModel)]="newPassword">
                 <button mat-icon-button matSuffix (click)="hide1 = !hide1" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide1">
                   <mat-icon>{{hide1 ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </button>
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Confirme a senha</mat-label>
-                <input matInput [type]="hide ? 'password' : 'text'" name="confirmPassword" [(ngModel)]="confirmPassword">
+                <input matInput [type]="hide2 ? 'password' : 'text'" name="confirmPassword" [(ngModel)]="confirmPassword">
                 <button mat-icon-button matSuffix (click)="hide2 = !hide2" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide2">
                   <mat-icon>{{hide2 ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </button>

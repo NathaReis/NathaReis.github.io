@@ -29,8 +29,7 @@ export class DataService {
     return this.afs.collection('users', ref => {
       return ref
       .where('id', '==', id)
-    }).valueChanges();  
-  }
+    }).valueChanges();  }
   getUserOfNamePass(name: string, pass: string)
   {
     return this.afs.collection('users', ref => {

@@ -78,6 +78,9 @@ export class AssociadosReadComponent implements AfterViewInit, OnInit{
       {
         if(user.departamentos)
         {
+          //Se o departamento se manter igual mesmo após retirar 
+          //meu id significa que ele nunca o teve, logo não era meu
+
           let notMyDepartamento = user.departamentos.replace(`${localStorage.getItem('usermask_id')}`,'');
           if(user.departamentos == notMyDepartamento)
           {
@@ -88,31 +91,17 @@ export class AssociadosReadComponent implements AfterViewInit, OnInit{
     return newList;
   }
 
-  deleteUser(id: string, name: string = '')
-  {
-    const dialogRef = this.dialog.open(DialogConfirmationComponent, {
-      data: {title: `Deseja excluir ${name}?`, confirm: true},
-    });
-
-    dialogRef.afterClosed().subscribe((result: boolean) => {
-      if(result)
-      {
-        this.data.deleteUser(id);
-      }
-    });
-  }
-
   addAssociadoEquipe(user: User)
   {
     if(user.departamentos)
     {
       user.departamentos += user.departamentos.length <= 0
-        ? `${localStorage.getItem('usermask_id')},${localStorage.getItem('usermask_name')},padrao`
-        : `/${localStorage.getItem('usermask_id')},${localStorage.getItem('usermask_name')},padrao`;
+        ? `${localStorage.getItem('usermask_id')},${localStorage.getItem('usermask_name')},false`
+        : `/${localStorage.getItem('usermask_id')},${localStorage.getItem('usermask_name')},false`;
     }
     else 
     {
-      user.departamentos = `${localStorage.getItem('usermask_id')},${localStorage.getItem('usermask_name')},padrao`;
+      user.departamentos = `${localStorage.getItem('usermask_id')},${localStorage.getItem('usermask_name')},false`;
     }
 
     const dialogRef = this.dialog.open(DialogConfirmationComponent, {

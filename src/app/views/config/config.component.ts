@@ -83,14 +83,8 @@ export class ConfigComponent implements OnInit{
     dialogRef.afterClosed().subscribe((result: boolean) => {
       if(result)
       {
-        this.snack.openSnackBar('Senha alterada!');
+        this.snack.openSnackBar('Senha alterada!')
       }
     });
   }
-
-  alterTheme()
-  {
-    this.theme = this.theme == 'Claro' ? 'Escuro' : 'Claro';
-  }
-
 }

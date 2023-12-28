@@ -1,1 +1,60 @@
-<app-form-event [typeForm]="typeForm"></app-form-event>
+<div class="card shadow">
+    <div class="card-body">
+        <form>
+            <mat-form-field>
+                <mat-label>Nome do evento</mat-label>
+                <input matInput #input name="event_name" [(ngModel)]="event_name">
+            </mat-form-field> 
+
+            <mat-form-field>
+                <mat-label>Breve descrição</mat-label>
+                <textarea matInput name="event_desc" [(ngModel)]="event_desc"></textarea>
+            </mat-form-field> 
+
+            <mat-form-field>
+                <mat-label>Apenas um dia?</mat-label>
+                <mat-select  name="isOneDay" [(ngModel)]="isOneDay">
+                  <mat-option value="true">Sim</mat-option>
+                  <mat-option value="">Não</mat-option>
+                  <mat-option *ngIf="isGerente" value="anual">Anual</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field *ngIf="isOneDay">
+                <mat-label>Data do evento</mat-label>
+                <input matInput [matDatepicker]="picker" name="start_date" [(ngModel)]="start_date" [min]="minDate" [max]="maxDate">
+                <mat-hint>DD/MM/YYYY</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker touchUi #picker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field *ngIf="!isOneDay">
+                <mat-label>Data do evento</mat-label>
+                <mat-date-range-input [rangePicker]="picker" [min]="minDate" [max]="maxDate">
+                    <input matStartDate placeholder="Start date" name="start_date" [(ngModel)]="start_date" [min]="minDate" [max]="maxDate">
+                    <input matEndDate placeholder="End date" name="end_date" [(ngModel)]="end_date" [min]="minDate" [max]="maxDate">
+                </mat-date-range-input>
+                <mat-hint>DD/MM/YYYY – DD/MM/YYYY</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker touchUi #picker></mat-date-range-picker>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Horário inicial</mat-label>
+                <input [disabled]="isOneDay=='anual'" matInput type="time" #input name="start_time" [(ngModel)]="start_time" (input)="maskTime()" maxlength="5">
+            </mat-form-field> 
+
+            <mat-form-field>
+                <mat-label>Horário final</mat-label>
+                <input [disabled]="isOneDay=='anual'" matInput type="time" #input name="end_time" [(ngModel)]="end_time" (input)="maskTime()" maxlength="5">
+            </mat-form-field> 
+
+            <mat-radio-group [disabled]="isOneDay=='anual'" aria-label="O evento será" name="event_type" [(ngModel)]="event_type">
+                <mat-radio-button color="primary" value="public">Público (Com a igreja)</mat-radio-button>
+                <mat-radio-button color="primary" value="private">Privado (Só para o departamento)</mat-radio-button>
+            </mat-radio-group>
+
+            <button type="button" class="btn" (click)="criar()">Criar</button>
+        </form>
+    </div>
+</div>
