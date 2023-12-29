@@ -5,11 +5,13 @@ import { DataService } from 'src/app/components/services/data.service';
 import { SnackbarService } from 'src/app/components/services/snackbar.service';
 import { CalendarOptions } from '@fullcalendar/core'; // useful for typechecking
 import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
 import esLocale from '@fullcalendar/core/locales/pt-br';
 import { Event } from 'src/app/components/models/event';
 import { DialogConfirmationComponent } from 'src/app/components/template/dialog-confirmation/dialog-confirmation.component';
 import { MatDialog } from '@angular/material/dialog';
 import { PerfilService } from 'src/app/components/services/perfil.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-eventos-read',
@@ -22,6 +24,7 @@ export class EventosReadComponent implements OnInit {
     private data: DataService,
     private snack: SnackbarService,
     private dialog: MatDialog,
+    private router: Router,
     private perfilService: PerfilService,
     private headerService: HeaderService) {
       headerService.headerData = {
@@ -36,7 +39,7 @@ export class EventosReadComponent implements OnInit {
   //Opções of init
   options = {
     initialView: 'dayGridMonth',
-    plugins: [dayGridPlugin],
+    plugins: [dayGridPlugin, interactionPlugin],
     locale: esLocale,
     headerToolbar: {
       left: '',
@@ -51,7 +54,7 @@ export class EventosReadComponent implements OnInit {
   };  
   //Init calendar 
   calendarOptions: CalendarOptions = this.options;
-  
+
   //Init page
   ngOnInit(): void {
     this.auth.auth_guard(); //auth_guard
@@ -134,6 +137,8 @@ export class EventosReadComponent implements OnInit {
       this.events.push({
         id: event.id,
         title: event.event_name,
+        message: event.event_desc,
+        type: event.event_type,
         date: new_date,
         color: '#ff9939',
         user: event.user,
@@ -182,56 +187,71 @@ export class EventosReadComponent implements OnInit {
     const day = +date.getDate();
     const agora = +`${year}${month}${day}`;
 
-    if(user == String(localStorage.getItem("usermask_id")))
+    console.log(arg)
+    if(arg.event._def.extendedProps.type == 'anual')
     {
-      if(dia > agora)
+      this.dialog.open(DialogConfirmationComponent, {
+        data: 
+        {
+          title: arg.event._def.title,
+          message: arg.event._def.extendedProps.message,
+          alert: true,
+        },
+      });
+    }
+    else 
+    {
+      if(user == String(localStorage.getItem("usermask_id")))
+      {
+        if(dia > agora)
+        {
+          dialogRef = this.dialog.open(DialogConfirmationComponent, {
+            data: 
+            {
+              id: id,
+              eventBox: true,
+              eventEdit: true,
+            },
+          });
+        }
+        else 
+        {
+          dialogRef = this.dialog.open(DialogConfirmationComponent, {
+            data:
+            {
+              id: id,
+              eventBox: true,
+            }
+          });
+          dialogRef = this.dialog.open(DialogConfirmationComponent, {
+            data:
+            {
+              title: 'Edição',
+              message: 'Edite com um dia de antecedência',
+              alert: true,
+            }
+          });
+        }
+      }
+      else 
       {
         dialogRef = this.dialog.open(DialogConfirmationComponent, {
           data: 
           {
             id: id,
             eventBox: true,
-            eventEdit: true,
           },
         });
       }
-      else 
-      {
-        dialogRef = this.dialog.open(DialogConfirmationComponent, {
-          data:
-          {
-            id: id,
-            eventBox: true,
-          }
-        });
-        dialogRef = this.dialog.open(DialogConfirmationComponent, {
-          data:
-          {
-            title: 'Edição',
-            message: 'Edite com um dia de antecedência',
-            alert: true,
-          }
-        });
-      }
-    }
-    else 
-    {
-      dialogRef = this.dialog.open(DialogConfirmationComponent, {
-        data: 
+  
+      dialogRef.afterClosed().subscribe((result: boolean) => {
+        if(result)
         {
-          id: id,
-          eventBox: true,
-        },
+          setTimeout(() => {
+            location.reload();
+          }, 1000)
+        }
       });
     }
-
-    dialogRef.afterClosed().subscribe((result: boolean) => {
-      if(result)
-      {
-        setTimeout(() => {
-          location.reload();
-        }, 1000)
-      }
-    });
   }
 }
