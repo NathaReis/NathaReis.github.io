@@ -20,6 +20,7 @@
                 <mat-select  name="isOneDay" [(ngModel)]="isOneDay">
                   <mat-option value="true">Sim</mat-option>
                   <mat-option value="">Não</mat-option>
+                  <mat-option *ngIf="isGerente" value="anual">Anual</mat-option>
                 </mat-select>
             </mat-form-field>
 
@@ -44,15 +45,15 @@
 
             <mat-form-field>
                 <mat-label>Horário inicial</mat-label>
-                <input matInput #input placeholder="HH:MM" name="start_time" [(ngModel)]="start_time" (input)="maskTime()" maxlength="5">
+                <input [disabled]="isOneDay=='anual'" type="time" matInput #input name="start_time" [(ngModel)]="start_time">
             </mat-form-field> 
 
             <mat-form-field>
                 <mat-label>Horário final</mat-label>
-                <input matInput #input placeholder="HH:MM" name="end_time" [(ngModel)]="end_time" (input)="maskTime()" maxlength="5">
+                <input [disabled]="isOneDay=='anual'" type="time" matInput #input name="end_time" [(ngModel)]="end_time">
             </mat-form-field> 
 
-            <mat-radio-group aria-label="O evento será" name="event_type" [(ngModel)]="event_type">
+            <mat-radio-group [disabled]="isOneDay=='anual'" aria-label="O evento será" name="event_type" [(ngModel)]="event_type">
                 <mat-radio-button color="primary" value="public">Público (Com a igreja)</mat-radio-button>
                 <mat-radio-button color="primary" value="private">Privado (Só para o departamento)</mat-radio-button>
             </mat-radio-group>

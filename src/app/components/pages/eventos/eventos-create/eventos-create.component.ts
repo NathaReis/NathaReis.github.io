@@ -14,8 +14,8 @@ import { DialogConfirmationComponent } from 'src/app/components/template/dialog-
 })
 export class EventosCreateComponent implements OnInit{
 
-  event_name: string = 'e';
-  event_desc: string = 'e';
+  event_name: string = '';
+  event_desc: string = '';
   isOneDay: string = 'true';
   start_date: Date = new Date();//'MM/DD/YYY'
   end_date: Date = new Date();
@@ -25,6 +25,7 @@ export class EventosCreateComponent implements OnInit{
   maxDate: Date = new Date();
   minDate: Date = new Date();
   agora: Date = new Date();
+  isGerente = localStorage.getItem('logado') == 'gerente' ? true : false;
 
   constructor(
     private auth: AuthService,
@@ -55,7 +56,7 @@ export class EventosCreateComponent implements OnInit{
   }
 
   eventsList: Event[] = [];
-  listDatas: Array<{data: {start: number, end: number}, hora: {start: number, end: number}, name: string}> = [];
+  listDatas: Array<{data: {start: number, end: number}, hora: {start: number, end: number}, name: string, horario: string}> = [];
   getAllEvents()
   {
     //Consulta o serviço Events
@@ -80,6 +81,7 @@ export class EventosCreateComponent implements OnInit{
               :  datInt;
             const horFim = +`${ev.end_time.replace(/\D/g, "")}`;
             const name = ev.event_name;
+            const horario = `${ev.start_time}-${ev.end_time}`;
             return {
               data: {
                 start: datInt, 
@@ -89,7 +91,8 @@ export class EventosCreateComponent implements OnInit{
                 start: horInt, 
                 end: horFim
               }, 
-              name: name
+              name: name,
+              horario: horario,
             }
           })
       }, err => 
@@ -97,68 +100,6 @@ export class EventosCreateComponent implements OnInit{
         //Mensagem de erro
         this.snack.openSnackBar(`Erro de busca: ${err}`);
       })
-  }
-
-  maskTime()
-  {
-    if(this.start_time)
-    {
-      //Remove caracters NaN e max.length 5
-      this.start_time = this.start_time.replace(/\D/g, "").substring(0,4);
-      //Dividir string em caracters individuais
-      let numsArray: Array<string> = this.start_time.split("");
-      //Var para num formatado
-      let numFormatado: string = "";
-      //If maior que zero
-      if(numsArray.length > 0)
-      {
-          //Formatar o DD e conectar o valor
-          //slice - extrai parte da array
-          //join - uni os elementos do array em uma única string
-          numFormatado += `${numsArray.slice(0,2).join("")}`;
-      }    
-      //If maior que dois
-      if(numsArray.length > 2)
-      {
-        numFormatado += `:${numsArray.slice(2,4).join("")}`;
-      }
-      //If maior que sete
-      if(numsArray.length > 4)
-      {
-        numFormatado += `${numsArray.slice(0,4).join("")}`;
-      }
-      //Enviar para o campo o num formatado
-      this.start_time = numFormatado;
-    }
-    if(this.end_time)
-    {
-      //Remove caracters NaN e max.length 5
-      this.end_time = this.end_time.replace(/\D/g, "").substring(0,4);
-      //Dividir string em caracters individuais
-      let numsArray: Array<string> = this.end_time.split("");
-      //Var para num formatado
-      let numFormatado: string = "";
-      //If maior que zero
-      if(numsArray.length > 0)
-      {
-          //Formatar o DD e conectar o valor
-          //slice - extrai parte da array
-          //join - uni os elementos do array em uma única string
-          numFormatado += `${numsArray.slice(0,2).join("")}`;
-      }    
-      //If maior que dois
-      if(numsArray.length > 2)
-      {
-        numFormatado += `:${numsArray.slice(2,4).join("")}`;
-      }
-      //If maior que sete
-      if(numsArray.length > 4)
-      {
-        numFormatado += `${numsArray.slice(0,4).join("")}`;
-      }
-      //Enviar para o campo o num formatado
-      this.end_time = numFormatado;
-    }
   }
 
   dateForString(data: Date)
@@ -213,96 +154,125 @@ export class EventosCreateComponent implements OnInit{
 
   validarObj(): boolean
   {
-    if(this.event_name == '' || this.event_desc == '' || String(this.start_date) == '' || String(this.end_date) == '' || this.start_time == '' || this.end_time == '')
+    if(this.isOneDay != 'anual')
     {
-      this.snack.openSnackBar('Preencha todos os dados!', 2000)
-      return false
-    }//Se preenchidos
-    else if(this.start_time.length < 5 || this.end_time.length < 5)
-    {
-      this.snack.openSnackBar('Preencha o horário completo!', 2000)
-      return false
-    }// Se horário preenchido
-    else if(+(this.start_time.replace(/\D/g, "")) > +(this.end_time.replace(/\D/g, "")) && this.isOneDay)
-    {
-      this.snack.openSnackBar('Horário de início maior que o de fim!', 2000)
-      return false
-    }//Se isOneDay e hor final maior que hor inicial
-    else if(+this.start_time.split(':')[0] > 23 || +this.start_time.split(':')[1] > 59 || +this.start_time.split(':')[0] < 0 || +this.start_time.split(':')[1] < 0 || +this.end_time.split(':')[0] > 23 || +this.end_time.split(':')[1] > 59 || +this.end_time.split(':')[0] < 0 || +this.end_time.split(':')[1] < 0)
-    {
-      this.snack.openSnackBar('Horário incorreto!', 2000)
-      return false
-    }
-    else 
-    {
-      //Se já exites um evento iniciado no mesmo intervalo entre o início e o fim do evento atual
-      let dataInicio: number | string = this.dateForString(this.start_date);
-      dataInicio = +`${dataInicio.split("/")[2]}${dataInicio.split("/")[1]}${dataInicio.split("/")[0]}`;
-      let horaInicio = +`${this.start_time.replace(/\D/g, "")}`;
-  
-      let dataFim: number | string = this.agora != this.end_date ? this.dateForString(this.end_date) : this.dateForString(this.start_date);
-      dataFim = +`${dataFim.split("/")[2]}${dataFim.split("/")[1]}${dataFim.split("/")[0]}`;
-      let horaFim = +`${this.end_time.replace(/\D/g, "")}`;
-
-      //Passa por todos os dias entre os dias atuais
-      for(let i = dataInicio; i <= dataFim; i++)
+      if(this.event_name == '' || this.event_desc == '' || String(this.start_date) == '' || String(this.end_date) == '' || this.start_time == '' || this.end_time == '')
       {
-        //Passa para todos os itens da lista
-        for(let item of this.listDatas)
+        this.snack.openSnackBar('Preencha todos os dados!', 2000)
+        return false
+      }//Se preenchidos
+      else if(this.start_time.length < 5 || this.end_time.length < 5)
+      {
+        this.snack.openSnackBar('Preencha o horário completo!', 2000)
+        return false
+      }// Se horário preenchido
+      else if(+(this.start_time.replace(/\D/g, "")) > +(this.end_time.replace(/\D/g, "")) && this.isOneDay)
+      {
+        this.snack.openSnackBar('Horário de início maior que o de fim!', 2000)
+        return false
+      }//Se isOneDay e hor final maior que hor inicial
+      else if(+this.start_time.split(':')[0] > 23 || +this.start_time.split(':')[1] > 59 || +this.start_time.split(':')[0] < 0 || +this.start_time.split(':')[1] < 0 || +this.end_time.split(':')[0] > 23 || +this.end_time.split(':')[1] > 59 || +this.end_time.split(':')[0] < 0 || +this.end_time.split(':')[1] < 0)
+      {
+        this.snack.openSnackBar('Horário incorreto!', 2000)
+        return false
+      }
+      else 
+      {
+        //Se já exites um evento iniciado no mesmo intervalo entre o início e o fim do evento atual
+        let dataInicio: number | string = this.dateForString(this.start_date);
+        dataInicio = +`${dataInicio.split("/")[2]}${dataInicio.split("/")[1]}${dataInicio.split("/")[0]}`;
+        let horaInicio = +`${this.start_time.replace(/\D/g, "")}`;
+    
+        let dataFim: number | string = this.agora != this.end_date ? this.dateForString(this.end_date) : this.dateForString(this.start_date);
+        dataFim = +`${dataFim.split("/")[2]}${dataFim.split("/")[1]}${dataFim.split("/")[0]}`;
+        let horaFim = +`${this.end_time.replace(/\D/g, "")}`;
+  
+        //Passa por todos os dias entre os dias atuais
+        for(let i = dataInicio; i <= dataFim; i++)
         {
-          //Passa por todos os períodos de cada item da lista
-          for(let ii = item.data.start; ii <= item.data.end; ii++)
+          //Passa para todos os itens da lista
+          for(let item of this.listDatas)
           {
-            //Se o príodo Dia da lista for igual ao período Dia atual
-            if(ii == i)
+            //Passa por todos os períodos de cada item da lista
+            for(let ii = item.data.start; ii <= item.data.end; ii++)
             {
-              //Passa por todas as horas entre o início e o fim atual
-              for(let h = horaInicio; h <= horaFim; h++)
+              //Se o príodo Dia da lista for igual ao período Dia atual
+              if(ii == i)
               {
-                //Passa por todas as horas do item da lista
-                for(let hh = item.hora.start; hh < item.hora.end; hh++)
+                //Passa por todas as horas entre o início e o fim atual
+                for(let h = horaInicio; h <= horaFim; h++)
                 {
-                  //Se a hora se encaixar
-                  if(hh == h)
+                  //Passa por todas as horas do item da lista
+                  for(let hh = item.hora.start; hh < item.hora.end; hh++)
                   {
-                    this.dialog.open(DialogConfirmationComponent, {
-                      data: 
-                      {
-                        title: 'ERRO',
-                        message: `A data já está sendo usada no evento ${item.name}!`,
-                        alert: true
-                      },
-                    });
-                    return false;
+                    //Se a hora se encaixar
+                    if(hh == h)
+                    {
+                      this.dialog.open(DialogConfirmationComponent, {
+                        data: 
+                        {
+                          title: 'ERRO',
+                          message: `A data já está sendo usada no evento ${item.name}!\nNo horário ${item.horario}`,
+                          alert: true
+                        },
+                      });
+                      return false;
+                    }
                   }
                 }
               }
             }
           }
         }
+  
+        //Se tudo estiver ok
+        return true;
       }
-
-      //Se tudo estiver ok
+    }
+    else 
+    {
+      if(this.event_name == '' || this.event_desc == '')
+      {
+        this.snack.openSnackBar('Preencha o nome e a descrição');
+        return false;
+      }
+      
       return true;
     }
   }
 
   criarObj()
   {
-
     if(this.validarObj()) 
     {
-      return {
-        event_name: this.event_name,
-        event_desc: this.event_desc,
-        isOneDay: this.isOneDay ? 'true' : 'false',
-        start_date: this.dateForString(this.start_date),
-        end_date: this.isOneDay ? 'null' : this.dateForString(this.end_date),
-        start_time: this.start_time,
-        end_time: this.end_time,
-        event_type: this.event_type,
-        user: String(localStorage.getItem("usermask_id"))
-      }        
+      if(this.isOneDay != 'anual')
+      {
+        return {
+          event_name: this.event_name,
+          event_desc: this.event_desc,
+          isOneDay: this.isOneDay ? 'true' : 'false',
+          start_date: this.dateForString(this.start_date),
+          end_date: this.isOneDay ? 'null' : this.dateForString(this.end_date),
+          start_time: this.start_time,
+          end_time: this.end_time,
+          event_type: this.event_type,
+          user: String(localStorage.getItem("usermask_id"))
+        }
+      } 
+      else 
+      {
+        return {
+          event_name: this.event_name,
+          event_desc: this.event_desc,
+          isOneDay: 'anual',
+          start_date: this.dateForString(this.start_date),
+          end_date: 'null',
+          start_time: '',
+          end_time: '',
+          event_type: 'anual',
+          user: String(localStorage.getItem("usermask_id"))
+        }
+      }       
     }
     else 
     {

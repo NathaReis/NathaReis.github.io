@@ -32,17 +32,20 @@ export class EventosReadComponent implements OnInit {
   }
   
   //Events example
-  events: any = [
-    {title: 'evenAnual', date: '2023-12-03', color: '#e35e6b'},
-  ]
+  events: any = [];
   //Opções of init
   options = {
     initialView: 'dayGridMonth',
     plugins: [dayGridPlugin],
     locale: esLocale,
     headerToolbar: {
-      left: 'prev',
+      left: '',
       center: 'title',
+      right: '',
+    },
+    footerToolbar: {
+      left: 'prev',
+      center: 'today',
       right: 'next',
     },
   };  
@@ -56,6 +59,7 @@ export class EventosReadComponent implements OnInit {
   }
     
   eventsList: Event[] = [];
+  eventsListAnuais: Event[] = [];
   getAllEvents()
   {
     //Consulta o serviço Events
@@ -68,11 +72,18 @@ export class EventosReadComponent implements OnInit {
             data.id = e.payload.doc.id;
             return data;
           })
+        this.eventsListAnuais = this.eventsList.filter(ev => ev.isOneDay == 'anual');
+        this.eventsList = this.eventsList.filter(ev => ev.isOneDay != 'anual');
         if(!this.perfilService.perfilData.all_view)
         {
           this.eventsList = this.eventsList.filter(ev => ev.user == String(localStorage.getItem('usermask_id')));
         }
+        else 
+        {
+          this.eventsList = this.eventsList.filter(ev => ev.user != String(localStorage.getItem('usermask_id')) && ev.event_type == 'public' ||  ev.user == String(localStorage.getItem('usermask_id')));
+        }
         this.popularEvents(this.eventsList); //Atualiza a lista
+        this.popularEventsAnuais(this.eventsListAnuais); //Atualiza a lista
         this.updateCalendarOptions(); //Atualiza o calendário
       }, err => 
       {
@@ -111,6 +122,23 @@ export class EventosReadComponent implements OnInit {
           })
         }
       }
+    })
+  }
+  popularEventsAnuais(events: Event[])
+  {
+    events.forEach(event =>
+    {
+      const atual_date = this.formatDate(event.start_date);
+      const atual_year = new Date().getFullYear();
+      const new_date = `${atual_year}-${atual_date.split('-')[1]}-${atual_date.split('-')[2]}`;
+      this.events.push({
+        id: event.id,
+        title: event.event_name,
+        date: new_date,
+        color: '#ff9939',
+        user: event.user,
+        dia: this.dateForNumber(event.start_date),
+      })
     })
   }
 
