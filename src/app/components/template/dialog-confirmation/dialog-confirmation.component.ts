@@ -68,6 +68,8 @@ export class DialogConfirmationComponent implements OnInit{
   newPassword: string = '';
   confirmPassword: string = '';
   hide = true;
+  hideNew = true;
+  hideConfirm = true;
 
   getUser()
   {
