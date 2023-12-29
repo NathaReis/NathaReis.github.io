@@ -107,12 +107,12 @@ export class AssociadosReadComponent implements AfterViewInit, OnInit{
     if(user.departamentos)
     {
       user.departamentos += user.departamentos.length <= 0
-        ? `${localStorage.getItem('usermask_id')},${localStorage.getItem('usermask_name')},padrao`
-        : `/${localStorage.getItem('usermask_id')},${localStorage.getItem('usermask_name')},padrao`;
+        ? `${localStorage.getItem('usermask_id')},${localStorage.getItem('usermask_name')},false`
+        : `/${localStorage.getItem('usermask_id')},${localStorage.getItem('usermask_name')},false`;
     }
     else 
     {
-      user.departamentos = `${localStorage.getItem('usermask_id')},${localStorage.getItem('usermask_name')},padrao`;
+      user.departamentos = `${localStorage.getItem('usermask_id')},${localStorage.getItem('usermask_name')},false`;
     }
 
     const dialogRef = this.dialog.open(DialogConfirmationComponent, {

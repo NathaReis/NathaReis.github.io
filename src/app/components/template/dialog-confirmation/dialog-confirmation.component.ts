@@ -62,7 +62,7 @@ export class DialogConfirmationComponent implements OnInit{
     perfil: '',
     departamentos: '',  
   };
-  user_name: string = String(localStorage.getItem("user_name"));
+  user_name: string = String(localStorage.getItem("usermask_name"));
   passwordAtual: string = '';
   password: string = '';
   newPassword: string = '';
@@ -73,7 +73,7 @@ export class DialogConfirmationComponent implements OnInit{
 
   getUser()
   {
-    this.dataS.getUser(String(localStorage.getItem("user_id"))).subscribe((res: any) =>
+    this.dataS.getUser(String(localStorage.getItem("usermask_id"))).subscribe((res: any) =>
       {
         if(res)
         {
@@ -94,7 +94,7 @@ export class DialogConfirmationComponent implements OnInit{
       if(this.newPassword == this.confirmPassword)
       {
         this.user.password = this.newPassword;
-        this.dataS.updateUser(this.user, String(localStorage.getItem("user_id")))
+        this.dataS.updateUser(this.user, String(localStorage.getItem("usermask_id")))
         this.onConfirm(true);
       }
       else 
