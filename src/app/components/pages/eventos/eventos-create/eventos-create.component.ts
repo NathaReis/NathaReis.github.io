@@ -14,8 +14,8 @@ import { DialogConfirmationComponent } from 'src/app/components/template/dialog-
 })
 export class EventosCreateComponent implements OnInit{
 
-  event_name: string = '';
-  event_desc: string = '';
+  event_name: string = 'e';
+  event_desc: string = 'e';
   isOneDay: string = 'true';
   start_date: Date = new Date();//'MM/DD/YYY'
   end_date: Date = new Date();
@@ -25,9 +25,6 @@ export class EventosCreateComponent implements OnInit{
   maxDate: Date = new Date();
   minDate: Date = new Date();
   agora: Date = new Date();
-  event_anual: Date = new Date();
-  isGerente: boolean = false;
-
 
   constructor(
     private auth: AuthService,
@@ -55,14 +52,10 @@ export class EventosCreateComponent implements OnInit{
 
     this.auth.auth_guard();
     this.getAllEvents();
-    if(localStorage.getItem('logado') == 'gerente')
-    {
-      this.isGerente = true;
-    }
   }
 
   eventsList: Event[] = [];
-  listDatas: Array<{data: {start: number, end: number}, hora: {start: number, end: number}, name: string, horario: string}> = [];
+  listDatas: Array<{data: {start: number, end: number}, hora: {start: number, end: number}, name: string}> = [];
   getAllEvents()
   {
     //Consulta o serviço Events
@@ -87,7 +80,6 @@ export class EventosCreateComponent implements OnInit{
               :  datInt;
             const horFim = +`${ev.end_time.replace(/\D/g, "")}`;
             const name = ev.event_name;
-            const horario = `${ev.start_time}-${ev.end_time}`;
             return {
               data: {
                 start: datInt, 
@@ -97,8 +89,7 @@ export class EventosCreateComponent implements OnInit{
                 start: horInt, 
                 end: horFim
               }, 
-              name: name,
-              horario: horario,
+              name: name
             }
           })
       }, err => 
@@ -222,94 +213,78 @@ export class EventosCreateComponent implements OnInit{
 
   validarObj(): boolean
   {
-    if(this.isOneDay == 'anual')
+    if(this.event_name == '' || this.event_desc == '' || String(this.start_date) == '' || String(this.end_date) == '' || this.start_time == '' || this.end_time == '')
     {
-      if(this.event_name == '' || this.event_desc == '' || String(this.start_date) == '')
-      {
-        this.snack.openSnackBar('Preencha todos os dados!', 2000)
-        return false
-      }//Se preenchidos
-      else 
-      {
-        return true
-      }
+      this.snack.openSnackBar('Preencha todos os dados!', 2000)
+      return false
+    }//Se preenchidos
+    else if(this.start_time.length < 5 || this.end_time.length < 5)
+    {
+      this.snack.openSnackBar('Preencha o horário completo!', 2000)
+      return false
+    }// Se horário preenchido
+    else if(+(this.start_time.replace(/\D/g, "")) > +(this.end_time.replace(/\D/g, "")) && this.isOneDay)
+    {
+      this.snack.openSnackBar('Horário de início maior que o de fim!', 2000)
+      return false
+    }//Se isOneDay e hor final maior que hor inicial
+    else if(+this.start_time.split(':')[0] > 23 || +this.start_time.split(':')[1] > 59 || +this.start_time.split(':')[0] < 0 || +this.start_time.split(':')[1] < 0 || +this.end_time.split(':')[0] > 23 || +this.end_time.split(':')[1] > 59 || +this.end_time.split(':')[0] < 0 || +this.end_time.split(':')[1] < 0)
+    {
+      this.snack.openSnackBar('Horário incorreto!', 2000)
+      return false
     }
     else 
     {
-      if(this.event_name == '' || this.event_desc == '' || String(this.start_date) == '' || String(this.end_date) == '' || this.start_time == '' || this.end_time == '')
-      {
-        this.snack.openSnackBar('Preencha todos os dados!', 2000)
-        return false
-      }//Se preenchidos
-      else if(this.start_time.length < 5 || this.end_time.length < 5)
-      {
-        this.snack.openSnackBar('Preencha o horário completo!', 2000)
-        return false
-      }// Se horário preenchido
-      else if(+(this.start_time.replace(/\D/g, "")) > +(this.end_time.replace(/\D/g, "")) && this.isOneDay)
-      {
-        this.snack.openSnackBar('Horário de início maior que o de fim!', 2000)
-        return false
-      }//Se isOneDay e hor final maior que hor inicial
-      else if(+this.start_time.split(':')[0] > 23 || +this.start_time.split(':')[1] > 59 || +this.start_time.split(':')[0] < 0 || +this.start_time.split(':')[1] < 0 || +this.end_time.split(':')[0] > 23 || +this.end_time.split(':')[1] > 59 || +this.end_time.split(':')[0] < 0 || +this.end_time.split(':')[1] < 0)
-      {
-        this.snack.openSnackBar('Horário incorreto!', 2000)
-        return false
-      }
-      else 
-      {
-        //Se já exites um evento iniciado no mesmo intervalo entre o início e o fim do evento atual
-        let dataInicio: number | string = this.dateForString(this.start_date);
-        dataInicio = +`${dataInicio.split("/")[2]}${dataInicio.split("/")[1]}${dataInicio.split("/")[0]}`;
-        let horaInicio = +`${this.start_time.replace(/\D/g, "")}`;
-    
-        let dataFim: number | string = this.agora != this.end_date ? this.dateForString(this.end_date) : this.dateForString(this.start_date);
-        dataFim = +`${dataFim.split("/")[2]}${dataFim.split("/")[1]}${dataFim.split("/")[0]}`;
-        let horaFim = +`${this.end_time.replace(/\D/g, "")}`;
+      //Se já exites um evento iniciado no mesmo intervalo entre o início e o fim do evento atual
+      let dataInicio: number | string = this.dateForString(this.start_date);
+      dataInicio = +`${dataInicio.split("/")[2]}${dataInicio.split("/")[1]}${dataInicio.split("/")[0]}`;
+      let horaInicio = +`${this.start_time.replace(/\D/g, "")}`;
+  
+      let dataFim: number | string = this.agora != this.end_date ? this.dateForString(this.end_date) : this.dateForString(this.start_date);
+      dataFim = +`${dataFim.split("/")[2]}${dataFim.split("/")[1]}${dataFim.split("/")[0]}`;
+      let horaFim = +`${this.end_time.replace(/\D/g, "")}`;
 
-        //Passa por todos os dias entre os dias atuais
-        for(let i = dataInicio; i <= dataFim; i++)
+      //Passa por todos os dias entre os dias atuais
+      for(let i = dataInicio; i <= dataFim; i++)
+      {
+        //Passa para todos os itens da lista
+        for(let item of this.listDatas)
         {
-          //Passa para todos os itens da lista
-          for(let item of this.listDatas)
+          //Passa por todos os períodos de cada item da lista
+          for(let ii = item.data.start; ii <= item.data.end; ii++)
           {
-            //Passa por todos os períodos de cada item da lista
-            for(let ii = item.data.start; ii <= item.data.end; ii++)
+            //Se o príodo Dia da lista for igual ao período Dia atual
+            if(ii == i)
             {
-              //Se o príodo Dia da lista for igual ao período Dia atual
-              if(ii == i)
+              //Passa por todas as horas entre o início e o fim atual
+              for(let h = horaInicio; h <= horaFim; h++)
               {
-                //Passa por todas as horas entre o início e o fim atual
-                for(let h = horaInicio; h <= horaFim; h++)
+                //Passa por todas as horas do item da lista
+                for(let hh = item.hora.start; hh < item.hora.end; hh++)
                 {
-                  //Passa por todas as horas do item da lista
-                  for(let hh = item.hora.start; hh < item.hora.end; hh++)
+                  //Se a hora se encaixar
+                  if(hh == h)
                   {
-                    //Se a hora se encaixar
-                    if(hh == h)
-                    {
-                      this.dialog.open(DialogConfirmationComponent, {
-                        data: 
-                        {
-                          title: 'ERRO',
-                          message: `A data já está sendo usada no evento ${item.name}!\nNo horário ${item.horario}`,
-                          alert: true
-                        },
-                      });
-                      return false;
-                    }
+                    this.dialog.open(DialogConfirmationComponent, {
+                      data: 
+                      {
+                        title: 'ERRO',
+                        message: `A data já está sendo usada no evento ${item.name}!`,
+                        alert: true
+                      },
+                    });
+                    return false;
                   }
                 }
               }
             }
           }
         }
+      }
 
-        //Se tudo estiver ok
-        return true;
-      }      
+      //Se tudo estiver ok
+      return true;
     }
-
   }
 
   criarObj()
@@ -317,33 +292,16 @@ export class EventosCreateComponent implements OnInit{
 
     if(this.validarObj()) 
     {
-      if(this.isOneDay == 'anual')
-      {
-        return {
-          event_name: this.event_name,
-          event_desc: this.event_desc,
-          isOneDay: this.isOneDay,
-          start_date: this.dateForString(this.start_date),
-          end_date: 'null',
-          start_time: '',
-          end_time: '',
-          event_type: 'all_view',
-          user: String(localStorage.getItem("usermask_id"))   
-        }
-      }
-      else 
-      {
-        return {
-          event_name: this.event_name,
-          event_desc: this.event_desc,
-          isOneDay: this.isOneDay ? 'true' : 'false',
-          start_date: this.dateForString(this.start_date),
-          end_date: this.isOneDay ? 'null' : this.dateForString(this.end_date),
-          start_time: this.start_time,
-          end_time: this.end_time,
-          event_type: this.event_type,
-          user: String(localStorage.getItem("usermask_id"))        
-        }
+      return {
+        event_name: this.event_name,
+        event_desc: this.event_desc,
+        isOneDay: this.isOneDay ? 'true' : 'false',
+        start_date: this.dateForString(this.start_date),
+        end_date: this.isOneDay ? 'null' : this.dateForString(this.end_date),
+        start_time: this.start_time,
+        end_time: this.end_time,
+        event_type: this.event_type,
+        user: String(localStorage.getItem("usermask_id"))
       }        
     }
     else 

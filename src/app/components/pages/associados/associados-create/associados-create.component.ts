@@ -9,6 +9,7 @@ import { SnackbarService } from 'src/app/components/services/snackbar.service';
   styleUrls: ['./associados-create.component.css']
 })
 export class AssociadosCreateComponent {
+
   hide = true;
   
   constructor( 
@@ -33,7 +34,7 @@ export class AssociadosCreateComponent {
   id: string = '';
   first_name: string = '';
   last_name: string = '';
-  password: string = 'iasge';
+  password: string = '';
   user_name: string = '';
 
   resetForm()

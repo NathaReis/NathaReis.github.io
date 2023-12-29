@@ -1,6 +1,10 @@
 <div class="card shadow">
     <div class="card-body">
         <form>
+            <div class="mb-3">
+                <h4 class="text-dark text-muted">Criar evento</h4>
+            </div>
+
             <mat-form-field>
                 <mat-label>Nome do evento</mat-label>
                 <input matInput #input name="event_name" [(ngModel)]="event_name">
@@ -16,7 +20,6 @@
                 <mat-select  name="isOneDay" [(ngModel)]="isOneDay">
                   <mat-option value="true">Sim</mat-option>
                   <mat-option value="">Não</mat-option>
-                  <mat-option *ngIf="isGerente" value="anual">Anual</mat-option>
                 </mat-select>
             </mat-form-field>
 
@@ -41,15 +44,15 @@
 
             <mat-form-field>
                 <mat-label>Horário inicial</mat-label>
-                <input [disabled]="isOneDay=='anual'" matInput type="time" #input name="start_time" [(ngModel)]="start_time" (input)="maskTime()" maxlength="5">
+                <input matInput #input placeholder="HH:MM" name="start_time" [(ngModel)]="start_time" (input)="maskTime()" maxlength="5">
             </mat-form-field> 
 
             <mat-form-field>
                 <mat-label>Horário final</mat-label>
-                <input [disabled]="isOneDay=='anual'" matInput type="time" #input name="end_time" [(ngModel)]="end_time" (input)="maskTime()" maxlength="5">
+                <input matInput #input placeholder="HH:MM" name="end_time" [(ngModel)]="end_time" (input)="maskTime()" maxlength="5">
             </mat-form-field> 
 
-            <mat-radio-group [disabled]="isOneDay=='anual'" aria-label="O evento será" name="event_type" [(ngModel)]="event_type">
+            <mat-radio-group aria-label="O evento será" name="event_type" [(ngModel)]="event_type">
                 <mat-radio-button color="primary" value="public">Público (Com a igreja)</mat-radio-button>
                 <mat-radio-button color="primary" value="private">Privado (Só para o departamento)</mat-radio-button>
             </mat-radio-group>

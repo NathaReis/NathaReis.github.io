@@ -1,4 +1,3 @@
-import { identifierName } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from 'src/app/components/services/data.service';
@@ -11,8 +10,7 @@ import { SnackbarService } from 'src/app/components/services/snackbar.service';
   styleUrls: ['./associados-edit.component.css']
 })
 export class AssociadosEditComponent implements OnInit{
-  //typeForm = 'Atualizar associado';
-
+  
   hide = true;
 
   constructor( 
@@ -40,18 +38,16 @@ export class AssociadosEditComponent implements OnInit{
   id: string = '';
   first_name: string = '';
   last_name: string = '';
-  editor: string = ''; //Uso apenas lógico, pois não está no Banco de Dados
+  editor: string = '';
   departamentos: string = '';
   perfil: string = '';
   password: string = '';
 
   ngOnInit(): void {
     const id = String(this.route.snapshot.paramMap.get('id'));
-    this.data.getUser(String(identifierName)).subscribe(user =>
+    this.data.getUser(String(id)).subscribe(user =>
       {
-
-        console.log(user)
-        this.preencher_form(user[0], id)
+        this.preencher_form(user.data(), id)
       })
   }
 
@@ -66,10 +62,10 @@ export class AssociadosEditComponent implements OnInit{
 
     if(user.departamentos)
     {
-      let isUltimo = user.departamentos.replace(`${localStorage.getItem('usermask_id')},${localStorage.getItem('usermask_name')},`,'').length <= 5 ? true : false;
+      let isUltimo = user.departamentos.replace(`${localStorage.getItem('user_id')},${localStorage.getItem('user_name')},`,'').length <= 5 ? true : false;
       if(isUltimo)
       {
-        let perfil = user.departamentos.replace(`${localStorage.getItem('usermask_id')},${localStorage.getItem('usermask_name')},`,'')
+        let perfil = user.departamentos.replace(`${localStorage.getItem('user_id')},${localStorage.getItem('user_name')},`,'')
         this.editor = perfil;
       }
       else 
@@ -78,9 +74,9 @@ export class AssociadosEditComponent implements OnInit{
         deps.forEach((dep: string) =>
           {
             let id = dep.split(',')[0];
-            if(id == localStorage.getItem('usermask_id'))
+            if(id == localStorage.getItem('user_id'))
             {
-              let perfil = dep.replace(`${localStorage.getItem('usermask_id')},${localStorage.getItem('usermask_name')},`,'')
+              let perfil = user.departamentos.replace(`${localStorage.getItem('user_id')},${localStorage.getItem('user_name')},`,'')
               this.editor = perfil;
             }
           })
@@ -99,10 +95,10 @@ export class AssociadosEditComponent implements OnInit{
   {
     if(this.departamentos)
     {
-      let isUltimo = this.departamentos.replace(`${localStorage.getItem('usermask_id')},${localStorage.getItem('usermask_name')},`,'').length <= 5 ? true : false;
+      let isUltimo = this.departamentos.replace(`${localStorage.getItem('user_id')},${localStorage.getItem('user_name')},`,'').length <= 5 ? true : false;
       if(isUltimo)
       {
-        let perfil = `${localStorage.getItem('usermask_id')},${localStorage.getItem('usermask_name')},${this.editor}`;
+        let perfil = `${localStorage.getItem('user_id')},${localStorage.getItem('user_name')},${this.editor}`;
         this.departamentos = perfil;
       }
       else 
@@ -112,21 +108,20 @@ export class AssociadosEditComponent implements OnInit{
         deps.forEach((dep: string) =>
           {
             let id = dep.split(',')[0];
-            if(id == localStorage.getItem('usermask_id'))
+            if(id == localStorage.getItem('user_id'))
             {
-              let newDep = `${localStorage.getItem('usermask_id')},${localStorage.getItem('usermask_name')},${this.editor}`;
-              newList.length <= 0 ? newList = newDep : newList += `/${newDep}`;
+              let newDep = `${localStorage.getItem('user_id')},${localStorage.getItem('user_name')},${this.editor}`;
+              newList.length <= 0 ? newList += newDep : `/${newDep}`;
             }
             else 
             {
-              newList.length <= 0 ? newList = dep : newList += `/${dep}`;
+              newList.length <= 0 ? newList += dep : `/${dep}`;
             }
           })
 
           this.departamentos = newList;
       }
     }
-
     if(this.first_name == '' || this.last_name == '')
     {
       this.snack.openSnackBar('Preencha todos os campos', 2000);

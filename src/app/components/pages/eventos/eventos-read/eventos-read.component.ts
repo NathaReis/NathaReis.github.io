@@ -5,7 +5,6 @@ import { DataService } from 'src/app/components/services/data.service';
 import { SnackbarService } from 'src/app/components/services/snackbar.service';
 import { CalendarOptions } from '@fullcalendar/core'; // useful for typechecking
 import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin  from '@fullcalendar/interaction';
 import esLocale from '@fullcalendar/core/locales/pt-br';
 import { Event } from 'src/app/components/models/event';
 import { DialogConfirmationComponent } from 'src/app/components/template/dialog-confirmation/dialog-confirmation.component';
@@ -33,11 +32,13 @@ export class EventosReadComponent implements OnInit {
   }
   
   //Events example
-  events: any = []
+  events: any = [
+    {title: 'evenAnual', date: '2023-12-03', color: '#e35e6b'},
+  ]
   //Opções of init
   options = {
     initialView: 'dayGridMonth',
-    plugins: [dayGridPlugin, interactionPlugin],
+    plugins: [dayGridPlugin],
     locale: esLocale,
     headerToolbar: {
       left: 'prev',
@@ -55,7 +56,6 @@ export class EventosReadComponent implements OnInit {
   }
     
   eventsList: Event[] = [];
-  eventsListAnual: Event[] = [];
   getAllEvents()
   {
     //Consulta o serviço Events
@@ -68,18 +68,11 @@ export class EventosReadComponent implements OnInit {
             data.id = e.payload.doc.id;
             return data;
           })
-        this.eventsListAnual = this.eventsList.filter(ev => ev.isOneDay == 'anual')
-        this.eventsList = this.eventsList.filter(ev => ev.isOneDay != 'anual')
         if(!this.perfilService.perfilData.all_view)
         {
           this.eventsList = this.eventsList.filter(ev => ev.user == String(localStorage.getItem('usermask_id')));
         }
-        else 
-        {
-          this.eventsList = this.eventsList.filter(ev => ev.user == String(localStorage.getItem('usermask_id')) || ev.user != String(localStorage.getItem('usermask_id')) && ev.event_type == 'public')
-        }
         this.popularEvents(this.eventsList); //Atualiza a lista
-        this.popularEventsAnuais(this.eventsListAnual); //Atualiza a lista
         this.updateCalendarOptions(); //Atualiza o calendário
       }, err => 
       {
@@ -118,24 +111,6 @@ export class EventosReadComponent implements OnInit {
           })
         }
       }
-    })
-  }
-  popularEventsAnuais(events: Event[])
-  {
-    events.forEach(event =>
-    {
-      const anoAtual = new Date().getFullYear();
-      const newDate = `${anoAtual}-${event.start_date.split('/')[1]}-${event.start_date.split('/')[0]}`
-      this.events.push({
-        id: event.id,
-        title: event.event_name,
-        start: newDate,
-        //daysOfWeek: [ '1' ],
-        color: '#e35e6b',
-        user: event.user,
-        dia: this.dateForNumber(event.start_date),
-        recurring: 'annual', // Configuração para evento anual
-      })
     })
   }
 

@@ -55,6 +55,7 @@ export class DepartamentosCreateComponent {
     }
     else 
     {
+      this.userObj.id = '';
       this.userObj.first_name = this.first_name;
       this.userObj.last_name = this.last_name;
       this.userObj.password = this.password;

@@ -39,7 +39,7 @@ export class AssociadosMyreadComponent implements AfterViewInit, OnInit{
   dataSource = new MatTableDataSource<User>();
 
   //USER LIST
-  usersList: any[] = [];  
+  usersList: User[] = [];  
   ngOnInit(): void {
     this.getAllUsers()
   }
@@ -50,7 +50,12 @@ export class AssociadosMyreadComponent implements AfterViewInit, OnInit{
     this.data.getAllUsers().subscribe(res =>
       {
         //Mapeia o resultado
-        this.usersList = res;
+        this.usersList = res.map((e: any) =>
+          {
+            const data = e.payload.doc.data();
+            data.id = e.payload.doc.id;
+            return data;
+          })
           this.usersList = this.usersList.filter(this.isPerfilAssociado)
           this.usersList = this.isMyAssociado(this.usersList)
           //Passa a lista para o data usado na table

@@ -1,67 +1,18 @@
-<div class="card shadow">
-    <div class="card-body">
-        <form>
-            <div class="mb-3">
-                <h4 class="text-dark text-muted">Criar escala</h4>
-            </div>
-
-            <mat-form-field>
-                <mat-label>Nome do evento</mat-label>
-                <input matInput #input name="escala_name" [(ngModel)]="escala_name">
-            </mat-form-field> 
-
-            <mat-form-field>
-                <mat-label>Data do evento</mat-label>
-                <input matInput [matDatepicker]="picker" name="start_date" [(ngModel)]="start_date" [min]="minDate" [max]="maxDate">
-                <mat-hint>DD/MM/YYYY</mat-hint>
-                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker touchUi #picker></mat-datepicker>
-            </mat-form-field>
-            
-            <mat-form-field>
-                <mat-label>Horário do campo</mat-label>
-                <input matInput type="time" name="hour" [(ngModel)]="hour">
-            </mat-form-field> 
-
-            <mat-form-field>
-                <mat-label>Categorias</mat-label>
-                <mat-select  name="categorias" [(ngModel)]="categorias">
-                  <mat-option value="">Escolha uma</mat-option>
-                  <mat-option value="Sermão">Sermão</mat-option>
-                  <mat-option value="Louvor_especial">Louvor especial</mat-option>
-                  <mat-option value="Louvor">Louvor</mat-option>
-                  <mat-option value="Oração">Oração</mat-option>
-                  <mat-option value="Ofertório">Ofertório</mat-option>
-                  <mat-option value="Ado_infantil">Ado. Infantil</mat-option>
-                  <mat-option value="Provai_vede">Provai e Vede</mat-option>
-                  <mat-option value="Informativo">Informativo</mat-option>
-                  <mat-option value="Outro">Outro</mat-option>
-                  <mat-option value="pausa">Pausa</mat-option>
-                  <mat-option value="entrada">Entrada</mat-option>
-                  <mat-option value="saida">Saída</mat-option>
-                </mat-select>
-            </mat-form-field>
-            
-            <mat-form-field>
-                <mat-label>Pessoa</mat-label>
-                <input matInput #input name="pessoa" [(ngModel)]="pessoa">
-            </mat-form-field> 
-
-            <div class="btns">
-                <button type="button" mat-fab class="view" (click)="criarCampo()">
-                    <mat-icon>
-                        add
-                    </mat-icon>
-                </button>
-                <button type="button" mat-fab class="view" (click)="viewEscala()">
-                    <mat-icon>
-                        remove_red_eye
-                    </mat-icon>
-                </button>                
-            </div>
-
-            <br>
-            <button type="button" class="btn" (click)="criar()">Criar</button>
-        </form>
-    </div>
-</div>
+<mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+    <!-- This is the tree node template for leaf nodes -->
+    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+      <!-- use a disabled button to provide padding for tree leaf -->
+      <button mat-icon-button disabled></button>
+      {{node.name}}
+    </mat-tree-node>
+    <!-- This is the tree node template for expandable nodes -->
+    <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+      <button mat-icon-button matTreeNodeToggle
+              [attr.aria-label]="'Toggle ' + node.name">
+        <mat-icon class="mat-icon-rtl-mirror">
+          {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+        </mat-icon>
+      </button>
+      {{node.name}}
+    </mat-tree-node>
+</mat-tree>

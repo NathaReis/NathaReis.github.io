@@ -5,7 +5,6 @@ import { AuthService } from 'src/app/components/services/auth.service';
 import { DataService } from 'src/app/components/services/data.service';
 import { HeaderService } from 'src/app/components/services/header.service';
 import { PerfilService } from 'src/app/components/services/perfil.service';
-import { SnackbarService } from 'src/app/components/services/snackbar.service';
 import { DialogConfirmationComponent } from 'src/app/components/template/dialog-confirmation/dialog-confirmation.component';
 
 @Component({
@@ -22,7 +21,6 @@ export class ConfigComponent implements OnInit{
     private data : DataService,
     private perfil : PerfilService,
     private dialog: MatDialog,
-    private snack: SnackbarService,
     private headerService: HeaderService) {
       headerService.headerData = {
         title: 'Config',
@@ -83,8 +81,14 @@ export class ConfigComponent implements OnInit{
     dialogRef.afterClosed().subscribe((result: boolean) => {
       if(result)
       {
-        this.snack.openSnackBar('Senha alterada!')
+        this.auth.logout();
       }
     });
   }
+
+  alterTheme()
+  {
+    this.theme = this.theme == 'Claro' ? 'Escuro' : 'Claro';
+  }
+
 }

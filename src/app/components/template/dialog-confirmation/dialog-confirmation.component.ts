@@ -31,6 +31,10 @@ export class DialogConfirmationComponent implements OnInit{
     this.agora = new Date(year, month, day);
 
     //Busca eventos para validação de datas
+    if(this.data.eventBox)
+    {
+      this.getAllEvents();
+    }
     if(this.data.passwordBox)
     {
       this.getUser();
@@ -64,8 +68,6 @@ export class DialogConfirmationComponent implements OnInit{
   newPassword: string = '';
   confirmPassword: string = '';
   hide = true;
-  hide1 = true;
-  hide2 = true;
 
   getUser()
   {

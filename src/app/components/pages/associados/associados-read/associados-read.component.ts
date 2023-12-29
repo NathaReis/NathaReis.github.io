@@ -38,7 +38,7 @@ export class AssociadosReadComponent implements AfterViewInit, OnInit{
   dataSource = new MatTableDataSource<User>();
 
   //USER LIST
-  usersList: any[] = [];  
+  usersList: User[] = [];  
   ngOnInit(): void {
     this.getAllUsers()
   }
@@ -49,7 +49,12 @@ export class AssociadosReadComponent implements AfterViewInit, OnInit{
     this.data.getAllUsers().subscribe(res =>
       {
         //Mapeia o resultado
-        this.usersList = res;
+        this.usersList = res.map((e: any) =>
+          {
+            const data = e.payload.doc.data();
+            data.id = e.payload.doc.id;
+            return data;
+          })
           this.usersList = this.usersList.filter(this.isPerfilAssociado)
           this.usersList = this.notMyAssociado(this.usersList)
           //Passa a lista para o data usado na table
@@ -73,9 +78,6 @@ export class AssociadosReadComponent implements AfterViewInit, OnInit{
       {
         if(user.departamentos)
         {
-          //Se o departamento se manter igual mesmo após retirar 
-          //meu id significa que ele nunca o teve, logo não era meu
-
           let notMyDepartamento = user.departamentos.replace(`${localStorage.getItem('usermask_id')}`,'');
           if(user.departamentos == notMyDepartamento)
           {
@@ -86,17 +88,31 @@ export class AssociadosReadComponent implements AfterViewInit, OnInit{
     return newList;
   }
 
+  deleteUser(id: string, name: string = '')
+  {
+    const dialogRef = this.dialog.open(DialogConfirmationComponent, {
+      data: {title: `Deseja excluir ${name}?`, confirm: true},
+    });
+
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+      if(result)
+      {
+        this.data.deleteUser(id);
+      }
+    });
+  }
+
   addAssociadoEquipe(user: User)
   {
     if(user.departamentos)
     {
       user.departamentos += user.departamentos.length <= 0
-        ? `${localStorage.getItem('usermask_id')},${localStorage.getItem('usermask_name')},false`
-        : `/${localStorage.getItem('usermask_id')},${localStorage.getItem('usermask_name')},false`;
+        ? `${localStorage.getItem('usermask_id')},${localStorage.getItem('usermask_name')},padrao`
+        : `/${localStorage.getItem('usermask_id')},${localStorage.getItem('usermask_name')},padrao`;
     }
     else 
     {
-      user.departamentos = `${localStorage.getItem('usermask_id')},${localStorage.getItem('usermask_name')},false`;
+      user.departamentos = `${localStorage.getItem('usermask_id')},${localStorage.getItem('usermask_name')},padrao`;
     }
 
     const dialogRef = this.dialog.open(DialogConfirmationComponent, {

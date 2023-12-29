@@ -72,8 +72,7 @@ button.add
 }
 button.delete
 {
-    background-color: var(--warnColor);
-    color: var(--secondColor);
+    background-color: var(--erroColor);
 }
 button.edit
 {
