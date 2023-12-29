@@ -37,7 +37,7 @@ export class DepartamentosReadComponent implements AfterViewInit, OnInit{
   dataSource = new MatTableDataSource<User>();
 
   //USER LIST
-  usersList: User[] = [];
+  usersList: any[] = [];
   ngOnInit(): void {
     this.getAllUsers()
   }
@@ -47,12 +47,12 @@ export class DepartamentosReadComponent implements AfterViewInit, OnInit{
     //Consulta o serviço correspondente
     this.data.getAllUsers().subscribe(res =>
       {
+        console.log(res)
         //Mapeia o resultado
-        this.usersList = res.map((e: any) =>
+        this.usersList = res
+        this.usersList.forEach(u =>
           {
-            const data = e.payload.doc.data();
-            data.id = e.payload.doc.id;
-            return data;
+            console.log(u.user_name + ' ' + u.id)
           })
         const noass = this.usersList.filter(user => user.perfil != 'associado');
         const admins = noass.filter(user => user.perfil == 'admin');

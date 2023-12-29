@@ -16,20 +16,19 @@ export class DataService {
   addUser(user: User)
   {
     user.id = this.afs.createId();
-    return this.afs.collection('/users').add(user);
+    return this.afs.collection('users').add(user);
   }
   // get all users
   getAllUsers()
   {
-    return this.afs.collection('/users').snapshotChanges();
+    //return this.afs.collection('users').snapshotChanges();
+    return this.afs.collection('users').valueChanges();  
   }
   // get one users
   getUser(id?: string)
   {
-    return this.afs.collection('users', ref => {
-      return ref
-      .where('id', '==', id)
-    }).valueChanges();  }
+    return this.afs.collection('users', ref => ref.where('id', '==', id)).valueChanges();  
+  }
   getUserOfNamePass(name: string, pass: string)
   {
     return this.afs.collection('users', ref => {
@@ -41,7 +40,7 @@ export class DataService {
   // delete user
   deleteUser(id: string)
   {
-    return this.afs.doc(`/users/${id}`).delete();
+    return this.afs.doc(`users/${id}`).delete();
   }
   // update user
   updateUser(user: User, id: string)
@@ -53,7 +52,7 @@ export class DataService {
   // get all perfis
   getAllPerfis()
   {
-    return this.afs.collection('/perfis').snapshotChanges();
+    return this.afs.collection('perfis').snapshotChanges();
   }
   getPerfil(type: string)
   {
@@ -65,22 +64,22 @@ export class DataService {
   addEvent(event: Event)
   {
     event.id = this.afs.createId();
-    return this.afs.collection('/events').add(event);
+    return this.afs.collection('events').add(event);
   }
   // get all events
   getAllEvents()
   {
-    return this.afs.collection('/events').snapshotChanges();
+    return this.afs.collection('events').snapshotChanges();
   }
   // get one events
   getEvent(id: string)
   {
-    return this.afs.doc(`/events/${id}`).get();
+    return this.afs.doc(`events/${id}`).get();
   }
   // delete event
   deleteEvent(id: string)
   {
-    return this.afs.doc(`/events/${id}`).delete();
+    return this.afs.doc(`events/${id}`).delete();
   }
   // update event
   updateEvent(event: Event, id: string)
@@ -93,7 +92,7 @@ export class DataService {
   addEscala(escala: Escala)
   {
     escala.id = this.afs.createId();
-    return this.afs.collection('/escalas').add(escala);
+    return this.afs.collection('escalas').add(escala);
   }
   /*
   // get all events

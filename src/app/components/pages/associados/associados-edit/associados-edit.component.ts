@@ -1,3 +1,4 @@
+import { identifierName } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from 'src/app/components/services/data.service';
@@ -46,8 +47,10 @@ export class AssociadosEditComponent implements OnInit{
 
   ngOnInit(): void {
     const id = String(this.route.snapshot.paramMap.get('id'));
-    this.data.getUser(String(id)).subscribe(user =>
+    this.data.getUser(String(identifierName)).subscribe(user =>
       {
+
+        console.log(user)
         this.preencher_form(user[0], id)
       })
   }
