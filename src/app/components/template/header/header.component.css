@@ -23,6 +23,13 @@
     cursor: pointer;
 }
 
+.header .logo img 
+{
+    height: 8vh;
+    width: 8vh;
+    border-radius: 50%;
+}
+
 .header .title-group
 {
     width: 100px;
