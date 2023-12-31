@@ -177,17 +177,6 @@ export class EventosReadComponent implements OnInit {
   
   handleDateClick(arg: any) {
     let id = arg.event._def.publicId; 
-    let user = arg.event._def.extendedProps.user; 
-    let dia = arg.event._def.extendedProps.dia; 
-    let dialogRef;
-
-    const date = new Date();
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = +date.getDate();
-    const agora = +`${year}${month}${day}`;
-
-    console.log(arg)
     if(arg.event._def.extendedProps.type == 'anual')
     {
       this.dialog.open(DialogConfirmationComponent, {
@@ -201,57 +190,7 @@ export class EventosReadComponent implements OnInit {
     }
     else 
     {
-      if(user == String(localStorage.getItem("usermask_id")))
-      {
-        if(dia > agora)
-        {
-          dialogRef = this.dialog.open(DialogConfirmationComponent, {
-            data: 
-            {
-              id: id,
-              eventBox: true,
-              eventEdit: true,
-            },
-          });
-        }
-        else 
-        {
-          dialogRef = this.dialog.open(DialogConfirmationComponent, {
-            data:
-            {
-              id: id,
-              eventBox: true,
-            }
-          });
-          dialogRef = this.dialog.open(DialogConfirmationComponent, {
-            data:
-            {
-              title: 'Edição',
-              message: 'Edite com um dia de antecedência',
-              alert: true,
-            }
-          });
-        }
-      }
-      else 
-      {
-        dialogRef = this.dialog.open(DialogConfirmationComponent, {
-          data: 
-          {
-            id: id,
-            eventBox: true,
-          },
-        });
-      }
-  
-      dialogRef.afterClosed().subscribe((result: boolean) => {
-        if(result)
-        {
-          setTimeout(() => {
-            location.reload();
-          }, 1000)
-        }
-      });
+      this.router.navigate(['eventos/edit/'+id]);
     }
   }
 }

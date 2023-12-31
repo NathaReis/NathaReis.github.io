@@ -55,7 +55,10 @@
                 <mat-radio-button color="primary" value="private">Privado (Só para o departamento)</mat-radio-button>
             </mat-radio-group>
 
-            <button type="button" class="btn" (click)="criar()">Criar</button>
+            <button mat-button (click)="criar()" class="add" style="color: #fff; text-shadow: 1px 1px 2px #0003;">
+                <mat-icon> create </mat-icon>
+                Criar
+            </button>
         </form>
     </div>
 </div>

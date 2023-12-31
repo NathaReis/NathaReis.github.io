@@ -34,7 +34,7 @@ export class AssociadosCreateComponent {
   id: string = '';
   first_name: string = '';
   last_name: string = '';
-  password: string = '';
+  password: string = 'iasge';
   user_name: string = '';
 
   resetForm()
