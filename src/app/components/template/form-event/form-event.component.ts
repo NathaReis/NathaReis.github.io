@@ -56,7 +56,7 @@ export class FormEventComponent implements OnInit{
   }
 
   eventsList: Event[] = [];
-  listDatas: Array<{data: {start: number, end: number}, hora: {start: number, end: number}, name: string, horario: string}> = [];
+  listDatas: Array<{data: {start: number, end: number}, hora: {start: number, end: number}, name: string, horario: string, type: string}> = [];
   getAllEvents()
   {
     //Consulta o serviço Events
@@ -69,19 +69,19 @@ export class FormEventComponent implements OnInit{
             data.id = e.payload.doc.id;
             return data;
           })
-        this.eventsList = this.eventsList
-        .filter(ev => ev.event_type == 'public');
         this.listDatas = this.eventsList
         .map(ev =>
           {
             const datInt = +`${ev.start_date.split("/")[2]}${ev.start_date.split("/")[1]}${ev.start_date.split("/")[0]}`;
             const horInt = +`${ev.start_time.replace(/\D/g, "")}`;
-            const datFim = !eval(ev.isOneDay) 
+            const datFim = this.isOneDay == ''
               ? +`${ev.end_date.split("/")[2]}${ev.end_date.split("/")[1]}${ev.end_date.split("/")[0]}`
               :  datInt;
             const horFim = +`${ev.end_time.replace(/\D/g, "")}`;
             const name = ev.event_name;
             const horario = `${ev.start_time}-${ev.end_time}`;
+            const type = ev.event_type;
+
             return {
               data: {
                 start: datInt, 
@@ -93,6 +93,7 @@ export class FormEventComponent implements OnInit{
               }, 
               name: name,
               horario: horario,
+              type: type,
             }
           })
       }, err => 
@@ -154,29 +155,35 @@ export class FormEventComponent implements OnInit{
 
   validarObj(): boolean
   {
+    let contPublic = 0;
+    let contPrivate = 0;
+    let contAnual = 0;
+    let publicsItems = [];
+    let privatesItems = [];
+    let anuaisItems = [];
     if(this.isOneDay != 'anual')
     {
+      if(this.isOneDay == 'true')
+      {
+        this.end_date = this.start_date;
+      }
+
       if(this.event_name == '' || this.event_desc == '' || String(this.start_date) == '' || String(this.end_date) == '' || this.start_time == '' || this.end_time == '')
       {
         this.snack.openSnackBar('Preencha todos os dados!', 2000)
         return false
       }//Se preenchidos
-      else if(this.start_time.length < 5 || this.end_time.length < 5)
+      else if(this.start_date < this.agora || this.end_date < this.agora)
       {
-        this.snack.openSnackBar('Preencha o horário completo!', 2000)
+        this.snack.openSnackBar('Datas antigas!', 2000)
         return false
-      }// Se horário preenchido
-      else if(+(this.start_time.replace(/\D/g, "")) > +(this.end_time.replace(/\D/g, "")) && this.isOneDay)
+      }// Se a data for igual ou menor a hoje
+      else if(this.start_date > this.end_date)
       {
-        this.snack.openSnackBar('Horário de início maior que o de fim!', 2000)
+        this.snack.openSnackBar('Data de início maior que a de fim!', 2000)
         return false
-      }//Se isOneDay e hor final maior que hor inicial
-      else if(+this.start_time.split(':')[0] > 23 || +this.start_time.split(':')[1] > 59 || +this.start_time.split(':')[0] < 0 || +this.start_time.split(':')[1] < 0 || +this.end_time.split(':')[0] > 23 || +this.end_time.split(':')[1] > 59 || +this.end_time.split(':')[0] < 0 || +this.end_time.split(':')[1] < 0)
-      {
-        this.snack.openSnackBar('Horário incorreto!', 2000)
-        return false
-      }
-      else 
+      }// Se a data de início for maior que a de fim
+      else
       {
         //Se já exites um evento iniciado no mesmo intervalo entre o início e o fim do evento atual
         let dataInicio: number | string = this.dateForString(this.start_date);
@@ -199,6 +206,12 @@ export class FormEventComponent implements OnInit{
               //Se o príodo Dia da lista for igual ao período Dia atual
               if(ii == i)
               {
+                if(item.type == 'anual') 
+                {
+                  contAnual == 0 ? anuaisItems.push(item) : undefined;
+                  contAnual++;
+                }//Eventos anuais serão vistos em criação de eventos privados e públicos
+
                 //Passa por todas as horas entre o início e o fim atual
                 for(let h = horaInicio; h <= horaFim; h++)
                 {
@@ -208,15 +221,16 @@ export class FormEventComponent implements OnInit{
                     //Se a hora se encaixar
                     if(hh == h)
                     {
-                      this.dialog.open(DialogConfirmationComponent, {
-                        data: 
-                        {
-                          title: 'ERRO',
-                          message: `A data já está sendo usada no evento ${item.name}!\nNo horário ${item.horario}`,
-                          alert: true
-                        },
-                      });
-                      return false;
+                      if(item.type == 'public' && this.event_type == 'public')
+                      {
+                        contPublic == 0 ? publicsItems.push(item) : undefined;
+                        contPublic++;
+                      }//Eventos públicos serão vistos apenas na criação de eventos públicos
+                      else if(item.type == 'private')
+                      {
+                        contPrivate == 0 ? privatesItems.push(item) : undefined;
+                        contPrivate++;
+                      }//Eventos privados serão vistos na criação de eventos privados
                     }
                   }
                 }
@@ -224,9 +238,42 @@ export class FormEventComponent implements OnInit{
             }
           }
         }
-  
-        //Se tudo estiver ok
-        return true;
+
+        if(contPublic > 0)
+        {
+          this.dialog.open(DialogConfirmationComponent, {
+            data: 
+            {
+              title: `Evento ${publicsItems[0].name} no horário ${publicsItems[0].horario}`,
+              alert: true
+            },
+          });
+          return false;
+        }
+        else
+        {
+          if(contPrivate > 0)
+          {
+            this.dialog.open(DialogConfirmationComponent, {
+              data: 
+              {
+                title: `${privatesItems[0].name} no horário ${privatesItems[0].horario}`,
+                alert: true
+              },
+            });
+          }
+          else if(contAnual > 0)
+          {
+            this.dialog.open(DialogConfirmationComponent, {
+              data: 
+              {
+                title: `${anuaisItems[0].name}`,
+                alert: true
+              },
+            });
+          }
+          return true;
+        }
       }
     }
     else 
@@ -235,6 +282,10 @@ export class FormEventComponent implements OnInit{
       {
         this.snack.openSnackBar('Preencha o nome');
         return false;
+      }
+      else 
+      {
+
       }
       
       return true;
