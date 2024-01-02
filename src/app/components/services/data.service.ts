@@ -93,4 +93,9 @@ export class DataService {
     escala.id = this.afs.createId();
     return this.afs.collection('/escalas').add(escala);
   }
+  // get all escalas
+  getAllEscalas()
+  {
+    return this.afs.collection('/escalas').snapshotChanges();
+  }
 }

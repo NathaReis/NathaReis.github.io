@@ -14,6 +14,7 @@ import { AssociadosEditComponent } from './components/pages/associados/associado
 import { EventosCreateComponent } from './components/pages/eventos/eventos-create/eventos-create.component';
 import { EscalasCreateComponent } from './components/pages/escalas/escalas-create/escalas-create.component';
 import { EventosEditComponent } from './components/pages/eventos/eventos-edit/eventos-edit.component';
+import { EscalasEditComponent } from './components/pages/escalas/escalas-edit/escalas-edit.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -31,6 +32,7 @@ const routes: Routes = [
   {path: 'eventos/edit/:id', component: EventosEditComponent},
   {path: 'escalas', component: EscalasComponent},
   {path: 'escalas/create', component: EscalasCreateComponent},
+  {path: 'escalas/edit/:id', component: EscalasEditComponent},
 ];
 
 @NgModule({

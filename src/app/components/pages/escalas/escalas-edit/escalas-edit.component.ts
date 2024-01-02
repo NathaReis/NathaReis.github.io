@@ -10,12 +10,11 @@ import { SnackbarService } from 'src/app/components/services/snackbar.service';
 import { DialogConfirmationComponent } from 'src/app/components/template/dialog-confirmation/dialog-confirmation.component';
 
 @Component({
-  selector: 'app-escalas-create',
-  templateUrl: './escalas-create.component.html',
-  styleUrls: ['./escalas-create.component.css']
+  selector: 'app-escalas-edit',
+  templateUrl: './escalas-edit.component.html',
+  styleUrls: ['./escalas-edit.component.css']
 })
-
-export class EscalasCreateComponent implements OnInit{
+export class EscalasEditComponent implements OnInit{
   
   events: Array<{id: string, name: string, start_date: string, end_date: string}> = [];
   escala_name: string = '';
