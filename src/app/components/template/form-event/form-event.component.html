@@ -1,18 +1,17 @@
 <div class="card shadow">
     <div class="card-body">
         <form>
-
-            <mat-form-field>
+            <mat-form-field class="campo">
                 <mat-label>Nome do evento</mat-label>
                 <input matInput #input name="event_name" [(ngModel)]="event_name">
             </mat-form-field> 
 
-            <mat-form-field>
+            <mat-form-field class="campo">
                 <mat-label>Breve descrição</mat-label>
                 <textarea matInput name="event_desc" [(ngModel)]="event_desc"></textarea>
             </mat-form-field> 
 
-            <mat-form-field>
+            <mat-form-field class="campo">
                 <mat-label>Apenas um dia?</mat-label>
                 <mat-select  name="isOneDay" [(ngModel)]="isOneDay">
                   <mat-option value="true">Sim</mat-option>
@@ -21,7 +20,7 @@
                 </mat-select>
             </mat-form-field>
 
-            <mat-form-field *ngIf="isOneDay">
+            <mat-form-field class="campo" *ngIf="isOneDay">
                 <mat-label>Data do evento</mat-label>
                 <input matInput [matDatepicker]="picker" name="start_date" [(ngModel)]="start_date" [min]="minDate" [max]="maxDate">
                 <mat-hint>DD/MM/YYYY</mat-hint>
@@ -29,7 +28,7 @@
                 <mat-datepicker touchUi #picker></mat-datepicker>
             </mat-form-field>
 
-            <mat-form-field *ngIf="!isOneDay">
+            <mat-form-field class="campo" *ngIf="!isOneDay">
                 <mat-label>Data do evento</mat-label>
                 <mat-date-range-input [rangePicker]="picker" [min]="minDate" [max]="maxDate">
                     <input matStartDate placeholder="Start date" name="start_date" [(ngModel)]="start_date" [min]="minDate" [max]="maxDate">
@@ -40,12 +39,12 @@
                 <mat-date-range-picker touchUi #picker></mat-date-range-picker>
             </mat-form-field>
 
-            <mat-form-field>
+            <mat-form-field class="campo">
                 <mat-label>Horário inicial</mat-label>
                 <input [disabled]="isOneDay=='anual'" type="time" matInput #input name="start_time" [(ngModel)]="start_time">
             </mat-form-field> 
 
-            <mat-form-field>
+            <mat-form-field class="campo">
                 <mat-label>Horário final</mat-label>
                 <input [disabled]="isOneDay=='anual'" type="time" matInput #input name="end_time" [(ngModel)]="end_time">
             </mat-form-field> 

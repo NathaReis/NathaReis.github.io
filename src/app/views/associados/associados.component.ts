@@ -26,33 +26,17 @@ export class AssociadosComponent implements OnInit {
 
   ngOnInit(): void {
     this.auth.auth_guard();
-    this.data.getAllPerfis().subscribe(res =>
-      {
-        //Mapeia o resultado
-        const perfis = res.map((e: any) =>
-          {
-            const data = e.payload.doc.data();
-            data.id = e.payload.doc.id;
-            return data;
-          })
-        const perfil = perfis.filter(perfil => localStorage.getItem('logado') == perfil.type)
-        this.perfilSave(perfil[0])
-      }, err => 
-      {
-        //Mensagem de erro
-        alert(`Erro de busca: ${err}`)
-      })
+    this.perfilSave();
   }
 
-  perfilSave(perfil: Perfil)
+  perfilSave()
   {
-    let all_view = perfil.all_view ? true : false;
     this.perfil.perfilData = {
-      departamentos: perfil.departamentos,
-      associados: perfil.associados,
-      eventos: perfil.eventos,
-      type: perfil.type,
-      all_view: all_view,
+      departamentos: localStorage.getItem("departamentos") ? true : false,
+      associados: localStorage.getItem("associados") ? true : false,
+      eventos: localStorage.getItem("eventos") ? true : false,
+      type: String(localStorage.getItem("logado")),
+      all_view: localStorage.getItem("all_view") ? true : false,
       escalas: true,
       config: true,
       home: true

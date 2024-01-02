@@ -39,12 +39,28 @@ export class HomeComponent implements OnInit {
   perfilSave(perfil: any)
   {
     let all_view = perfil.all_view ? true : false;
+    if(all_view)
+    {
+      localStorage.setItem('all_view', 'true');
+    }
+    if(perfil.departamentos)
+    {
+      localStorage.setItem('departamentos', 'true');
+    }
+    if(perfil.associados)
+    {
+      localStorage.setItem('associados', 'true');
+    }
+    if(perfil.eventos)
+    {
+      localStorage.setItem('eventos', 'true');
+    }
     this.perfil.perfilData = {
-      departamentos: perfil.departamentos,
-      associados: perfil.associados,
-      eventos: perfil.eventos,
-      type: perfil.type,
-      all_view: all_view,
+      departamentos: localStorage.getItem("departamentos") ? true : false,
+      associados: localStorage.getItem("associados") ? true : false,
+      eventos: localStorage.getItem("eventos") ? true : false,
+      type: String(localStorage.getItem("logado")),
+      all_view: localStorage.getItem("all_view") ? true : false,
       escalas: true,
       config: true,
       home: true

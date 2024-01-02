@@ -39,6 +39,13 @@ export class AuthService {
     localStorage.removeItem('user_name');
     localStorage.removeItem('user_id');
     localStorage.removeItem('logado');
+
+    //PAGES
+    localStorage.removeItem("departamentos"),
+    localStorage.removeItem("associados"),
+    localStorage.removeItem("eventos"),
+    localStorage.removeItem("all_view"),
+    
     this.router.navigate(['login']);
   }
   // Login

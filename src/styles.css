@@ -7,7 +7,7 @@
 :root 
 {
     --background: #eee;
-    --primaryColor: #003c5a;
+    --primaryColor: #002d44;
     --secondColor: #eee;
     --textColor: #1d1d1d;
     --warnColor: #e35e6b;
@@ -20,12 +20,12 @@
 {
     --background: #1d1d1d;
     --primaryColor: #002d44;
-    --secondColor: #afafaf;
+    --secondColor: #eee;
     --textColor: #eee;
-    --warnColor: #c4414e;
-    --neutroColor: #8ddd57;
+    --warnColor: #e35e6b;
+    --neutroColor: #afff79;
     --grayColor: #333;
-    --selectedColor: #cca72d;
+    --selectedColor: #ffd139;
 }
 
 /*PAGES*/

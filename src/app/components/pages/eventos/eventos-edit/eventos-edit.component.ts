@@ -4,6 +4,8 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
 import { ActivatedRoute, Router } from '@angular/router';
 import { Event } from 'src/app/components/models/event';
 import { DataService } from 'src/app/components/services/data.service';
+import { HeaderService } from 'src/app/components/services/header.service';
+import { PerfilService } from 'src/app/components/services/perfil.service';
 import { SnackbarService } from 'src/app/components/services/snackbar.service';
 import { DialogConfirmationComponent } from 'src/app/components/template/dialog-confirmation/dialog-confirmation.component';
 
@@ -36,7 +38,24 @@ export class EventosEditComponent implements OnInit{
     private route: ActivatedRoute,
     private router: Router,
     private dialog: MatDialog,
-  ) {}
+    private perfilService: PerfilService,
+    private headerService: HeaderService) {
+      headerService.headerData = {
+        title: 'Eventos',
+        icon: 'event',
+        routerLink: 'eventos'
+      },
+      perfilService.perfilData = {
+        departamentos: localStorage.getItem("departamentos") ? true : false,
+        associados: localStorage.getItem("associados") ? true : false,
+        eventos: localStorage.getItem("eventos") ? true : false,
+        type: String(localStorage.getItem("logado")),
+        all_view: localStorage.getItem("all_view") ? true : false,
+        escalas: true,
+        config: true,
+        home: true
+      }
+    }
 
   ngOnInit(): void {
     const date = new Date();
