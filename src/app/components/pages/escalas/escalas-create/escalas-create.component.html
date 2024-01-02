@@ -1,10 +1,13 @@
 <div class="card shadow">
     <div class="card-body">
         <form>
+
             <mat-form-field>
-                <mat-label>Nome do evento</mat-label>
-                <input matInput #input name="escala_name" [(ngModel)]="escala_name">
-            </mat-form-field> 
+                <mat-label>Eventos</mat-label>
+                <mat-select name="escala_id" [(ngModel)]="escala_id">
+                    <mat-option *ngFor="let event of events" value="{{ event.id }}" (click)="selectDate()">{{ event.name }}</mat-option>
+                </mat-select>
+            </mat-form-field>
 
             <mat-form-field>
                 <mat-label>Data do evento</mat-label>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Escala } from 'src/app/components/models/escala';
+import { Event } from 'src/app/components/models/event';
 import { AuthService } from 'src/app/components/services/auth.service';
 import { DataService } from 'src/app/components/services/data.service';
 import { HeaderService } from 'src/app/components/services/header.service';
@@ -16,7 +17,9 @@ import { DialogConfirmationComponent } from 'src/app/components/template/dialog-
 
 export class EscalasCreateComponent implements OnInit{
   
+  events: Array<{id: string, name: string, start_date: string, end_date: string}> = [];
   escala_name: string = '';
+  escala_id: string = '';
   start_date: Date = new Date();//'MM/DD/YYY'
 
   hour: string = '';
@@ -65,6 +68,126 @@ export class EscalasCreateComponent implements OnInit{
     this.start_date = this.agora;
 
     this.auth.auth_guard();
+    this.getAllEvents();
+  }
+
+  dateBrForEUA(date: string)
+  {
+    let res = `${date.split('/')[1]}/${date.split('/')[0]}/${date.split('/')[2]}`;
+    return res;
+  }
+
+  selectDate()
+  {
+    let event: any = this.events.filter(ev => ev.id == this.escala_id);
+    event = event[0];
+    if(event.id && event.name != 'Culto')
+    {
+      if(event.end_date != 'null')
+      {
+        this.minDate = new Date(event.start_date);
+        this.maxDate = new Date(event.end_date);    
+        this.escala_name = event.name;      
+      }//Mais de um dia
+      else 
+      {
+        this.minDate = new Date(event.start_date);
+        this.maxDate = new Date(event.start_date);
+        this.escala_name = event.name;
+      }//Apenas um dia
+    }
+    else 
+    {
+      event.name != 'Culto' ? this.escala_name = '' : this.escala_name = event.name;
+      const date = new Date();
+      const year = date.getFullYear();
+      this.maxDate = new Date(year, 11, 31);
+      this.minDate = this.agora;
+      this.start_date = this.agora;
+    }//Para a primeira opção e a de Culto
+  }
+
+  eventsList: Event[] = [];
+  getAllEvents()
+  {
+    //Consulta o serviço Events
+    this.data.getAllEvents().subscribe(res =>
+      {
+        //Mapeia o resultado
+        this.eventsList = res.map((e: any) =>
+          {
+            const data = e.payload.doc.data();
+            data.id = e.payload.doc.id;
+            return data;
+          })
+        this.eventsList = this.eventsList
+        .filter(this.yearEvents)
+        .filter(this.minDateEvents)
+        .filter(this.myEvents)
+        .filter(this.publicEvents);
+        this.popularEvents(this.eventsList); //Atualiza a lista
+      }, err => 
+      {
+        //Mensagem de erro
+        this.snack.openSnackBar(`Erro de busca: ${err}`);
+      })
+  }
+
+  myEvents(ev: any)
+  {
+    return ev.user == String(localStorage.getItem('usermask_id'));
+  }
+
+  publicEvents(ev: any)
+  {
+    return ev.event_type == 'public';
+  }
+
+  yearEvents(ev: any)
+  {
+    const date = new Date();
+    const year = +date.getFullYear() -1;
+    const oldDate = new Date(year, 11, 31);
+    const dataStr = `${ev.start_date.split('/')[1]}/${ev.start_date.split('/')[0]}/${ev.start_date.split('/')[2]}`
+    const dataEv = new Date(dataStr);
+    return dataEv > oldDate;
+  }
+
+  minDateEvents(ev: any)
+  {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const day = +date.getDate() + 1;
+    const agora = new Date(year, month, day);
+    const dataStr = `${ev.start_date.split('/')[1]}/${ev.start_date.split('/')[0]}/${ev.start_date.split('/')[2]}`
+    const dataEv = new Date(dataStr);
+    return dataEv >= agora;
+  }
+
+  popularEvents(events: Event[])
+  {
+    this.events.push({
+      id: '',
+      name: 'Escolha um',
+      start_date: '',
+      end_date: '',
+    })
+    events.forEach(ev =>
+      {
+        this.events.push({
+          id: String(ev.id),
+          name: ev.event_name,
+          start_date: this.dateBrForEUA(ev.start_date),
+          end_date: ev.end_date != 'null' ? this.dateBrForEUA(ev.end_date) : 'null',
+        })
+      })
+    this.events.push({
+      id: 'culto',
+      name: 'Culto',
+      start_date: '',
+      end_date: '',
+    })
   }
 
   criarCampo()
@@ -155,9 +278,9 @@ export class EscalasCreateComponent implements OnInit{
     });
   }
 
-  validateEscala()
+  validateEscala(name: string)
   {
-    if(this.escala_name == '')
+    if(name == '')
     {
       this.snack.openSnackBar('Preencha o nome do evento');
       return false;
@@ -165,6 +288,11 @@ export class EscalasCreateComponent implements OnInit{
     else if(this.campos.length <= 0)
     {
       this.snack.openSnackBar('Preencha a escala');
+      return false;
+    }
+    else if(this.start_date < this.minDate || this.start_date > this.maxDate)
+    {
+      this.snack.openSnackBar('Data inválida');
       return false;
     }
     else 
@@ -186,7 +314,7 @@ export class EscalasCreateComponent implements OnInit{
 
   criar()
   {
-    if(this.validateEscala())
+    if(this.validateEscala(this.escala_name))
     {
       this.data.addEscala(this.criarEscala());
       this.reset();
