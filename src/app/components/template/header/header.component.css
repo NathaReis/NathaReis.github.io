@@ -32,7 +32,7 @@
 {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-around;
     color: var(--secondColor);
     cursor: pointer;
 }
@@ -42,4 +42,13 @@
     margin-top: 2vh;
     color: var(--secondColor);
     cursor: pointer;
+}
+
+@media(min-width: 500px)
+{
+    .theme
+    {
+        position: absolute;
+        right: 10px
+    }
 }

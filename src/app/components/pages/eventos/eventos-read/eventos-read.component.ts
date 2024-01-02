@@ -50,7 +50,7 @@ export class EventosReadComponent implements OnInit {
       left: 'prev',
       center: 'today',
       right: 'next',
-    },
+    },  
   };  
   //Init calendar 
   calendarOptions: CalendarOptions = this.options;

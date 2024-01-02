@@ -244,7 +244,7 @@ export class FormEventComponent implements OnInit{
           this.dialog.open(DialogConfirmationComponent, {
             data: 
             {
-              title: `Evento ${publicsItems[0].name} no horário ${publicsItems[0].horario}`,
+              title: `${publicsItems[0].name} (PÚBLICO) ${publicsItems[0].horario}`,
               alert: true
             },
           });
@@ -257,37 +257,32 @@ export class FormEventComponent implements OnInit{
             this.dialog.open(DialogConfirmationComponent, {
               data: 
               {
-                title: `${privatesItems[0].name} no horário ${privatesItems[0].horario}`,
+                title: `${privatesItems[0].name} (PRIVADO) ${privatesItems[0].horario}`,
                 alert: true
               },
             });
           }
-          else if(contAnual > 0)
+          if(contAnual > 0)
           {
             this.dialog.open(DialogConfirmationComponent, {
               data: 
               {
-                title: `${anuaisItems[0].name}`,
+                title: `${anuaisItems[0].name} (ANUAL)`,
                 alert: true
               },
             });
           }
-          return true;
+          return true
         }
       }
     }
     else 
     {
-      if(this.event_name == '')
+      if(this.event_name == '' || this.event_desc == '')
       {
         this.snack.openSnackBar('Preencha o nome');
         return false;
       }
-      else 
-      {
-
-      }
-      
       return true;
     }
   }
