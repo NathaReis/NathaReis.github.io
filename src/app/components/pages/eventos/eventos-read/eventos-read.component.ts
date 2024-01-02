@@ -62,6 +62,7 @@ export class EventosReadComponent implements OnInit {
   }
     
   eventsList: Event[] = [];
+  eventsListBack: Event[] = [];
   eventsListAnuais: Event[] = [];
   getAllEvents()
   {
@@ -75,11 +76,14 @@ export class EventosReadComponent implements OnInit {
             data.id = e.payload.doc.id;
             return data;
           })
-        this.eventsListAnuais = this.eventsList.filter(ev => ev.isOneDay == 'anual');
-        this.eventsList = this.eventsList.filter(ev => ev.isOneDay != 'anual');
+        this.eventsListAnuais = this.eventsList.filter(this.isEventAnual);
+        this.eventsList = this.eventsList.filter(this.notEventAnual);
+        this.eventsListBack = this.eventsList
+        .filter(this.otherEvents)
+        .filter(this.isEventPublic);
         if(!this.perfilService.perfilData.all_view)
         {
-          this.eventsList = this.eventsList.filter(ev => ev.user == String(localStorage.getItem('usermask_id')));
+          this.eventsList = this.eventsList.filter(this.myEvents);
         }
         else 
         {
@@ -87,12 +91,38 @@ export class EventosReadComponent implements OnInit {
         }
         this.popularEvents(this.eventsList); //Atualiza a lista
         this.popularEventsAnuais(this.eventsListAnuais); //Atualiza a lista
+        this.popularEventsBack(this.eventsListBack); //Atualiza a lista
         this.updateCalendarOptions(); //Atualiza o calendário
       }, err => 
       {
         //Mensagem de erro
         this.snack.openSnackBar(`Erro de busca: ${err}`);
       })
+  }
+
+  myEvents(ev: any)
+  {
+    return ev.user == String(localStorage.getItem('usermask_id'));
+  }
+
+  otherEvents(ev: any)
+  {
+    return ev.user != String(localStorage.getItem('usermask_id'));
+  }
+
+  isEventPublic(ev: any)
+  {
+    return ev.event_type == 'public';
+  }
+
+  isEventAnual(ev: any)
+  {
+    return ev.isOneDay == 'anual';
+  }
+
+  notEventAnual(ev: any)
+  {
+    return ev.isOneDay != 'anual';
   }
   
   //Atualizar lista
@@ -145,6 +175,31 @@ export class EventosReadComponent implements OnInit {
         dia: this.dateForNumber(event.start_date),
       })
     })
+  }
+  popularEventsBack(events: Event[])
+  {
+    events.forEach(event =>
+      {
+        if(eval(event.isOneDay))
+        {
+          this.events.push({
+            date: this.formatDate(event.start_date),
+            color: '#FFFF00',
+            display: 'background',
+          })
+        }
+        else 
+        {
+          for(let init = this.dateForNumber(event.start_date); init <= this.dateForNumber(event.end_date); init++)
+          {
+            this.events.push({
+              date: this.formatDate(this.numberForDate(init)),
+              color: '#B22222',
+              display: 'background',
+            })
+          }
+        }
+      })
   }
 
   //Atualuzar o calendário

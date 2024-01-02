@@ -6,4 +6,6 @@ export interface Dialog
     alert?: boolean,
     id?: string,
     passwordBox?: boolean,
+    escalaBox?: boolean,
+    escalaView: Array<{id: number, hour: string, categoria: string, pessoa: string, descricao: string}>,
 }

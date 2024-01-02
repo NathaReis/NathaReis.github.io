@@ -19,7 +19,7 @@
 :root .dark-theme
 {
     --background: #1d1d1d;
-    --primaryColor: #002d44;
+    --primaryColor: #3254a8;
     --secondColor: #eee;
     --textColor: #eee;
     --warnColor: #e35e6b;
@@ -123,6 +123,6 @@ form
 }
 form button.btn
 {
-    color: var(--secondColor);
+    color: var(--background);
     background-color: var(--primaryColor);
 }

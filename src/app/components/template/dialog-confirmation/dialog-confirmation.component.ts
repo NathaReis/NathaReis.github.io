@@ -34,6 +34,11 @@ export class DialogConfirmationComponent implements OnInit{
     this.dialogRef.close(result);
   }
 
+  deleteCampo(campos: Array<{id: number, hour: string, categoria: string, pessoa: string}>, id: number) {
+    // Verificar se a posição fornecida é válida
+    this.dialogRef.close(campos.filter(campo => campo.id != id));
+  }
+
   //Password
   user: User = {
     id: '',

@@ -1,0 +1,17 @@
+.card
+{
+    width: 90vw;
+    max-width: 300px;
+    background-color: var(--background);
+    color: var(--textColor);
+}
+.btns .btn
+{
+    margin: 10px;
+}
+
+.btns .btn 
+{
+    background-color: var(--textColor);
+    color: var(--background);
+}

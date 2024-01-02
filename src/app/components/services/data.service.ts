@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { User } from '../models/user';
 import { Event } from '../models/event';
+import { Escala } from '../models/escala';
 
 @Injectable({
   providedIn: 'root'
@@ -83,5 +84,13 @@ export class DataService {
   updateEvent(event: Event, id: string)
   {
     this.afs.doc(`events/${id}`).update(event);
+  }
+
+  //ESCALAS
+  // add escala
+  addEscala(escala: Escala)
+  {
+    escala.id = this.afs.createId();
+    return this.afs.collection('/escalas').add(escala);
   }
 }
