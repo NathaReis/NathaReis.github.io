@@ -98,4 +98,9 @@ export class DataService {
   {
     return this.afs.collection('/escalas').snapshotChanges();
   }
+  // get one escala
+  getEscala(id: string)
+  {
+    return this.afs.doc(`/escalas/${id}`).get();
+  }
 }

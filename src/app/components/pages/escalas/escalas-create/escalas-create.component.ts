@@ -87,8 +87,11 @@ export class EscalasCreateComponent implements OnInit{
         this.eventsList = this.eventsList
         .filter(this.yearEvents)
         .filter(this.minDateEvents)
-        .filter(this.myEvents)
         .filter(this.publicEvents);
+        if(!this.perfilService.perfilData.all_view)
+        {
+          this.eventsList = this.eventsList.filter(this.myEvents);
+        }
         this.popularEvents(this.eventsList); //Atualiza a lista
       }, err => 
       {
@@ -301,6 +304,7 @@ export class EscalasCreateComponent implements OnInit{
     return {
       id: '',
       escala_name: this.escala_name,
+      escala_id: this.escala_id,
       start_date: this.dateForString(this.start_date),
       escala: this.campos,
       user: String(localStorage.getItem("usermask_id")),

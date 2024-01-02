@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
 import { Escala } from 'src/app/components/models/escala';
 import { Event } from 'src/app/components/models/event';
 import { AuthService } from 'src/app/components/services/auth.service';
@@ -31,12 +32,14 @@ export class EscalasEditComponent implements OnInit{
   maxDate: Date = new Date();
   minDate: Date = new Date();
   agora: Date = new Date();
+  id: string = '';
 
   constructor(
     private auth: AuthService,
     private data: DataService,
     private snack: SnackbarService,
     private dialog: MatDialog,
+    private route: ActivatedRoute,
     private perfilService: PerfilService,
     private headerService: HeaderService) {
       headerService.headerData = {
@@ -68,6 +71,29 @@ export class EscalasEditComponent implements OnInit{
 
     this.auth.auth_guard();
     this.getAllEvents();
+
+    //Para preencher os eventos
+    this.id = String(this.route.snapshot.paramMap.get('id'));
+    this.data.getEscala(String(this.id)).subscribe(escala =>
+      {
+        this.preencherEscala(escala.data())
+      })
+  }
+
+  preencherEscala(escala: any)
+  {
+    if(escala.escala_name == 'Culto')
+    {
+      this.escala_id = 'culto';
+      this.escala_name = 'Culto';
+    }
+    else 
+    {
+      this.eventsList.forEach(event =>
+        {
+
+        })
+    }
   }
 
   eventsList: Event[] = [];
@@ -85,9 +111,11 @@ export class EscalasEditComponent implements OnInit{
           })
         this.eventsList = this.eventsList
         .filter(this.yearEvents)
-        .filter(this.minDateEvents)
-        .filter(this.myEvents)
         .filter(this.publicEvents);
+        if(!this.perfilService.perfilData.all_view)
+        {
+          this.eventsList = this.eventsList.filter(this.myEvents);
+        }
         this.popularEvents(this.eventsList); //Atualiza a lista
       }, err => 
       {
@@ -300,6 +328,7 @@ export class EscalasEditComponent implements OnInit{
     return {
       id: '',
       escala_name: this.escala_name,
+      escala_id: this.escala_id,
       start_date: this.dateForString(this.start_date),
       escala: this.campos,
       user: String(localStorage.getItem("usermask_id")),
