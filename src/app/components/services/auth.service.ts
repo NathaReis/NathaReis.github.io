@@ -45,6 +45,9 @@ export class AuthService {
     localStorage.removeItem("associados"),
     localStorage.removeItem("eventos"),
     localStorage.removeItem("all_view"),
+
+    //Is Editor de Escalas
+    localStorage.removeItem('isEditor');
     
     this.router.navigate(['login']);
   }

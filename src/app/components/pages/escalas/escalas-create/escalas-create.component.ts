@@ -166,13 +166,15 @@ export class EscalasCreateComponent implements OnInit{
       if(event.end_date != 'null')
       {
         this.minDate = new Date(event.start_date);
-        this.maxDate = new Date(event.end_date);    
+        this.maxDate = new Date(event.end_date);  
+        this.start_date = this.minDate;  
         this.escala_name = event.name;      
       }//Mais de um dia
       else 
       {
         this.minDate = new Date(event.start_date);
         this.maxDate = new Date(event.start_date);
+        this.start_date = this.minDate;
         this.escala_name = event.name;
       }//Apenas um dia
     }

@@ -103,4 +103,14 @@ export class DataService {
   {
     return this.afs.doc(`/escalas/${id}`).get();
   }
+  // delete escala
+  deleteEscala(id: string)
+  {
+    return this.afs.doc(`/escalas/${id}`).delete();
+  }
+  // update escala
+  updateEscala(escala: Escala, id: string)
+  {
+    this.afs.doc(`escalas/${id}`).update(escala);
+  }
 }

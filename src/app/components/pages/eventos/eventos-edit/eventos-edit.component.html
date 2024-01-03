@@ -54,15 +54,15 @@
                   <mat-radio-button color="primary" value="private">Privado</mat-radio-button>
                 </mat-radio-group>
     
-                <button *ngIf="isEventEdit" mat-button (click)="updateEvent()" class="save" style="color: #fff;">
+                <button *ngIf="isEventEdit" mat-button (click)="updateEvent()" class="add" style="color: #ffffff; text-shadow: 1px 1px 2px #0003;">
                     <mat-icon> save </mat-icon>
-                    Salvar
+                    Atualizar
                 </button>
-                <button *ngIf="isEventEdit" mat-button (click)="deleteEvent()" class="delete" style="color: #fff;">
+                <button *ngIf="isEventEdit" mat-button (click)="deleteEvent()" class="delete" style="color: #ffffff; text-shadow: 1px 1px 2px #0003;">
                     <mat-icon> delete </mat-icon>
                     Deletar
                 </button>
-                <button routerLink="/eventos" mat-button class="back" style="color: #fff;">
+                <button routerLink="/eventos" mat-button class="view" style="color: #ffffff; text-shadow: 1px 1px 2px #0003;">
                     Voltar
                 </button>
             </form>
