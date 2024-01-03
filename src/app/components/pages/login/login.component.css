@@ -1,0 +1,6 @@
+.card
+{
+    width: 90vw;
+    max-width: 300px;
+    background-color: var(--background);
+}

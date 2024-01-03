@@ -4,9 +4,6 @@
             <div class="card shadow">
                 <div class="card-body">
                     <form>
-                        <div class="mb-3">
-                            <h4 class="text-dark text-muted">Login</h4>
-                        </div>
                         <mat-form-field>
                             <mat-label>Seu usuário</mat-label>
                             <input matInput #input minlength="10" placeholder="Ex. nome.sobrenome" name="user_name" [(ngModel)]="user_name">
@@ -18,7 +15,10 @@
                               <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                             </button>
                         </mat-form-field>
-                        <button type="button" class="btn" (click)="login()">Login</button>
+                        <button mat-button (click)="login()" class="add" style="color: #fff; text-shadow: 1px 1px 2px #0003;">
+                            <mat-icon> login </mat-icon>
+                            Login
+                        </button>
                     </form>
                 </div>
             </div>
