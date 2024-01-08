@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormEvent } from 'src/app/components/models/form-event';
 import { HeaderService } from 'src/app/components/services/header.service';
 import { PerfilService } from 'src/app/components/services/perfil.service';
 
@@ -8,6 +9,7 @@ import { PerfilService } from 'src/app/components/services/perfil.service';
   styleUrls: ['./eventos-create.component.css']
 })
 export class EventosCreateComponent {
+  formParams: FormEvent = {type: 'create'}
   constructor(
     private headerService: HeaderService,
     private perfilService: PerfilService) {

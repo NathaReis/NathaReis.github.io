@@ -12,12 +12,6 @@
     margin: 10px;
 }
 
-a 
-{
-    text-decoration: none;
-    color: var(--secondColor);
-}
-
 .btns 
 {
     display: flex;

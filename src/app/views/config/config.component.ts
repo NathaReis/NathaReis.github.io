@@ -72,9 +72,17 @@ export class ConfigComponent implements OnInit{
     });
   }
 
-  alterTheme()
+  copiarTexto(num: string) 
   {
-    this.theme = this.theme == 'Claro' ? 'Escuro' : 'Claro';
+    navigator.clipboard.writeText(num)
+    .then(() =>
+    {
+      this.snack.openSnackBar(`Número de suporte ${num} - Nathan copiado!`, 3500);
+    })
+    .catch(erro =>
+      {
+        this.snack.openSnackBar(`Erro ao copiar o número de suporte!`, 3000);
+        console.log(erro);
+      })
   }
-
 }

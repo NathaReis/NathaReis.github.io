@@ -54,7 +54,6 @@ export class AssociadosCreateComponent {
     this.id = '';
     this.first_name = '';
     this.last_name = '';
-    this.password = '';
     this.user_name = '';
   }
 

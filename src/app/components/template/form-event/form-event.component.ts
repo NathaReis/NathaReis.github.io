@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { DialogConfirmationComponent } from '../dialog-confirmation/dialog-confirmation.component';
 import { Event } from '../../models/event';
 import { HeaderService } from '../../services/header.service';
@@ -6,6 +6,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { SnackbarService } from '../../services/snackbar.service';
 import { DataService } from '../../services/data.service';
 import { AuthService } from '../../services/auth.service';
+import { FormEvent } from '../../models/form-event';
+import { PerfilService } from '../../services/perfil.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-form-event',
@@ -13,6 +16,13 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./form-event.component.css']
 })
 export class FormEventComponent implements OnInit{
+
+  @Input() formParams: FormEvent = {}
+
+  //Usado na edição
+  id: string = '';
+  isEventEdit = true;
+  dataAntesdeEditar: number = 0;
 
   event_name: string = '';
   event_desc: string = '';
@@ -31,12 +41,25 @@ export class FormEventComponent implements OnInit{
     private auth: AuthService,
     private data: DataService,
     private snack: SnackbarService,
+    private route: ActivatedRoute,
+    private router: Router,
     private dialog: MatDialog,
+    private perfilService: PerfilService,
     private headerService: HeaderService) {
       headerService.headerData = {
         title: 'Eventos',
         icon: 'event',
         routerLink: 'eventos'
+      },
+      perfilService.perfilData = {
+        departamentos: localStorage.getItem("departamentos") ? true : false,
+        associados: localStorage.getItem("associados") ? true : false,
+        eventos: localStorage.getItem("eventos") ? true : false,
+        type: String(localStorage.getItem("logado")),
+        all_view: localStorage.getItem("all_view") ? true : false,
+        escalas: true,
+        config: true,
+        home: true
       }
     }
 
@@ -48,11 +71,24 @@ export class FormEventComponent implements OnInit{
     this.agora = new Date(year, month, day);
     this.maxDate = new Date(year, 11, 31);
     this.minDate = this.agora;
-    this.start_date = this.agora;
-    this.end_date = this.agora;
 
     this.auth.auth_guard();
     this.getAllEvents();
+
+    if(this.formParams.type == 'create')
+    {
+      this.start_date = this.agora;
+      this.end_date = this.agora;
+    }
+    else if(this.formParams.type == 'edit')
+    {
+      //Para preencher os eventos
+      this.id = String(this.route.snapshot.paramMap.get('id'));
+      this.data.getEvent(String(this.id)).subscribe(event =>
+        {
+          this.preencherEvent(event.data())
+        })
+    }
   }
 
   eventsList: Event[] = [];
@@ -69,6 +105,11 @@ export class FormEventComponent implements OnInit{
             data.id = e.payload.doc.id;
             return data;
           })
+        if(this.formParams.type == 'edit')
+        {
+          this.eventsList = this.eventsList
+          .filter(ev => ev.id != this.id);
+        }
         this.listDatas = this.eventsList
         .map(ev =>
           {
@@ -103,6 +144,45 @@ export class FormEventComponent implements OnInit{
       })
   }
 
+  //Edição
+  preencherEvent(event: any)
+  {
+    let DataStartEvent = new Date(this.dateBrForEUA(event.start_date));
+    //Validação para saber se pode editar ou não
+    if(DataStartEvent < this.agora)
+    {
+      this.isEventEdit = false;
+      this.snack.openSnackBar('Edite com um dia de antecedência!', 2500)
+    }
+    else if(event.user != String(localStorage.getItem('usermask_id')))
+    {
+      this.isEventEdit = false;
+      this.snack.openSnackBar('Edite apenas seus eventos!', 2500)
+    }
+    let dataInicio: number | string = this.dateForString(new Date(this.dateBrForEUA(String(event.start_date))));
+    dataInicio = +`${dataInicio.split("/")[2]}${dataInicio.split("/")[1]}${dataInicio.split("/")[0]}${event.start_time.replace(/\D/g, "")}`;
+
+    let dataFim: number | string = this.agora != this.end_date ? this.dateForString(new Date(this.dateBrForEUA(String(event.end_date)))) : this.dateForString(new Date(this.dateBrForEUA(String(event.start_date))));
+    dataFim = +`${dataFim.split("/")[2]}${dataFim.split("/")[1]}${dataFim.split("/")[0]}${event.end_time.replace(/\D/g, "")}`;
+
+    const somaDatas = dataInicio + dataFim;
+    
+    this.event_desc = event.event_desc;
+    this.event_name = event.event_name;
+    this.isOneDay = eval(event.isOneDay) ? 'true' : '';
+    this.start_date = new Date(this.dateBrForEUA(event.start_date));//'MM/DD/YYY'
+    this.end_date = new Date(this.dateBrForEUA(event.end_date));
+    this.start_time = event.start_time;
+    this.end_time = event.end_time;
+    this.event_type = event.event_type;
+    this.dataAntesdeEditar = somaDatas;
+  }
+
+  dateBrForEUA(date: string)
+  {
+    let res = `${date.split('/')[1]}/${date.split('/')[0]}/${date.split('/')[2]}`;
+    return res;
+  }
   dateForString(data: Date)
   {
     let date = String(data);
@@ -152,8 +232,14 @@ export class FormEventComponent implements OnInit{
     date = `${day}/${month}/${year}`
     return date;
   }
+  horaNumberForHour(hora: number)
+  {
+    let str = String(hora);
+    let res = `${str.slice(0,1)}:${str.slice(2,3)}`;
+    return res;
+  }
 
-  validarObj(): boolean
+  validateObj(): boolean
   {
     let contPublic = 0;
     let contPrivate = 0;
@@ -287,9 +373,9 @@ export class FormEventComponent implements OnInit{
     }
   }
 
-  criarObj()
+  createObj()
   {
-    if(this.validarObj()) 
+    if(this.validateObj()) 
     {
       if(this.isOneDay != 'anual')
       {
@@ -338,9 +424,9 @@ export class FormEventComponent implements OnInit{
     this.event_type = 'public';
   }
 
-  criar()
+  create()
   {
-    const event = this.criarObj();
+    const event = this.createObj();
     if(event)
     {
       this.data.addEvent(event);
@@ -348,5 +434,38 @@ export class FormEventComponent implements OnInit{
       this.reset();
       this.getAllEvents();
     }
+  }
+
+  update()
+  {
+    const event = this.createObj();
+    if(event)
+    {
+      this.data.updateEvent(event, this.id);
+      this.snack.openSnackBar('Atualizado com sucesso!');
+      this.reset();
+      this.router.navigate(['eventos']);
+    }
+  }
+
+  delete()
+  {
+    const dialogRef = this.dialog.open(DialogConfirmationComponent, {
+      data: 
+      {
+        title: `Deseja excluir?`,
+        confirm: true
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+      if(result)
+      {
+        this.data.deleteEvent(this.id);
+        this.snack.openSnackBar('Deletado com sucesso!');
+        this.reset();
+        this.router.navigate(['eventos']);
+      }
+    });
   }
 }
