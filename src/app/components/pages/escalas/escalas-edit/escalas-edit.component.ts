@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Escala } from 'src/app/components/models/escala';
 import { Event } from 'src/app/components/models/event';
 import { AuthService } from 'src/app/components/services/auth.service';
@@ -21,6 +21,7 @@ export class EscalasEditComponent implements OnInit{
   escala_name: string = '';
   escala_id: string = '';
   start_date: Date = new Date();//'MM/DD/YYY'
+  id: string = '';
 
   hour: string = '';
   pessoa: string = '';
@@ -32,7 +33,7 @@ export class EscalasEditComponent implements OnInit{
   maxDate: Date = new Date();
   minDate: Date = new Date();
   agora: Date = new Date();
-  id: string = '';
+  isEditor: boolean = false;
 
   constructor(
     private auth: AuthService,
@@ -40,6 +41,7 @@ export class EscalasEditComponent implements OnInit{
     private snack: SnackbarService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
+    private router: Router,
     private perfilService: PerfilService,
     private headerService: HeaderService) {
       headerService.headerData = {
@@ -72,28 +74,32 @@ export class EscalasEditComponent implements OnInit{
     this.auth.auth_guard();
     this.getAllEvents();
 
+    this.isEditor = eval(String(localStorage.getItem('isEditor')));
+
     //Para preencher os eventos
-    this.id = String(this.route.snapshot.paramMap.get('id'));
-    this.data.getEscala(String(this.id)).subscribe(escala =>
+    const id = String(this.route.snapshot.paramMap.get('id'));
+    this.data.getEscala(String(id)).subscribe(escala =>
       {
-        this.preencherEscala(escala.data())
+        this.preencherEscala(escala.data(), id)
       })
   }
 
-  preencherEscala(escala: any)
+  preencherEscala(escala: any, id: string)
   {
+    console.log(escala)
     if(escala.escala_name == 'Culto')
     {
       this.escala_id = 'culto';
       this.escala_name = 'Culto';
     }
-    else 
+    else
     {
-      this.eventsList.forEach(event =>
-        {
-
-        })
+      this.escala_id = escala.escala_id;
+      this.escala_name = escala.escala_name;
     }
+    this.start_date = new Date(this.dateBrForEUA(escala.start_date));
+    this.campos = escala.escala;
+    this.id = id;
   }
 
   eventsList: Event[] = [];
@@ -111,6 +117,7 @@ export class EscalasEditComponent implements OnInit{
           })
         this.eventsList = this.eventsList
         .filter(this.yearEvents)
+        .filter(this.minDateEvents)
         .filter(this.publicEvents);
         if(!this.perfilService.perfilData.all_view)
         {
@@ -326,7 +333,7 @@ export class EscalasEditComponent implements OnInit{
   criarEscala(): Escala
   {
     return {
-      id: '',
+      id: this.id,
       escala_name: this.escala_name,
       escala_id: this.escala_id,
       start_date: this.dateForString(this.start_date),
@@ -335,14 +342,36 @@ export class EscalasEditComponent implements OnInit{
     }
   }
 
-  criar()
+  atualizar()
   {
     if(this.validateEscala(this.escala_name))
     {
-      this.data.addEscala(this.criarEscala());
+      this.data.updateEscala(this.criarEscala(), this.id);
       this.reset();
+      this.router.navigate(['escalas']);
     }
   } 
+
+  deletar()
+  {
+    const dialogRef = this.dialog.open(DialogConfirmationComponent, {
+      data: 
+      {
+        title: `Deseja excluir?`,
+        confirm: true
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+      if(result)
+      {
+        this.data.deleteEscala(this.id);
+        this.snack.openSnackBar('Deletada com sucesso!');
+        this.reset();
+        this.router.navigate(['escalas']);
+      }
+    });
+  }
 
   // Funções
   dateBrForEUA(date: string)

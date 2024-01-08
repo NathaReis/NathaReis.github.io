@@ -24,9 +24,50 @@ export class EscalasComponent implements OnInit{
       }
     }
 
+  isEditor = false;
+  isAssociado = false;
+  deps = [
+    {
+      id: '',
+      name: 'Escolha um',
+      isEditor: false,
+    }
+  ];
+  departamento_id = '';
+
   ngOnInit(): void {
     this.auth.auth_guard();    
     this.perfilSave();
+    this.departamento_id = String(localStorage.getItem('usermask_id'));
+    if(this.perfil.perfilData.type == 'associado')
+    {
+      this.isAssociado = true;
+      this.data.getUser(String(localStorage.getItem('user_id'))).subscribe((res: any) =>
+        {
+          this.preencherDeps(res.data().departamentos);
+        })
+      this.isEditor = eval(String(localStorage.getItem('isEditor')));
+    }
+    else 
+    {
+      this.isEditor = true;
+    }
+  }
+
+  preencherDeps(departamentos: string)
+  {
+    const deps = departamentos.split('/');
+    deps.forEach(departamento =>
+      {
+        const dep = departamento.split(',');
+        this.deps.push(
+          {
+            id: dep[0],
+            name: dep[1],
+            isEditor: eval(dep[2]),
+          }
+        )
+      })
   }
 
   perfilSave()
@@ -41,5 +82,25 @@ export class EscalasComponent implements OnInit{
       config: true,
       home: true
     }
+  }
+
+  selectDep()
+  {
+    if(this.departamento_id)
+    {
+      const dep = this.deps.filter(dp => dp.id == this.departamento_id);
+      localStorage.setItem('usermask_id', dep[0].id);
+      localStorage.setItem('usermask_name', dep[0].name);    
+      this.isEditor = dep[0].isEditor; 
+      localStorage.setItem('isEditor', String(this.isEditor));
+    }
+    else 
+    {
+      localStorage.setItem('usermask_id', String(localStorage.getItem('user_id')));
+      localStorage.setItem('usermask_name', String(localStorage.getItem('user_name')));
+      this.isEditor = false;
+      localStorage.removeItem('isEditor');
+    }
+    location.reload();
   }
 }
