@@ -1,30 +1,31 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Escala } from 'src/app/components/models/escala';
-import { EscalaCampo } from 'src/app/components/models/escala-campo';
 import { Event } from 'src/app/components/models/event';
-import { FormEscala } from 'src/app/components/models/form-escala';
 import { AuthService } from 'src/app/components/services/auth.service';
 import { DataService } from 'src/app/components/services/data.service';
 import { HeaderService } from 'src/app/components/services/header.service';
 import { PerfilService } from 'src/app/components/services/perfil.service';
 import { SnackbarService } from 'src/app/components/services/snackbar.service';
 import { DialogConfirmationComponent } from 'src/app/components/template/dialog-confirmation/dialog-confirmation.component';
+import { FormEscala } from '../../models/form-escala';
+import { EscalaCampo } from '../../models/escala-campo';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-  selector: 'app-escalas-edit',
-  templateUrl: './escalas-edit.component.html',
-  styleUrls: ['./escalas-edit.component.css']
+  selector: 'app-form-escala',
+  templateUrl: './form-escala.component.html',
+  styleUrls: ['./form-escala.component.css']
 })
-export class EscalasEditComponent implements OnInit{
-  formParams: FormEscala = {type: 'edit'}
+export class FormEscalaComponent implements OnInit{
+
+  @Input() formParams: FormEscala = {};
   
   events: Array<{id: string, name: string, start_date: string, end_date: string}> = [];
   escala_name: string = '';
   escala_id: string = '';
   start_date: Date = new Date();//'MM/DD/YYY'
-  id: string = '';
+  id: string = '';//Edição
 
   hour: string = '';
   pessoa: string = '';
@@ -36,7 +37,7 @@ export class EscalasEditComponent implements OnInit{
   maxDate: Date = new Date();
   minDate: Date = new Date();
   agora: Date = new Date();
-  isEditor: boolean = false;
+  isEditor: boolean = true;//Edição
 
   constructor(
     private auth: AuthService,
@@ -77,14 +78,18 @@ export class EscalasEditComponent implements OnInit{
     this.auth.auth_guard();
     this.getAllEvents();
 
-    this.isEditor = eval(String(localStorage.getItem('isEditor')));
+    if(this.formParams.type == 'edit')
+    {
+      this.isEditor = false;
+      this.isEditor = eval(String(localStorage.getItem('isEditor')));
 
-    //Para preencher os eventos
-    const id = String(this.route.snapshot.paramMap.get('id'));
-    this.data.getEscala(String(id)).subscribe(escala =>
-      {
-        this.preencherEscala(escala.data(), id)
-      })
+      //Para preencher os eventos
+      const id = String(this.route.snapshot.paramMap.get('id'));
+      this.data.getEscala(String(id)).subscribe(escala =>
+        {
+          this.preencherEscala(escala.data(), id)
+        })    
+    }
   }
 
   preencherEscala(escala: any, id: string)
@@ -200,13 +205,15 @@ export class EscalasEditComponent implements OnInit{
       if(event.end_date != 'null')
       {
         this.minDate = new Date(event.start_date);
-        this.maxDate = new Date(event.end_date);    
+        this.maxDate = new Date(event.end_date);  
+        this.start_date = this.minDate;  
         this.escala_name = event.name;      
       }//Mais de um dia
       else 
       {
         this.minDate = new Date(event.start_date);
         this.maxDate = new Date(event.start_date);
+        this.start_date = this.minDate;
         this.escala_name = event.name;
       }//Apenas um dia
     }
@@ -336,7 +343,7 @@ export class EscalasEditComponent implements OnInit{
   criarEscala(): Escala
   {
     return {
-      id: this.id,
+      id: '',
       escala_name: this.escala_name,
       escala_id: this.escala_id,
       start_date: this.dateForString(this.start_date),
@@ -344,6 +351,15 @@ export class EscalasEditComponent implements OnInit{
       user: String(localStorage.getItem("usermask_id")),
     }
   }
+
+  criar()
+  {
+    if(this.validateEscala(this.escala_name))
+    {
+      this.data.addEscala(this.criarEscala());
+      this.reset();
+    }
+  } 
 
   atualizar()
   {
@@ -354,7 +370,7 @@ export class EscalasEditComponent implements OnInit{
       this.router.navigate(['escalas']);
     }
   } 
-
+  
   deletar()
   {
     const dialogRef = this.dialog.open(DialogConfirmationComponent, {

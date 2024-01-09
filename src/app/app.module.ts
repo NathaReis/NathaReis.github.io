@@ -65,6 +65,7 @@ import { ambiente } from 'src/ambiente/ambiente';
 import { FormEventComponent } from './components/template/form-event/form-event.component';
 import { EventosEditComponent } from './components/pages/eventos/eventos-edit/eventos-edit.component';
 import { EscalasEditComponent } from './components/pages/escalas/escalas-edit/escalas-edit.component';
+import { FormEscalaComponent } from './components/template/form-escala/form-escala.component';
 
 @NgModule({
   declarations: [
@@ -93,6 +94,7 @@ import { EscalasEditComponent } from './components/pages/escalas/escalas-edit/es
     FormEventComponent,
     EventosEditComponent,
     EscalasEditComponent,
+    FormEscalaComponent,
   ],
   imports: [
     AngularFireModule.initializeApp(ambiente.firebaseConfig),
