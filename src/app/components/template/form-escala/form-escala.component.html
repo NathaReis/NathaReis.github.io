@@ -64,19 +64,19 @@
                 </button>                
             </div>
 
-            <button *ngIf="formParams.type=='create'" mat-button (click)="criar()" class="add" style="color: #fff; text-shadow: 1px 1px 2px #0003;">
+            <button *ngIf="formParams.type=='create'" mat-button (click)="criar()" class="add" style="margin-top: 5px; color: #fff; text-shadow: 1px 1px 2px #0003;">
                 <mat-icon> create </mat-icon>
                 Criar
             </button>
-            <button *ngIf="isEditor" mat-button (click)="atualizar()" class="add" style="color: #ffffff; text-shadow: 1px 1px 2px #0003;">
+            <button *ngIf="isEditor && formParams.type=='edit'" mat-button (click)="atualizar()" class="add" style="margin-top: 5px; color: #ffffff; text-shadow: 1px 1px 2px #0003;">
                 <mat-icon> save </mat-icon>
                 Atualizar    
             </button>
-            <button *ngIf="isEditor" mat-button (click)="deletar()" class="delete" style="color: #eee; text-shadow: 1px 1px 2px #0003;">
+            <button *ngIf="isEditor && formParams.type=='edit'" mat-button (click)="deletar()" class="delete" style="margin-top: 5px; color: #eee; text-shadow: 1px 1px 2px #0003;">
                 <mat-icon> delete </mat-icon>
                 Deletar
             </button>
-            <button *ngIf="formParams.type=='edit'" routerLink="/escalas" mat-button class="view" style="color: #eee; text-shadow: 1px 1px 2px #0003;">
+            <button routerLink="/escalas" mat-button class="view" style="margin-top: 5px; color: #eee; text-shadow: 1px 1px 2px #0003;">
                 Voltar
             </button>
         </form>

@@ -80,8 +80,10 @@ export class FormEscalaComponent implements OnInit{
 
     if(this.formParams.type == 'edit')
     {
-      this.isEditor = false;
-      this.isEditor = eval(String(localStorage.getItem('isEditor')));
+      if(localStorage.getItem("logado") == 'associado')
+      {
+        this.isEditor = eval(String(localStorage.getItem('isEditor')));
+      }
 
       //Para preencher os eventos
       const id = String(this.route.snapshot.paramMap.get('id'));
@@ -269,6 +271,7 @@ export class FormEscalaComponent implements OnInit{
     this.escala_name = '';
     this.escala_id = '';
     this.start_date = this.agora;
+    this.campos = [];
   }
 
   ordernarEscala(campos: Array<EscalaCampo>)

@@ -58,15 +58,15 @@
                 <mat-icon> create </mat-icon>
                 Criar
             </button>
-            <button *ngIf="isEventEdit && formParams.type=='edit'" mat-button (click)="update()" class="save" style="color: #fff;">
+            <button *ngIf="isEventEdit && formParams.type=='edit'" mat-button (click)="update()" class="add" style="margin-top: 5px; text-shadow: 1px 1px 2px #0003; color: #fff;">
                 <mat-icon> save </mat-icon>
                 Salvar
             </button>
-            <button *ngIf="isEventEdit && formParams.type=='edit'" mat-button (click)="delete()" class="delete" style="color: #fff;">
+            <button *ngIf="isEventEdit && formParams.type=='edit'" mat-button (click)="delete()" class="delete" style="margin-top: 5px; text-shadow: 1px 1px 2px #0003; color: #fff;">
                 <mat-icon> delete </mat-icon>
                 Deletar
             </button>
-            <button *ngIf="formParams.type=='edit'" routerLink="/eventos" mat-button class="back" style="color: #fff;">
+            <button routerLink="/eventos" mat-button class="view" style="margin-top: 5px; text-shadow: 1px 1px 2px #0003; color: #fff;">
                 Voltar
             </button>
         </form>
