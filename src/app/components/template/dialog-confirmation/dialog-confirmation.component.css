@@ -12,10 +12,6 @@
     color: var(--secondColor);
     background: var(--primaryColor); 
 }
-.card
-{
-    height: 70vh;
-}
 .escala 
 {
     width: 280px;

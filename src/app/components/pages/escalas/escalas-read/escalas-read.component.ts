@@ -70,6 +70,7 @@ export class EscalasReadComponent implements OnInit {
         this.escalasList = res.map((e: any) =>
           {
             const data = e.payload.doc.data();
+            data.id = e.payload.doc.id;
             return data;
           })
         console.log(this.escalasList)

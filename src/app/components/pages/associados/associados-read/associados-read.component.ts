@@ -52,6 +52,7 @@ export class AssociadosReadComponent implements AfterViewInit, OnInit{
         this.usersList = res.map((e: any) =>
           {
             const data = e.payload.doc.data();
+            data.id = e.payload.doc.id;
             return data;
           })
           this.usersList = this.usersList.filter(this.isPerfilAssociado)
