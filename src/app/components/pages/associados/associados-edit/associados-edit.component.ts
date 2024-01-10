@@ -59,7 +59,7 @@ export class AssociadosEditComponent implements OnInit{
     const id = String(this.route.snapshot.paramMap.get('id'));
     this.data.getUser(String(id)).subscribe(user =>
       {
-        this.preencher_form(user.data(), id)
+        this.preencher_form(user[0], id)
       })
   }
 

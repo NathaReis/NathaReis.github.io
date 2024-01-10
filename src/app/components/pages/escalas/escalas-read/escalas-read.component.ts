@@ -73,6 +73,7 @@ export class EscalasReadComponent implements OnInit {
             data.id = e.payload.doc.id;
             return data;
           })
+        console.log(this.escalasList)
 
         if(!this.perfilService.perfilData.all_view)
         {

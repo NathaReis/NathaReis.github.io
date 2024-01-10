@@ -96,6 +96,18 @@ export class FormEscalaComponent implements OnInit{
 
   preencherEscala(escala: any, id: string)
   {
+    const data = new Date(this.dateBrForEUA(escala.start_date));
+    //Validação para saber se pode editar ou não
+    if(data < this.agora)
+    {
+      this.isEditor = false;
+      this.snack.openSnackBar('Edite com um dia de antecedência!', 2500)
+    }
+    else if(escala.user != String(localStorage.getItem('usermask_id')))
+    {
+      this.isEditor = false;
+      this.snack.openSnackBar('Edite apenas suas escalas!', 2500)
+    }
     console.log(escala)
     if(escala.escala_name == 'Culto')
     {
@@ -107,7 +119,7 @@ export class FormEscalaComponent implements OnInit{
       this.escala_id = escala.escala_id;
       this.escala_name = escala.escala_name;
     }
-    this.start_date = new Date(this.dateBrForEUA(escala.start_date));
+    this.start_date = data;
     this.campos = escala.escala;
     this.id = id;
   }
@@ -359,6 +371,7 @@ export class FormEscalaComponent implements OnInit{
   {
     if(this.validateEscala(this.escala_name))
     {
+      console.log(this.criarEscala())
       this.data.addEscala(this.criarEscala());
       this.reset();
     }

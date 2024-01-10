@@ -38,13 +38,13 @@ export class EscalasComponent implements OnInit{
   ngOnInit(): void {
     this.auth.auth_guard();    
     this.perfilSave();
-    this.departamento_id = String(localStorage.getItem('usermask_id'));
     if(this.perfil.perfilData.type == 'associado')
     {
       this.isAssociado = true;
-      this.data.getUser(String(localStorage.getItem('user_id'))).subscribe((res: any) =>
+      this.data.getUser(String(localStorage.getItem('user_id'))).subscribe((user: any) =>
         {
-          this.preencherDeps(res.data().departamentos);
+          console.log(user[0])
+          this.preencherDeps(user[0].departamentos);
         })
       this.isEditor = eval(String(localStorage.getItem('isEditor')));
     }
