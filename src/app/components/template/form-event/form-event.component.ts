@@ -408,7 +408,17 @@ export class FormEventComponent implements OnInit{
     }
     else 
     {
-      return false;
+        return {
+          event_name: '',
+          event_desc: '',
+          isOneDay: '',
+          start_date: '',
+          end_date: '',
+          start_time: '',
+          end_time: '',
+          event_type: '',
+          user: 'false',
+        }    
     }
   }
 
@@ -426,8 +436,8 @@ export class FormEventComponent implements OnInit{
 
   create()
   {
-    const event = this.createObj();
-    if(event)
+    const event: Event = this.createObj();
+    if(event.user != 'false')
     {
       this.data.addEvent(event);
       this.snack.openSnackBar('Criado com sucesso!');

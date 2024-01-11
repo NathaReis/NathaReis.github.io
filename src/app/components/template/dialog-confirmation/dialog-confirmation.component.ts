@@ -3,7 +3,6 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dial
 import { Dialog } from '../../models/dialog';
 import { DataService } from '../../services/data.service';
 import { SnackbarService } from '../../services/snackbar.service';
-import { Event } from '../../models/event';
 import { User } from '../../models/user';
 
 @Component({

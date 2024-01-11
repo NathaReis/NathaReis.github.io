@@ -28,7 +28,8 @@ import { AutoCompleteModule } from 'primeng/autocomplete'; //PrimeNG
 import { ToolbarModule } from 'primeng/toolbar';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { InputTextModule } from 'primeng/inputtext';
-
+import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 
 
@@ -139,6 +140,8 @@ import { EditorComponent } from './components/template/editor/editor.component';
     ToolbarModule,
     SplitButtonModule,
     InputTextModule,
+    ToastModule,
+    ConfirmDialogModule,
     EditorModule,
     provideFirebaseApp(() => initializeApp({"projectId":"iasgestao","appId":"1:634292682476:web:38ff865f29151abb53efc9","storageBucket":"iasgestao.appspot.com","apiKey":"AIzaSyDM_8ffyG8YjOvCh2mtu9bO8iYYMBqIpk0","authDomain":"iasgestao.firebaseapp.com","messagingSenderId":"634292682476"})),
     provideAuth(() => getAuth()),

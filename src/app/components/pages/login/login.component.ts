@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { HeaderService } from '../../services/header.service';
-import { SnackbarService } from '../../services/snackbar.service';
 import { PerfilService } from '../../services/perfil.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
+  providers: [MessageService]
 })
 export class LoginComponent implements OnInit {
 
@@ -17,7 +18,7 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private auth: AuthService, 
-    private snack: SnackbarService,
+    private messageService: MessageService,
     private perfil: PerfilService,
     private headerService: HeaderService) 
     {
@@ -40,26 +41,21 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.auth.isLogin();
-    console.log('jj')
   }
 
   login()
   {
     if(this.user_name == '')
     {
-      this.snack.openSnackBar('Por favor, digite o usuário');
-      return '';
+      this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Por favor, digite o usuário'});
     }
-
-    if(this.password == '')
+    else if(this.password == '')
     {
-      this.snack.openSnackBar('Por favor digite a senha');
-      return '';
+      this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Por favor digite a senha'});
     }
-
-    this.auth.login(this.user_name,this.password);
-    this.user_name = '';
-    this.password = '';
-    return '';
+    else 
+    {
+      this.auth.login(this.user_name,this.password)
+    }
   }
 }
