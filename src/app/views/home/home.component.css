@@ -55,21 +55,21 @@
 }
 #gerencie
 {
-    background: url('../../../assets/gerencie.jpg');
+    background: url(../../../assets/gerencie_oficial800.jpg);
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
 }
 #organize
 {
-    background: url('../../../assets/organize.jpg');
+    background: url(../../../assets/organize_oficial800.jpg);
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
 }
 #compartilhe
 {
-    background: url('../../../assets/compartilhe.jpg');
+    background: url(../../../assets/compartilhe_oficial800.jpg);
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
