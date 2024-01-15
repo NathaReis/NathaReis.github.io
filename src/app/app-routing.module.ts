@@ -15,7 +15,6 @@ import { EventosCreateComponent } from './components/pages/eventos/eventos-creat
 import { EscalasCreateComponent } from './components/pages/escalas/escalas-create/escalas-create.component';
 import { EventosEditComponent } from './components/pages/eventos/eventos-edit/eventos-edit.component';
 import { EscalasEditComponent } from './components/pages/escalas/escalas-edit/escalas-edit.component';
-import { EditorComponent } from './components/template/editor/editor.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -34,8 +33,6 @@ const routes: Routes = [
   {path: 'escalas', component: EscalasComponent},
   {path: 'escalas/create', component: EscalasCreateComponent},
   {path: 'escalas/edit/:id', component: EscalasEditComponent},
-  
-  {path: 'editor', component: EditorComponent}, //PrimeNG
 ];
 
 @NgModule({

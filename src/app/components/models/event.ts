@@ -1,6 +1,5 @@
 export interface Event 
 {
-    target: EventTarget;
     id?: string,
     event_name: string,
     event_desc: string,

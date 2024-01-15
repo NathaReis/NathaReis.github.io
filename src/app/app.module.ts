@@ -21,6 +21,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatCardModule } from '@angular/material/card';
 import { MatTreeModule } from '@angular/material/tree';
+<<<<<<< HEAD
 import { ButtonModule } from 'primeng/button'; //PrimeNG
 import { EditorModule } from 'primeng/editor'; //PrimeNG
 import { KnobModule } from 'primeng/knob'; //PrimeNG
@@ -32,6 +33,8 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 
+=======
+>>>>>>> parent of 4c69178 (PrimeNgTestes)
 
 //Components
 import { AppRoutingModule } from './app-routing.module';
@@ -77,7 +80,6 @@ import { FormEventComponent } from './components/template/form-event/form-event.
 import { EventosEditComponent } from './components/pages/eventos/eventos-edit/eventos-edit.component';
 import { EscalasEditComponent } from './components/pages/escalas/escalas-edit/escalas-edit.component';
 import { FormEscalaComponent } from './components/template/form-escala/form-escala.component';
-import { EditorComponent } from './components/template/editor/editor.component';
 
 @NgModule({
   declarations: [
@@ -107,7 +109,6 @@ import { EditorComponent } from './components/template/editor/editor.component';
     EventosEditComponent,
     EscalasEditComponent,
     FormEscalaComponent,
-    EditorComponent,
   ],
   imports: [
     AngularFireModule.initializeApp(ambiente.firebaseConfig),
@@ -127,7 +128,6 @@ import { EditorComponent } from './components/template/editor/editor.component';
     MatFormFieldModule,
     MatDialogModule,
     MatButtonModule,
-    ButtonModule,
     MatSnackBarModule,
     FullCalendarModule,
     MatRadioModule,
@@ -135,6 +135,7 @@ import { EditorComponent } from './components/template/editor/editor.component';
     MatSlideToggleModule,
     MatCheckboxModule,
     MatTreeModule,
+<<<<<<< HEAD
     KnobModule,
     AutoCompleteModule,
     ToolbarModule,
@@ -143,6 +144,8 @@ import { EditorComponent } from './components/template/editor/editor.component';
     ToastModule,
     ConfirmDialogModule,
     EditorModule,
+=======
+>>>>>>> parent of 4c69178 (PrimeNgTestes)
     provideFirebaseApp(() => initializeApp({"projectId":"iasgestao","appId":"1:634292682476:web:38ff865f29151abb53efc9","storageBucket":"iasgestao.appspot.com","apiKey":"AIzaSyDM_8ffyG8YjOvCh2mtu9bO8iYYMBqIpk0","authDomain":"iasgestao.firebaseapp.com","messagingSenderId":"634292682476"})),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
