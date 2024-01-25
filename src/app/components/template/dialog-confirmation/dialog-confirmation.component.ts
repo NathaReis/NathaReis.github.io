@@ -94,4 +94,21 @@ export class DialogConfirmationComponent implements OnInit{
       this.snack.openSnackBar('Senha atual incorreta!');
     }
   }
+
+  copy()
+  {
+    const dados = this.data.escalaView;
+    let str = ''
+    dados.forEach(dado => 
+      {
+        str += `*${dado.hour}* - ${dado.categoria}\n\tPessoa: ${dado.pessoa}\n\tobs.: ${dado.descricao}\n`
+      })
+    navigator.clipboard.writeText(str)
+    .then(() => {
+      this.snack.openSnackBar('Escala copiada!');
+    })
+    .catch(err => {
+      this.snack.openSnackBar('Erro ao copiar escala!');
+    });
+  }
 }

@@ -119,12 +119,14 @@ export class EscalasReadComponent implements OnInit {
       localStorage.setItem('usermask_id', dep[0].id);
       localStorage.setItem('usermask_name', dep[0].name);    
       this.isEditor = dep[0].isEditor; 
+      localStorage.setItem('isEditor', String(this.isEditor))
     }
     else 
     {
       localStorage.setItem('usermask_id', String(localStorage.getItem('user_id')));
       localStorage.setItem('usermask_name', String(localStorage.getItem('user_name')));
       this.isEditor = false;
+      localStorage.removeItem('isEditor')
     }
     this.ngOnInit();
   }

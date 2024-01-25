@@ -66,4 +66,8 @@
   <div *ngIf="data.alert" mat-dialog-actions>
     <button mat-button (click)="onConfirm(false)" class="save" style="color: var(--secondColor);">OK</button>
   </div>
+
+  <div *ngIf="data.escalaBox" mat-dialog-actions>
+    <button mat-button (click)="copy()" class="save" style="color: var(--secondColor);">COPY</button>
+  </div>
 </div>
