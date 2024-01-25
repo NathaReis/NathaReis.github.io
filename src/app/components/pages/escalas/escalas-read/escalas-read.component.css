@@ -9,3 +9,18 @@
     max-width: 300px;
     height: 60vh;
 }
+.btns 
+{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.btns button
+{
+    margin-right: 10px;
+}
+.select-label
+{
+    color: #000;
+}

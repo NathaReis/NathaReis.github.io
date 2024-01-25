@@ -148,7 +148,6 @@ export class EscalasReadComponent implements OnInit {
           this.escalasList = this.escalasList
           .filter(this.myEscalas)          
         }
-        console.log(this.escalasList)
         this.popularEscalas(this.escalasList);
         this.updateCalendarOptions();
       }, err => 

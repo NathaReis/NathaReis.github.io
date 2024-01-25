@@ -3,7 +3,7 @@
         <mat-icon>add</mat-icon>
     </button>        
     <mat-form-field *ngIf="isAssociado">
-        <mat-label>Departamentos</mat-label>
+        <mat-label class="select-label">Departamentos</mat-label>
         <mat-select name="departamento_id" [(ngModel)]="departamento_id">
             <mat-option *ngFor="let dep of deps" value="{{ dep.id }}" (click)="selectDep()">{{ dep.name }}</mat-option>
         </mat-select>
