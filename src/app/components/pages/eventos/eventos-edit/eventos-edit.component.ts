@@ -6,6 +6,6 @@ import { FormEvent } from 'src/app/components/models/form-event';
   templateUrl: './eventos-edit.component.html',
   styleUrls: ['./eventos-edit.component.css']
 })
-export class EventosEditComponent {
+export class EventosEditComponent{
   formParams: FormEvent = {type: 'edit'}
 }

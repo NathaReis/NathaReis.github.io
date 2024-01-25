@@ -13,7 +13,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-form-event',
   templateUrl: './form-event.component.html',
-  styleUrls: ['./form-event.component.css']
+  styleUrls: ['./form-event.component.css'],
 })
 export class FormEventComponent implements OnInit{
 
@@ -429,10 +429,18 @@ export class FormEventComponent implements OnInit{
     const event = this.createObj();
     if(event)
     {
-      this.data.addEvent(event);
-      this.snack.openSnackBar('Criado com sucesso!');
-      this.reset();
-      this.getAllEvents();
+      this.data.addEvent(event)
+      .then(res =>
+        {
+          this.snack.openSnackBar('Criado com sucesso!', 2000);
+          this.reset();
+          this.getAllEvents();
+        })
+        .catch(error =>
+          {
+            this.snack.openSnackBar(`Erro: ${error}`, 2000)
+            console.log(error);
+          })
     }
   }
 
@@ -441,10 +449,18 @@ export class FormEventComponent implements OnInit{
     const event = this.createObj();
     if(event)
     {
-      this.data.updateEvent(event, this.id);
-      this.snack.openSnackBar('Atualizado com sucesso!');
-      this.reset();
-      this.router.navigate(['eventos']);
+      this.data.updateEvent(event, this.id)
+      .then(res =>
+        {
+          this.snack.openSnackBar('Atualizado com sucesso!', 2000);
+          this.reset();
+          this.back();
+        })
+        .catch(error =>
+          {
+            this.snack.openSnackBar(`Erro: ${error}`, 2000)
+            console.log(error);
+          })
     }
   }
 
@@ -461,11 +477,27 @@ export class FormEventComponent implements OnInit{
     dialogRef.afterClosed().subscribe((result: boolean) => {
       if(result)
       {
-        this.data.deleteEvent(this.id);
-        this.snack.openSnackBar('Deletado com sucesso!');
-        this.reset();
-        this.router.navigate(['eventos']);
+        this.data.deleteEvent(this.id)
+        .then(res =>
+          {
+            this.snack.openSnackBar('Deletado com sucesso!', 2000);
+            this.reset();
+            this.back();
+          })
+          .catch(error =>
+            {
+              this.snack.openSnackBar(`Erro: ${error}`, 2000);
+              console.log(error);
+            })
       }
     });
+  }
+
+  back()
+  {
+    setTimeout(() =>
+    {
+      this.router.navigate(['eventos']);
+    },1500)
   }
 }

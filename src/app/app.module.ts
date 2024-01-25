@@ -21,16 +21,12 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatCardModule } from '@angular/material/card';
 import { MatTreeModule } from '@angular/material/tree';
-
-//PrimeNG
-import { ButtonModule } from 'primeng/button';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 //Components
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './views/home/home.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HeaderComponent } from './components/template/header/header.component';
 import { BodyComponent } from './components/template/body/body.component';
 
@@ -122,9 +118,9 @@ import { FormEscalaComponent } from './components/template/form-escala/form-esca
     FullCalendarModule,
     MatRadioModule,
     MatCardModule,
-    ButtonModule,
     MatSlideToggleModule,
     MatCheckboxModule,
+    BrowserAnimationsModule,
     MatTreeModule,
     provideFirebaseApp(() => initializeApp({"projectId":"iasgestao","appId":"1:634292682476:web:38ff865f29151abb53efc9","storageBucket":"iasgestao.appspot.com","apiKey":"AIzaSyDM_8ffyG8YjOvCh2mtu9bO8iYYMBqIpk0","authDomain":"iasgestao.firebaseapp.com","messagingSenderId":"634292682476"})),
     provideAuth(() => getAuth()),

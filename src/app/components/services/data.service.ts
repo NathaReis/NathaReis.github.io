@@ -64,7 +64,7 @@ export class DataService {
 
   //EVENT
   // add user
-  addEvent(event: Event)
+  async addEvent(event: Event): Promise<any>
   {
     event.id = this.afs.createId();
     return this.afs.collection('/events').add(event);
@@ -80,14 +80,14 @@ export class DataService {
     return this.afs.doc(`/events/${id}`).get();
   }
   // delete user
-  deleteEvent(id: string)
+  async deleteEvent(id: string): Promise<any>
   {
     return this.afs.doc(`/events/${id}`).delete();
   }
   // update user
-  updateEvent(event: Event, id: string)
+  async updateEvent(event: Event, id: string): Promise<any>
   {
-    this.afs.doc(`events/${id}`).update(event);
+    return this.afs.doc(`events/${id}`).update(event);
   }
 
   //ESCALAS
