@@ -1,7 +1,4 @@
 <div class="btns">
-    <button *ngIf="isEditor" mat-fab class="add" routerLink="create">
-        <mat-icon>add</mat-icon>
-    </button>        
     <mat-form-field *ngIf="isAssociado">
         <mat-label class="black">Departamentos</mat-label>
         <mat-select class="black" name="departamento_id" [(ngModel)]="departamento_id">

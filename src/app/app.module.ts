@@ -22,6 +22,10 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatCardModule } from '@angular/material/card';
 import { MatTreeModule } from '@angular/material/tree';
 
+//PrimeNG
+import { ButtonModule } from 'primeng/button';
+
+
 //Components
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -118,6 +122,7 @@ import { FormEscalaComponent } from './components/template/form-escala/form-esca
     FullCalendarModule,
     MatRadioModule,
     MatCardModule,
+    ButtonModule,
     MatSlideToggleModule,
     MatCheckboxModule,
     MatTreeModule,

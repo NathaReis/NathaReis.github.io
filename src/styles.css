@@ -4,6 +4,10 @@
 /* font-family: 'Dhurjati', sans-serif; */
 @import url('https://fonts.googleapis.com/css2?family=Caveat&display=swap');
 /* font-family: 'Caveat', cursive; */
+/*PrimeNG*/
+@import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "primeng/resources/primeng.css";
+@import "primeicons/primeicons.css"; /*Icons*/
 :root 
 {
     --background: #eee;
@@ -20,12 +24,8 @@
 {
     --background: #1d1d1d;
     --primaryColor: #3254a8;
-    --secondColor: #eee;
     --textColor: #eee;
-    --warnColor: #e35e6b;
-    --neutroColor: #afff79;
-    --grayColor: #333;
-    --selectedColor: #ffd139;
+    --secondColor: #eee;
 }
 
 /*PAGES*/
@@ -64,23 +64,31 @@ body
 {
     background-color: var(--secondColor);
 }
+.btns
+{
+    margin: 20px 0;
+}
 
 /*BUTTONS*/
 button.add
 {
     background-color: var(--primaryColor);
+    color: var(--secondColor);
 }
 button.delete
 {
     background-color: var(--warnColor);
+    color: var(--secondColor);
 }
 button.edit
 {
     background-color: var(--neutroColor);
+    color: var(--secondColor);
 }
 button.view
 {
     background-color: var(--grayColor);
+    color: var(--secondColor);
 }
 button.btn
 {
