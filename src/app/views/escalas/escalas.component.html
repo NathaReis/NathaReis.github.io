@@ -1,15 +1,3 @@
 <div class="container center">
-    <div class="btns">
-        <button *ngIf="isEditor" mat-fab class="add" routerLink="create">
-            <mat-icon>add</mat-icon>
-        </button>        
-        <mat-form-field *ngIf="isAssociado">
-            <mat-label>Departamentos</mat-label>
-            <mat-select name="departamento_id" [(ngModel)]="departamento_id">
-                <mat-option *ngFor="let dep of deps" value="{{ dep.id }}" (click)="selectDep()">{{ dep.name }}</mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
-
     <app-escalas-read></app-escalas-read>
 </div>

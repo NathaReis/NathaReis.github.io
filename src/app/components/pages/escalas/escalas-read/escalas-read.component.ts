@@ -20,49 +20,118 @@ import { Router } from '@angular/router';
 export class EscalasReadComponent implements OnInit {
 
   constructor(
-      private auth : AuthService,
-      private data: DataService,
-      private snack: SnackbarService,
-      private dialog: MatDialog,
-      private router: Router,
-      private perfilService: PerfilService,
-      private headerService: HeaderService) {
-        headerService.headerData = {
-          title: 'Escalas',
-          icon: 'dashboard',
-          routerLink: 'escalas'
-        }
+    private auth : AuthService,
+    private data: DataService,
+    private snack: SnackbarService,
+    private dialog: MatDialog,
+    private router: Router,
+    private perfilService: PerfilService,
+    private headerService: HeaderService) {
+      headerService.headerData = {
+        title: 'Escalas',
+        icon: 'dashboard',
+        routerLink: 'escalas'
+      }
     }
     
     //Events example
     escalas: any = [];
     //Opções of init
     options = {
-    initialView: 'dayGridMonth',
-    plugins: [dayGridPlugin, interactionPlugin],
-    locale: esLocale,
-    headerToolbar: {
-      left: '',
-      center: 'title',
-      right: '',
-    },
-    footerToolbar: {
-      left: 'prev',
-      center: 'today',
-      right: 'next',
-    },
-  };  
-  //Init calendar 
-  calendarOptions: CalendarOptions = this.options;
+      initialView: 'dayGridMonth',
+      plugins: [dayGridPlugin, interactionPlugin],
+      locale: esLocale,
+      headerToolbar: {
+        left: '',
+        center: 'title',
+        right: '',
+      },
+      footerToolbar: {
+        left: 'prev',
+        center: 'today',
+        right: 'next',
+      },
+    };  
+    //Init calendar 
+    calendarOptions: CalendarOptions = this.options;
+    escalasList: Escala[] = [];
+
+  //Options Acima
+  isEditor = false;
+  isAssociado = false;
+  deps = [
+    {
+      id: '',
+      name: 'Escolha um',
+      isEditor: false,
+    }
+  ];
+  departamento_id = '';
   
   ngOnInit(): void {
     this.auth.auth_guard(); //auth_guard
     this.getAllEscalas();
+
+    this.deps = [
+      {
+        id: '',
+        name: 'Escolha um',
+        isEditor: false,
+      }
+    ];
+
+    //Options acima
+    if(this.perfilService.perfilData.type == 'associado')
+    {
+      this.isAssociado = true;
+      this.data.getUser(String(localStorage.getItem('user_id'))).subscribe((user: any) =>
+        {
+          this.preencherDeps(user[0].departamentos);
+        })
+    }
+    else 
+    {
+      this.isEditor = true;
+    }
   }
 
-  escalasList: Escala[] = [];
+  preencherDeps(departamentos: string)
+  {
+    const deps = departamentos.split('/');
+    deps.forEach(departamento =>
+      {
+        const dep = departamento.split(',');
+        this.deps.push(
+          {
+            id: dep[0],
+            name: dep[1],
+            isEditor: eval(dep[2]),
+          }
+        )
+      })
+  }
+
+  selectDep()
+  {
+    if(this.departamento_id)
+    {
+      const dep = this.deps.filter(dp => dp.id == this.departamento_id);
+      localStorage.setItem('usermask_id', dep[0].id);
+      localStorage.setItem('usermask_name', dep[0].name);    
+      this.isEditor = dep[0].isEditor; 
+    }
+    else 
+    {
+      localStorage.setItem('usermask_id', String(localStorage.getItem('user_id')));
+      localStorage.setItem('usermask_name', String(localStorage.getItem('user_name')));
+      this.isEditor = false;
+    }
+    this.ngOnInit();
+  }
+
   getAllEscalas()
   {
+    this.escalas = [];
     //Consulta o serviço Events
     this.data.getAllEscalas().subscribe(res =>
       {
@@ -73,14 +142,13 @@ export class EscalasReadComponent implements OnInit {
             data.id = e.payload.doc.id;
             return data;
           })
-        console.log(this.escalasList)
 
         if(!this.perfilService.perfilData.all_view)
         {
           this.escalasList = this.escalasList
           .filter(this.myEscalas)          
         }
-
+        console.log(this.escalasList)
         this.popularEscalas(this.escalasList);
         this.updateCalendarOptions();
       }, err => 
