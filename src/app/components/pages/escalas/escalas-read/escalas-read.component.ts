@@ -59,13 +59,7 @@ export class EscalasReadComponent implements OnInit {
   //Options Acima
   isEditor = false;
   isAssociado = false;
-  deps = [
-    {
-      id: '',
-      name: 'Escolha um',
-      isEditor: false,
-    }
-  ];
+  deps: {id: string, name: string, isEditor: boolean}[] = [];
   departamento_id = '';
   
   ngOnInit(): void {
@@ -187,28 +181,28 @@ export class EscalasReadComponent implements OnInit {
     };
   }
 
-   //Funções
-   formatDate(date: string)
-   {
-     let res = `${date.split('/')[2]}-${date.split('/')[1]}-${date.split('/')[0]}`;
-     return res;
-   }
+  //Funções
+  formatDate(date: string)
+  {
+    let res = `${date.split('/')[2]}-${date.split('/')[1]}-${date.split('/')[0]}`;
+    return res;
+  }
  
-   dateForNumber(date: string)
-   {
-     let res = +`${date.split('/')[2]}${date.split('/')[1]}${date.split('/')[0]}`;
-     return res;
-   }
+  dateForNumber(date: string)
+  {
+    let res = +`${date.split('/')[2]}${date.split('/')[1]}${date.split('/')[0]}`;
+    return res;
+  }
  
-   numberForDate(num: number)
-   {
-     let str = String(num);
-     let res = str.slice(6,8)+'/'+str.slice(4,6)+'/'+str.slice(0,4);
-     return res;
-   }
+  numberForDate(num: number)
+  {
+    let str = String(num);
+    let res = str.slice(6,8)+'/'+str.slice(4,6)+'/'+str.slice(0,4);
+    return res;
+  }
    
-   handleDateClick(arg: any) {
-      let id = arg.event._def.publicId; 
-      this.router.navigate(['escalas/edit/'+id]);
-   }
+  handleDateClick(arg: any) {
+    let id = arg.event._def.publicId; 
+    this.router.navigate(['escalas/edit/'+id]);
+  }
 }

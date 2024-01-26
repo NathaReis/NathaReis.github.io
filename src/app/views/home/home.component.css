@@ -99,28 +99,3 @@
         background-attachment: fixed;
     } 
 }
-
-@media(max-width: 400px)
-{
-    #gerencie
-    {
-        background: url(../../../assets/gerencie_oficial.jpg);
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-    }
-    #organize
-    {
-        background: url(../../../assets/organize_oficial800.jpg);
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-    }
-    #compartilhe
-    {
-        background: url(../../../assets/compartilhe_oficial800.jpg);
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-    } 
-}
